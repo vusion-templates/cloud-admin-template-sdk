@@ -46,6 +46,12 @@ export default {
                     utils.setPage(root, pages);
                 }
             },
+            {
+                type: 'addMany',
+                destination: fixSlash(dest),
+                base: fixSlash(path.join(base, 'src')),
+                templateFiles: fixSlash(path.join(base, 'src/**')),
+            },
             async function() {
                 let content = '';
                 const packageName = `@cloud-ui/s-${template}.vue`;
@@ -59,12 +65,6 @@ export default {
                 content = await fs.readFile(path.join(blockPath, 'index.vue'), 'utf8');
 
                 await fs.writeFile(path.join(dest, 'views/index.vue'), content);
-            },
-            {
-                type: 'addMany',
-                destination: fixSlash(dest),
-                base: fixSlash(path.join(base, 'src')),
-                templateFiles: fixSlash(path.join(base, 'src/**')),
             },
             {
                 type: 'add',
