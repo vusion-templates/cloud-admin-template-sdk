@@ -1,25 +1,31 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
-const fs_extra_1 = __importDefault(require("fs-extra"));
-const fs_1 = __importDefault(require("fs"));
+const path = require("path");
+const fs = require("fs-extra");
 const utils_1 = require("../../utils");
+const vusion = require("vusion-api");
 const utils = {
     loadPage(root) {
-        return JSON.parse(fs_1.default.readFileSync(path_1.default.join(root, './pages.json')).toString());
+        return JSON.parse(fs.readFileSync(path.join(root, './pages.json')).toString());
     },
     setPage(root, pages) {
-        fs_1.default.writeFileSync(path_1.default.join(root, './pages.json'), JSON.stringify(pages, null, 4));
+        fs.writeFileSync(path.join(root, './pages.json'), JSON.stringify(pages, null, 4));
     },
 };
 exports.default = {
     add(pageInfo, root) {
-        const { name, title } = pageInfo;
-        const dest = path_1.default.join(root, './src/views', pageInfo.name);
-        const base = path_1.default.join(__dirname, '../../../../template/page');
+        const { name, title, template } = pageInfo;
+        const dest = path.join(root, './src/views', pageInfo.name);
+        const base = path.join(__dirname, '../../../../template/page');
         return [
             function () {
                 if (!name) {
@@ -46,28 +52,41 @@ exports.default = {
                     utils.setPage(root, pages);
                 }
             },
+            function () {
+                return __awaiter(this, void 0, void 0, function* () {
+                    let content = '';
+                    const packageName = `@cloud-ui/s-${template}.vue`;
+                    const blockCacheDir = vusion.ms.getCacheDir('blocks');
+                    const blockPath = yield vusion.ms.download.npm({
+                        registry: 'https://registry.npmjs.org',
+                        name: packageName,
+                    }, blockCacheDir);
+                    content = yield fs.readFile(path.join(blockPath, 'index.vue'), 'utf8');
+                    yield fs.writeFile(path.join(dest, 'views/index.vue'), content);
+                });
+            },
             {
                 type: 'addMany',
                 destination: utils_1.fixSlash(dest),
-                base: utils_1.fixSlash(path_1.default.join(base, 'src')),
-                templateFiles: utils_1.fixSlash(path_1.default.join(base, 'src/**')),
+                base: utils_1.fixSlash(path.join(base, 'src')),
+                templateFiles: utils_1.fixSlash(path.join(base, 'src/**')),
             },
             {
                 type: 'add',
-                path: path_1.default.join(root, './src/pages', name + '.html'),
+                path: path.join(root, './src/pages', name + '.html'),
                 base,
-                templateFile: path_1.default.join(base, 'index.html'),
+                templateFile: path.join(base, 'index.html'),
             },
         ];
     },
     remove(pageInfo, root) {
         const { name } = pageInfo;
-        const viewsRoot = path_1.default.join(root, './src/views');
-        const dest = path_1.default.join(viewsRoot, name);
+        const viewsRoot = path.join(root, './src/views');
+        const dest = path.join(viewsRoot, name);
         return [
             function () {
-                fs_extra_1.default.removeSync(dest);
-                fs_extra_1.default.removeSync(path_1.default.join(root, './src/pages', name + '.html'));
+                fs.removeSync(dest);
+                fs.removeSync(path.join(root, './src/pages', name + '.html'));
                 const pages = utils.loadPage(root);
                 delete pages[name];
                 utils.setPage(root, pages);

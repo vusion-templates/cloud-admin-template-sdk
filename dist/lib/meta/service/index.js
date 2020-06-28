@@ -8,13 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 // import { PlopConfig } from '../utils';
 // import * as fse from 'fs-extra';
-const path_1 = __importDefault(require("path"));
+const path = require("path");
 class Service {
     constructor(name, module, page, root, parent) {
         this.name = name;
@@ -26,7 +23,7 @@ class Service {
         }
     }
     getFullPath() {
-        return path_1.default.join(this.root, this.page, this.module, 'service', this.name);
+        return path.join(this.root, this.page, this.module, 'service', this.name);
     }
     load() {
         // todo

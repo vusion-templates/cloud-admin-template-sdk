@@ -1,9 +1,12 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { fixSlash } from '../../utils';
+import * as vusion from 'vusion-api';
+
 interface PageInfo {
     name: string;
     title: string;
+    template: string; // 页面模板，当前先直接使用区块代替
 }
 const utils = {
     loadPage(root: string): object {
@@ -15,7 +18,7 @@ const utils = {
 }
 export default {
     add(pageInfo: PageInfo, root: string): Array<Function|object|string> {
-        const { name, title } = pageInfo;
+        const { name, title, template } = pageInfo;
         const dest = path.join(root, './src/views', pageInfo.name);
         const base = path.join(__dirname, '../../../../template/page');
         return [
@@ -42,6 +45,20 @@ export default {
                     }
                     utils.setPage(root, pages);
                 }
+            },
+            async function() {
+                let content = '';
+                const packageName = `@cloud-ui/s-${template}.vue`;
+
+                const blockCacheDir = vusion.ms.getCacheDir('blocks');
+                const blockPath = await vusion.ms.download.npm({
+                    registry: 'https://registry.npmjs.org',
+                    name: packageName,
+                }, blockCacheDir);
+
+                content = await fs.readFile(path.join(blockPath, 'index.vue'), 'utf8');
+
+                await fs.writeFile(path.join(dest, 'views/index.vue'), content);
             },
             {
                 type: 'addMany',

@@ -1,14 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
-const chalk_1 = __importDefault(require("chalk"));
-const actions_1 = __importDefault(require("./actions"));
+const path = require("path");
+const chalk_1 = require("chalk");
+const actions_1 = require("./actions");
 function default_1(plop) {
     const dest = plop.getDestBasePath();
-    const basePath = path_1.default.join(dest, './src/global/components');
+    const basePath = path.join(dest, './src/global/components');
     return {
         prompts: [
             {

@@ -1,12 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
-const fs_extra_1 = __importDefault(require("fs-extra"));
-const chalk_1 = __importDefault(require("chalk"));
-const actions_1 = __importDefault(require("./actions"));
+const path = require("path");
+const fs = require("fs-extra");
+const chalk_1 = require("chalk");
+const actions_1 = require("./actions");
 function default_1(plop) {
     const dest = plop.getDestBasePath();
     return {
@@ -18,9 +15,9 @@ function default_1(plop) {
                 message: '请选择要删除的入口页名称',
                 choices() {
                     const pages = [];
-                    const viewsRoot = path_1.default.join(dest, './src/views');
-                    fs_extra_1.default.readdirSync(viewsRoot).forEach((innerDir) => {
-                        const stat = fs_extra_1.default.statSync(path_1.default.resolve(viewsRoot, innerDir));
+                    const viewsRoot = path.join(dest, './src/views');
+                    fs.readdirSync(viewsRoot).forEach((innerDir) => {
+                        const stat = fs.statSync(path.resolve(viewsRoot, innerDir));
                         if (stat.isDirectory()) {
                             pages.push(innerDir);
                         }
