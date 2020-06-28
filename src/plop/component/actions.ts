@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 const fixComponentName = function (name: string): string {
     return name.replace(/^[a-z]/, (a) => a.toUpperCase()).replace(/-([a-z])/g, (a, b) => b.toUpperCase()).replace('.vue', '');
 };

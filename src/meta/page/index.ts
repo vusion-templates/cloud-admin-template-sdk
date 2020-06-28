@@ -1,7 +1,7 @@
 import { Layout } from './config';
 import Utils, {PlopConfig} from '../utils';
 import { ProjectPath } from '../common';
-import path from 'path';
+import * as path from 'path';
 export interface AddPage {
     name: string;
     title: string;

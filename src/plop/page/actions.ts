@@ -1,6 +1,5 @@
-import path from 'path';
-import fse from 'fs-extra';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs-extra';
 import { fixSlash } from '../../utils';
 interface PageInfo {
     name: string;
@@ -66,8 +65,8 @@ export default {
         const dest = path.join(viewsRoot, name);
         return [
             function (): void {
-                fse.removeSync(dest);
-                fse.removeSync(path.join(root, './src/pages', name + '.html'));
+                fs.removeSync(dest);
+                fs.removeSync(path.join(root, './src/pages', name + '.html'));
                 const pages = utils.loadPage(root);
                 delete pages[name];
                 utils.setPage(root, pages);
