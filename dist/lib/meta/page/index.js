@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = __importDefault(require("../utils"));
-const path_1 = __importDefault(require("path"));
+const utils_1 = require("../utils");
+const path = require("path");
 class Page {
     constructor(name, root, parent) {
         this.name = name;
@@ -14,7 +11,7 @@ class Page {
         }
     }
     getFullPath() {
-        return path_1.default.join(this.root, this.name);
+        return path.join(this.root, this.name);
     }
     static add(answers, config) {
         const plop = utils_1.default.getPlop(config);

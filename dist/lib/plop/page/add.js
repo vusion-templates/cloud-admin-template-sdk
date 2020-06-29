@@ -1,11 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const chalk_1 = __importDefault(require("chalk"));
-const path_1 = __importDefault(require("path"));
-const actions_1 = __importDefault(require("./actions"));
+const chalk_1 = require("chalk");
+const path = require("path");
+const actions_1 = require("./actions");
 function default_1(plop) {
     const dest = plop.getDestBasePath();
     return {
@@ -36,7 +33,7 @@ function default_1(plop) {
         ],
         actions(answers) {
             const { name } = answers;
-            answers.appName = require(path_1.default.join(dest, 'package.json')).name.replace(/-client$/, '');
+            answers.appName = require(path.join(dest, 'package.json')).name.replace(/-client$/, '');
             return [
                 ...actions_1.default.add(answers, dest),
                 [

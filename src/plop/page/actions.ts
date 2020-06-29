@@ -1,10 +1,12 @@
-import path from 'path';
-import fse from 'fs-extra';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs-extra';
 import { fixSlash } from '../../utils';
+import * as vusion from 'vusion-api';
+
 interface PageInfo {
     name: string;
     title: string;
+    template: string; // 页面模板，当前先直接使用区块代替
 }
 const utils = {
     loadPage(root: string): object {
@@ -16,7 +18,7 @@ const utils = {
 }
 export default {
     add(pageInfo: PageInfo, root: string): Array<Function|object|string> {
-        const { name, title } = pageInfo;
+        const { name, title, template } = pageInfo;
         const dest = path.join(root, './src/views', pageInfo.name);
         const base = path.join(__dirname, '../../../../template/page');
         return [
@@ -50,6 +52,20 @@ export default {
                 base: fixSlash(path.join(base, 'src')),
                 templateFiles: fixSlash(path.join(base, 'src/**')),
             },
+            async function() {
+                let content = '';
+                const packageName = `@cloud-ui/s-${template}.vue`;
+
+                const blockCacheDir = vusion.ms.getCacheDir('blocks');
+                const blockPath = await vusion.ms.download.npm({
+                    registry: 'https://registry.npmjs.org',
+                    name: packageName,
+                }, blockCacheDir);
+
+                content = await fs.readFile(path.join(blockPath, 'index.vue'), 'utf8');
+
+                await fs.writeFile(path.join(dest, 'views/index.vue'), content);
+            },
             {
                 type: 'add',
                 path: path.join(root, './src/pages', name + '.html'),
@@ -66,8 +82,8 @@ export default {
         const dest = path.join(viewsRoot, name);
         return [
             function (): void {
-                fse.removeSync(dest);
-                fse.removeSync(path.join(root, './src/pages', name + '.html'));
+                fs.removeSync(dest);
+                fs.removeSync(path.join(root, './src/pages', name + '.html'));
                 const pages = utils.loadPage(root);
                 delete pages[name];
                 utils.setPage(root, pages);

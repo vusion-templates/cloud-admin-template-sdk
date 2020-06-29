@@ -1,5 +1,5 @@
-import path from 'path';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export const fixSlash = function (filePath: string): string {
     return filePath.split(path.sep).join('/');

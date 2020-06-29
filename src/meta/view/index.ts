@@ -1,5 +1,5 @@
 import { ProjectPath } from '../common';
-import path from 'path';
+import * as path from 'path';
 export default class View<T> implements ProjectPath {
     public name: string;
     public module: string;

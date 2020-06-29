@@ -1,6 +1,6 @@
 <template>
     <u-linear-layout direction="vertical">
-        <span>overview</span>
+        <span>content</span>
         <router-view></router-view>
     </u-linear-layout>
 </template>

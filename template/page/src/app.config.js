@@ -4,12 +4,7 @@ export default {
     project: '{{ appName }}',
     auth: {{ auth }},
     router: {
-        defaults: '/overview',
-        notFound: '/overview',
-        unauthorized: '/overview',
-    },
-    navInfo: {
-        navbar: [],
-        sidebar: [],
+        notFound: '/',
+        unauthorized: '/',
     },
 };

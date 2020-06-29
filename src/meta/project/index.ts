@@ -2,7 +2,7 @@ import Page, { AddPage, RemovePage } from '../page';
 import Component, { AddComponent } from '../component';
 import { PlopConfig } from '../utils';
 import { ProjectPath } from '../common';
-import path from 'path';
+import * as path from 'path';
 export default class Project implements ProjectPath{
 
     public root: string;

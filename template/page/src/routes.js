@@ -1,39 +1,24 @@
 import appConfig from './app.config';
-import routes from './routes.map.js?scopeName=/';
+import rootRoute from './routes.map.js?rootPath=/';
 import utils from '@/global/utils';
-let defaultRoute = appConfig.router.defaults;
 let notFoundRoute = appConfig.router.notFound;
 let unauthorized = appConfig.router.unauthorized;
 
-if (!utils.hasRoute(routes.children || [], defaultRoute)) {
-    if (routes.length) {
-        defaultRoute = routes.path;
-    } else {
-        defaultRoute = '';
-    }
-}
-
-if (!utils.hasRoute(routes.children || [], notFoundRoute)) {
+if (!utils.hasRoute(rootRoute.children || [], notFoundRoute)) {
     notFoundRoute = '/';
 }
 
-if (!utils.hasRoute(routes.children || [], unauthorized)) {
+if (!utils.hasRoute(rootRoute.children || [], unauthorized)) {
     unauthorized = '/';
 }
 
 Object.assign(appConfig.router, {
-    defaultRoute,
     notFoundRoute,
     unauthorized,
 });
 
-routes.children = routes.children || [];
-if (routes.children.length && routes.children[0].path === '') {
-    routes.children[0].redirect = defaultRoute;
-}
-
 export default [
-    routes,
+    rootRoute,
     { path: '*', beforeEnter(to, from, next) {
         if (window.microApp && window.microApp.isMicro) {
             if (!location.pathname.startsWith(window.microApp.prefix)) {
