@@ -25,7 +25,7 @@ function default_1(plop) {
                 message: '请输入入口页标题（可选，如"用户注册"，作为网页 title 等使用）',
             },
             {
-                type: 'boolean',
+                type: 'confirm',
                 name: 'auth',
                 message: '是否需要登录验证（默认为 true）',
                 default: true,

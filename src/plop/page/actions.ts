@@ -7,6 +7,7 @@ interface PageInfo {
     name: string;
     title: string;
     template: string; // 页面模板，当前先直接使用区块代替
+    auth: boolean;
 }
 const utils = {
     loadPage(root: string): object {
@@ -18,7 +19,7 @@ const utils = {
 }
 export default {
     add(pageInfo: PageInfo, root: string): Array<Function|object|string> {
-        const { name, title, template } = pageInfo;
+        const { name, title, template, auth } = pageInfo;
         const dest = path.join(root, './src/views', pageInfo.name);
         const base = path.join(__dirname, '../../../../template/page');
         return [
@@ -42,6 +43,9 @@ export default {
                             name,
                         ],
                         chunksSortMode: 'manual',
+                        options: {
+                            auth,
+                        },
                     }
                     utils.setPage(root, pages);
                 }

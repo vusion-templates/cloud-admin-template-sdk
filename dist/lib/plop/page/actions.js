@@ -23,7 +23,7 @@ const utils = {
 };
 exports.default = {
     add(pageInfo, root) {
-        const { name, title, template } = pageInfo;
+        const { name, title, template, auth } = pageInfo;
         const dest = path.join(root, './src/views', pageInfo.name);
         const base = path.join(__dirname, '../../../../template/page');
         return [
@@ -48,6 +48,9 @@ exports.default = {
                             name,
                         ],
                         chunksSortMode: 'manual',
+                        options: {
+                            auth,
+                        },
                     };
                     utils.setPage(root, pages);
                 }
