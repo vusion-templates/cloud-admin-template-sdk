@@ -1,5 +1,5 @@
 import * as path from 'path';
-import chalk from 'chalk';
+import chalk = require('chalk');
 import actions from './actions';
 export default function (plop): any{
     const dest = plop.getDestBasePath();

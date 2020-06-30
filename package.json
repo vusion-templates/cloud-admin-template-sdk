@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.10.0",
+    "chalk": "^4.1.0",
     "fs-extra": "^9.0.0",
     "inquirer-directory": "^2.2.0",
     "node-plop": "^0.26.0",

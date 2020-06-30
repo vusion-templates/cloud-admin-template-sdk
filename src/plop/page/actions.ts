@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { fixSlash } from '../../utils';
-import * as vusion from 'vusion-api';
+import * as ms from 'vusion-api/out/ms';
 
 interface PageInfo {
     name: string;
@@ -60,8 +60,8 @@ export default {
                 let content = '';
                 const packageName = `@cloud-ui/s-${template}.vue`;
 
-                const blockCacheDir = vusion.ms.getCacheDir('blocks');
-                const blockPath = await vusion.ms.download.npm({
+                const blockCacheDir = ms.getCacheDir('blocks');
+                const blockPath = await ms.download.npm({
                     registry: 'https://registry.npmjs.org',
                     name: packageName,
                 }, blockCacheDir);
