@@ -80,6 +80,12 @@ exports.default = {
                 base: utils_1.fixSlash(path.join(base, 'src')),
                 templateFiles: utils_1.fixSlash(path.join(base, 'src/**')),
             },
+            {
+                type: 'add',
+                path: path.join(root, './src/pages', name + '.html'),
+                base,
+                templateFile: path.join(base, 'index.html'),
+            },
             function () {
                 return __awaiter(this, void 0, void 0, function* () {
                     let content = '';
@@ -92,12 +98,6 @@ exports.default = {
                     content = yield fs.readFile(path.join(blockPath, 'index.vue'), 'utf8');
                     yield fs.writeFile(path.join(dest, 'views/index.vue'), content);
                 });
-            },
-            {
-                type: 'add',
-                path: path.join(root, './src/pages', name + '.html'),
-                base,
-                templateFile: path.join(base, 'index.html'),
             },
         ];
     },
