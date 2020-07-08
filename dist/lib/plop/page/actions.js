@@ -97,6 +97,14 @@ exports.default = {
                     }, blockCacheDir);
                     content = yield fs.readFile(path.join(blockPath, 'index.vue'), 'utf8');
                     yield fs.writeFile(path.join(dest, 'views/index.vue'), content);
+                    const pkgInfo = JSON.parse(yield fs.readFile(path.join(blockPath, 'package.json'), 'utf8'));
+                    const deps = pkgInfo.vusionDependencies;
+                    if (deps && Object.keys(deps).length) {
+                        yield Promise.all(Object.keys(deps).map((name) => ms.install({
+                            name,
+                            version: deps[name].replace(/^[^\d]+/, ''),
+                        })));
+                    }
                 });
             },
         ];
