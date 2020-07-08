@@ -27,22 +27,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs-extra"));
 const utils_1 = require("../../utils");
 const ms = __importStar(require("vusion-api/out/ms"));
-const utils = {
-    loadPage(root) {
-        return JSON.parse(fs.readFileSync(path.join(root, './pages.json')).toString());
-    },
-    setPage(root, pages) {
-        fs.writeFileSync(path.join(root, './pages.json'), JSON.stringify(pages, null, 4));
-    },
-};
+const pages_1 = __importDefault(require("./pages"));
 exports.default = {
     add(pageInfo, root) {
-        const { name, title, template, auth } = pageInfo;
+        const { name, title, template, auth, isIndex } = pageInfo;
         const dest = path.join(root, './src/views', pageInfo.name);
         const base = path.join(__dirname, '../../../../template/page');
         return [
@@ -51,9 +47,17 @@ exports.default = {
                     throw new Error('name 为空');
                 }
                 else {
-                    const pages = utils.loadPage(root);
+                    const pages = pages_1.default.get(root);
                     if (pages[name]) {
                         throw new Error('该页面已经存在！');
+                    }
+                    if (isIndex) {
+                        Object.keys(pages).forEach((pageName) => {
+                            const page = pages[pageName];
+                            if (page.options && page.options.isIndex) {
+                                page.options.isIndex = false;
+                            }
+                        });
                     }
                     pages[name] = {
                         entry: `./src/views/${name}/index.js`,
@@ -69,9 +73,10 @@ exports.default = {
                         chunksSortMode: 'manual',
                         options: {
                             auth,
+                            isIndex,
                         },
                     };
-                    utils.setPage(root, pages);
+                    pages_1.default.set(root, pages);
                 }
             },
             {
@@ -117,9 +122,9 @@ exports.default = {
             function () {
                 fs.removeSync(dest);
                 fs.removeSync(path.join(root, './src/pages', name + '.html'));
-                const pages = utils.loadPage(root);
+                const pages = pages_1.default.get(root);
                 delete pages[name];
-                utils.setPage(root, pages);
+                pages_1.default.set(root, pages);
             },
         ];
     }

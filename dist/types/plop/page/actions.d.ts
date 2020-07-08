@@ -3,6 +3,7 @@ interface PageInfo {
     title: string;
     template: string;
     auth: boolean;
+    isIndex: boolean;
 }
 declare const _default: {
     add(pageInfo: PageInfo, root: string): Array<Function | object | string>;

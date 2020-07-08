@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chalk = require("chalk");
 const path = __importStar(require("path"));
 const actions_1 = __importDefault(require("./actions"));
+const pages_1 = __importDefault(require("./pages"));
 function default_1(plop) {
     const dest = plop.getDestBasePath();
     return {
@@ -51,6 +52,15 @@ function default_1(plop) {
                 name: 'auth',
                 message: '是否需要登录验证（默认为 true）',
                 default: true,
+            },
+            {
+                type: 'confirm',
+                name: 'isIndex',
+                message: '是否设置为首页（默认为 false）',
+                default: false,
+                when() {
+                    return !pages_1.default.get(dest).index;
+                }
             },
         ],
         actions(answers) {

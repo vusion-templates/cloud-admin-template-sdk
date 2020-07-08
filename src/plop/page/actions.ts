@@ -2,24 +2,17 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import { fixSlash } from '../../utils';
 import * as ms from 'vusion-api/out/ms';
-
+import pagesUtil from './pages';
 interface PageInfo {
     name: string;
     title: string;
     template: string; // 页面模板，当前先直接使用区块代替
     auth: boolean;
-}
-const utils = {
-    loadPage(root: string): object {
-        return JSON.parse(fs.readFileSync(path.join(root,'./pages.json')).toString());
-    },
-    setPage(root: string, pages: object): void {
-        fs.writeFileSync(path.join(root, './pages.json'), JSON.stringify(pages, null, 4));
-    },
+    isIndex: boolean;
 }
 export default {
     add(pageInfo: PageInfo, root: string): Array<Function|object|string> {
-        const { name, title, template, auth } = pageInfo;
+        const { name, title, template, auth, isIndex } = pageInfo;
         const dest = path.join(root, './src/views', pageInfo.name);
         const base = path.join(__dirname, '../../../../template/page');
         return [
@@ -27,9 +20,17 @@ export default {
                 if (!name) {
                     throw new Error('name 为空');
                 } else {
-                    const pages = utils.loadPage(root);
+                    const pages = pagesUtil.get(root);
                     if (pages[name]) {
                         throw new Error('该页面已经存在！');
+                    }
+                    if (isIndex) {
+                        Object.keys(pages).forEach((pageName) => {
+                            const page = pages[pageName];
+                            if (page.options && page.options.isIndex) {
+                                page.options.isIndex = false;
+                            }
+                        });
                     }
                     pages[name] = {
                         entry: `./src/views/${name}/index.js`,
@@ -45,9 +46,10 @@ export default {
                         chunksSortMode: 'manual',
                         options: {
                             auth,
+                            isIndex,
                         },
                     }
-                    utils.setPage(root, pages);
+                    pagesUtil.set(root, pages);
                 }
             },
             {
@@ -96,9 +98,9 @@ export default {
             function (): void {
                 fs.removeSync(dest);
                 fs.removeSync(path.join(root, './src/pages', name + '.html'));
-                const pages = utils.loadPage(root);
+                const pages = pagesUtil.get(root);
                 delete pages[name];
-                utils.setPage(root, pages);
+                pagesUtil.set(root, pages);
             },
         ];
     }

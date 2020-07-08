@@ -1,6 +1,7 @@
 import chalk = require('chalk');
 import * as path from 'path';
 import actions from './actions';
+import pagesUtil from './pages';
 export default function(plop): any {
     const dest = plop.getDestBasePath();
     return {
@@ -25,6 +26,15 @@ export default function(plop): any {
                 name: 'auth',
                 message: '是否需要登录验证（默认为 true）',
                 default: true,
+            },
+            {
+                type: 'confirm',
+                name: 'isIndex',
+                message: '是否设置为首页（默认为 false）',
+                default: false,
+                when(): boolean {
+                    return !pagesUtil.get(dest).index;
+                }
             },
         ],
         actions(answers): ReturnType<typeof actions.add> {
