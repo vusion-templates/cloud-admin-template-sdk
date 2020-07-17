@@ -34,3 +34,5 @@ public/
 lib-cov
 coverage
 .nyc_output
+dist/tests
+types/tests

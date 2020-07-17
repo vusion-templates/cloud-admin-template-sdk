@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/lib/index.js",
   "module": "dist/lib/index.js",
-  "typings": "dist/types/index.d.ts",
+  "typings": "types/lib/index.d.ts",
   "scripts": {
+    "test:init": "node ./dist/tests/init.js",
     "test": "jest",
     "watch": "npm t -- --watch",
     "coverage": "jest --coverage",
@@ -33,9 +34,8 @@
     "husky": "^3.0.1",
     "jest": "^24.9.0",
     "lint-staged": "^9.2.0",
-    "ts-jest": "^24.1.0",
-    "typescript": "^3.5.3",
-    "@types/node": "^14.0.5"
+    "typescript": "^3.3.1",
+    "@types/node": "^10.12.18"
   },
   "husky": {
     "hooks": {
@@ -50,7 +50,6 @@
     ]
   },
   "dependencies": {
-    "@babel/core": "^7.10.0",
     "chalk": "^4.1.0",
     "fs-extra": "^9.0.0",
     "inquirer-directory": "^2.2.0",

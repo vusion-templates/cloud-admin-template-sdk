@@ -50,8 +50,8 @@ function default_1(plop) {
             {
                 type: 'confirm',
                 name: 'auth',
-                message: '是否需要登录验证（默认为 true）',
                 default: true,
+                message: '是否需要登录验证（默认为 true）',
             },
             {
                 type: 'confirm',
@@ -69,7 +69,7 @@ function default_1(plop) {
             return [
                 ...actions_1.default.add(answers, dest),
                 [
-                    `页面 ${chalk.blue(name)} 已经添加成功。你需要${chalk.green(`重新启动 dev server`)}，然后打开 ${chalk.blue(`/${name}`)} 即可查看。`,
+                    `入口页面 ${chalk.blue(name)} 已经添加成功。你需要${chalk.green(`重新启动 dev server`)}，然后打开 ${chalk.blue(`/${name}`)} 即可查看。`,
                     `需要注意以下几点：`,
                     `  入口 JS 文件为 ${chalk.yellow(`src/views/${name}/index.js`)}`,
                     `  入口页面模板为 ${chalk.yellow(`src/pages/${name}.html`)}`,

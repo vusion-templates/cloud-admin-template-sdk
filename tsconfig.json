@@ -11,9 +11,10 @@
       "dom"
     ],
     "declaration": true,
-    "declarationDir": "dist/types",
-    "outDir": "dist/lib",
+    "declarationDir": "types",
+    "outDir": "dist",
     "moduleResolution": "node",
+    "pretty": true,
     "typeRoots": [
       "node_modules/@types"
     ]
@@ -22,6 +23,8 @@
     "./src/**/*"
   ],
   "exclude": [
-    "template/**"
+    "node_modules/**",
+    "template/**",
+    "src/tests/tmp/**"
   ]
 }

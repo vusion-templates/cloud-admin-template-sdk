@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = __importStar(require("fs"));
+const fs = __importStar(require("fs-extra"));
 const path = __importStar(require("path"));
 const node_plop_1 = __importDefault(require("node-plop"));
 exports.default = {
@@ -39,5 +39,14 @@ exports.default = {
             force: !!config.force,
         });
         return plop;
-    }
+    },
+    getPagePath(answer) {
+        return path.join(answer.root, answer.page);
+    },
+    getModulePath(answer) {
+        return path.join(answer.root, answer.page, answer.module);
+    },
+    getViewPath(answer) {
+        return path.join(answer.root, answer.page, answer.module, 'views');
+    },
 };

@@ -93,6 +93,9 @@ exports.default = {
             },
             function () {
                 return __awaiter(this, void 0, void 0, function* () {
+                    if (!template) {
+                        return;
+                    }
                     let content = '';
                     const packageName = `@cloud-ui/s-${template}.vue`;
                     const blockCacheDir = ms.getCacheDir('blocks');

@@ -18,48 +18,60 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { PlopConfig } from '../utils';
-// import * as fse from 'fs-extra';
+const fs = __importStar(require("fs-extra"));
 const path = __importStar(require("path"));
-class Service {
-    constructor(name, module, page, root, parent) {
-        this.name = name;
-        this.module = module;
-        this.page = page;
-        this.root = root;
-        if (parent) {
-            this.parent = parent;
-        }
+const utils_1 = require("../../utils");
+const common_1 = require("../common");
+const tree_1 = __importDefault(require("../common/tree"));
+const file_1 = __importDefault(require("../common/file"));
+const directory_1 = __importDefault(require("../common/directory"));
+class Service extends tree_1.default {
+    constructor(name, root, parent) {
+        super(name, root, common_1.LEVEL_ENUM.service, parent);
+        this.subFiles = {
+            api: new file_1.default(path.join(this.fullPath, 'api.json')),
+            config: new file_1.default(path.join(this.fullPath, 'api.config.js')),
+            index: new file_1.default(path.join(this.fullPath, 'index.js')),
+        };
     }
     getFullPath() {
-        return path.join(this.root, this.page, this.module, 'service', this.name);
+        return path.join(this.root, this.name);
     }
     load() {
-        // todo
+        return {
+            api: this.subFiles.api.load(),
+            config: this.subFiles.config.load(),
+            index: this.subFiles.index.load(),
+        };
     }
-    save() {
-        // todo
+    save(content) {
+        content.api && this.subFiles.api.save(content.api);
+        content.config && this.subFiles.api.save(content.config);
+        content.index && this.subFiles.api.save(content.index);
     }
-    remove() {
-        // todo
+    rename(newName) {
+        new directory_1.default(this.fullPath).rename(newName);
     }
     static add(answers) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return Promise.resolve('');
-        });
+        const dir = path.join(answers.root, answers.name);
+        const tplPath = path.resolve(utils_1.templatePath, 'service');
+        fs.copySync(tplPath, dir);
+        if (answers.api) {
+            const api = new file_1.default(path.join(dir, 'api.json'));
+            api.save(answers.api);
+        }
     }
     static remove(answers) {
-        return Promise.resolve(true);
+        const dir = path.join(answers.root, answers.name);
+        return new directory_1.default(dir).remove();
     }
 }
 exports.default = Service;
+Service.getServicesPath = function (root) {
+    const services = new directory_1.default(root).dir();
+    return services;
+};

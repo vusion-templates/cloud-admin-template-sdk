@@ -53,7 +53,7 @@ function default_1(plop) {
             return [
                 ...actions_1.default.remove(answers, dest),
                 [
-                    `页面 ${name} 已经被删除。你需要${chalk.green(`重新启动 dev server`)}。`,
+                    `入口页面 ${name} 已经被删除。你需要${chalk.green(`重新启动 dev server`)}。`,
                     `需要注意以下几点：`,
                     `  Webpack 配置 (vue pages 配置) 在 ${chalk.yellow(`pages.json`)} 中`,
                     `  代理在 ${chalk.yellow('webpack.dev-server.js')} 中，可能需要修改`,
