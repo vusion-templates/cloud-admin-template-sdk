@@ -11,20 +11,24 @@ export default {
                 console.error('repeat trigger');
                 return;
             }
-            microApp.customProps = data.customProps;
-            instance = new Vue({
-                name: 'app',
-                router: initRouter(data.customProps.prefix),
-                ...App,
-            }).$mount(data.customProps.node);
+            microApp.parentData = data.customProps;
+            if (data.customProps.appInfo.alive) {
+                instance = new Vue({
+                    name: 'app',
+                    router: initRouter(data.customProps.prefix),
+                    ...App,
+                }).$mount(data.customProps.node);
+            }
             publish(topic + ':mounted', new Date());
         });
         subscribe(topic + ':unmount', (data) => {
-            const el = instance.$el;
-            instance.$destroy();
-            instance = null;
-            microApp.customProps = null;
-            el.parentNode.removeChild(el);
+            if (instance) {
+                const el = instance.$el;
+                instance.$destroy();
+                instance = null;
+                el.parentNode.removeChild(el);
+            }
+            microApp.parentData = undefined;
             publish(topic + ':unmounted', new Date());
         });
     },
