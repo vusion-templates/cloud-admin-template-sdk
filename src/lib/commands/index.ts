@@ -3,7 +3,8 @@ import type { PageOP } from '../meta/project/page';
 import type { ViewOP } from '../meta/page/view';
 import type { ServiceOP } from '../meta/project/service';
 import type View from '../meta/view';
-import { addBlock, addCode, addLayout } from 'vusion-api/out/designer';
+import { addCode, addLayout } from 'vusion-api/out/designer';
+import type { BlockInfo } from '../meta/view';
 
 export interface Command {
     [prop: string]: any;
@@ -77,14 +78,17 @@ export default function (root: string): Command {
             return project.page.load(page).view.load(view).getContent();
         } as View["getContent"],
 
-        'block.add': async function(...args) {
-            return await addBlock(...args);
-        } as typeof addBlock,
-        'code.add': async function (...args) {
-            return await addCode(...args);
-        } as typeof addCode,
-        'layout.add': async function (...args) {
-            return await addLayout(...args);
-        } as typeof addLayout,
+        'view.mergeCode': function (page: string, view: string, code: string, nodePath: string) {
+            return project.page.load(page).view.mergeCode(view, code, nodePath);
+        } as typeof View.mergeCode,
+        'view.saveCode': function (page: string, view: string, type: string, content: string) {
+            return project.page.load(page).view.saveCode(view, type, content);
+        } as typeof View.saveCode,
+        'view.addBlock': function (page: string, view: string, blockInfo: BlockInfo) {
+            return project.page.load(page).view.addBlock(view, blockInfo);
+        } as typeof View.addBlock,
+        'view.addCustomComponent': function (page: string, view: string, libraryPath: string, blockInfo: BlockInfo, content: string) {
+            return project.page.load(page).view.addCustomComponent(view, libraryPath, blockInfo, content);
+        } as typeof View.addCustomComponent,
     };
 }
