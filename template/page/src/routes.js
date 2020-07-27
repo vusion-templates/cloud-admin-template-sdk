@@ -1,6 +1,6 @@
 import appConfig from './app.config';
 import rootRoute from './routes.map.js?rootPath=/';
-import utils from '@/global/utils';
+import utils from '@/global/features/utils/route';
 let notFoundRoute = appConfig.router.notFound;
 let unauthorized = appConfig.router.unauthorized;
 

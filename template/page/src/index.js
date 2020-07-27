@@ -3,15 +3,18 @@ import '@/global/styles/theme.css';
 import Vue from 'vue';
 import App from './index.vue';
 import { initRouter } from './router';
-import '@/global/page';
+import '@/global/features/page-init';
 import './library';
 import '@/global/styles/index.css';
-import installServices from '@/global/services/install';
+import installServices from '@/global/features/service/install';
 import micro from './micro';
+import appConfig from './app.config';
+import { initMiddleware } from '@/global/middleware';
 // import { initI18n } from '@/global/page/i18n';
 
 Vue.use(installServices);
 
+initMiddleware(appConfig);
 if (window.microApp && window.microApp.isMicro) {
     micro.init(initRouter);
 } else {

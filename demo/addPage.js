@@ -8,10 +8,6 @@ async function b() {
         auth: true,
     });
     console.log('addPage');
-    await project.removePage({
-        name: 'aaa'
-    });
-    console.log('removePage'); 
 }
 b();
 
