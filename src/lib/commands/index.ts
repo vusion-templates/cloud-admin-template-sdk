@@ -3,8 +3,7 @@ import type { PageOP } from '../meta/project/page';
 import type { ViewOP } from '../meta/page/view';
 import type { ServiceOP } from '../meta/project/service';
 import type View from '../meta/view';
-import { addCode, addLayout } from 'vusion-api/out/designer';
-import type { BlockInfo } from '../meta/view';
+import type { BlockInfo, ViewInfo } from '../meta/view';
 
 export interface Command {
     [prop: string]: any;
@@ -74,21 +73,21 @@ export default function (root: string): Command {
         'view.remove': function (page: string, view: string) {
             return project.page.load(page).view.remove(view);
         } as typeof View.removeView,
-        'view.detail': function (page: string, view: string) {
-            return project.page.load(page).view.load(view).getContent();
-        } as View["getContent"],
+        'view.detail': async function (page: string, view: string, viewInfo: ViewInfo) {
+            return await project.page.load(page).view.getViewContent(view, viewInfo);
+        } as typeof View.getViewContent,
 
-        'view.mergeCode': function (page: string, view: string, code: string, nodePath: string) {
-            return project.page.load(page).view.mergeCode(view, code, nodePath);
+        'view.mergeCode': async function (page: string, view: string, code: string, nodePath: string) {
+            return await project.page.load(page).view.mergeCode(view, code, nodePath);
         } as typeof View.mergeCode,
-        'view.saveCode': function (page: string, view: string, type: string, content: string) {
-            return project.page.load(page).view.saveCode(view, type, content);
+        'view.saveCode': async function (page: string, view: string, type: string, content: string) {
+            return await project.page.load(page).view.saveCode(view, type, content);
         } as typeof View.saveCode,
-        'view.addBlock': function (page: string, view: string, blockInfo: BlockInfo) {
-            return project.page.load(page).view.addBlock(view, blockInfo);
+        'view.addBlock': async function (page: string, view: string, blockInfo: BlockInfo) {
+            return await project.page.load(page).view.addBlock(view, blockInfo);
         } as typeof View.addBlock,
-        'view.addCustomComponent': function (page: string, view: string, libraryPath: string, blockInfo: BlockInfo, content: string) {
-            return project.page.load(page).view.addCustomComponent(view, libraryPath, blockInfo, content);
+        'view.addCustomComponent': async function (page: string, view: string, blockInfo: BlockInfo, content: string) {
+            return await project.page.load(page).view.addCustomComponent(view, blockInfo, content);
         } as typeof View.addCustomComponent,
     };
 }

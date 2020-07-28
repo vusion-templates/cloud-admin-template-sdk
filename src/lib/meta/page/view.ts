@@ -1,6 +1,6 @@
 import * as path from 'path';
 import View  from '../view';
-import type { ViewOptions, BlockInfo } from '../view';
+import type { ViewOptions, BlockInfo, ViewInfo } from '../view';
 export interface ViewOP {
     loadListPath(): ReturnType<typeof View.getViewsPath>;
     load(viewPath: string): View;
@@ -9,7 +9,8 @@ export interface ViewOP {
     mergeCode(view: string, code: string, nodePath: string): ReturnType<typeof View.mergeCode>;
     saveCode(view: string, type: string, content: string): ReturnType<typeof View.saveCode>;
     addBlock(view: string, blockInfo: BlockInfo): ReturnType<typeof View.saveCode>;
-    addCustomComponent(view: string, libraryPath: string, blockInfo: BlockInfo, content: string): ReturnType<typeof View.addCustomComponent>;
+    addCustomComponent(view: string, blockInfo: BlockInfo, content: string): ReturnType<typeof View.addCustomComponent>;
+    getViewContent(view: string, viewInfo: ViewInfo): ReturnType<typeof View.addCustomComponent>;
 }
 const getRootPath = function (root: string): string {
     return path.join(root, 'views');
@@ -38,8 +39,11 @@ export default function(pageRoot: string): ViewOP{
         addBlock(view, blockInfo) {
             return View.addBlock(root, view, blockInfo);
         },
-        addCustomComponent(view, libraryPath, blockInfo, content) {
-            return View.addCustomComponent(root, view, libraryPath, blockInfo, content);
+        addCustomComponent(view, blockInfo, content) {
+            return View.addCustomComponent(root, view, blockInfo, content);
+        },
+        getViewContent(view, viewInfo) {
+            return View.getViewContent(root, view, viewInfo);
         },
     } as ViewOP;
 }

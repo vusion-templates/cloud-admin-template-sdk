@@ -5,7 +5,12 @@ import { ProjectPath, LEVEL_ENUM } from '../common';
 import type Page from '../page';
 import Directory from '../common/directory';
 import { templatePath } from '../../utils';
-import { mergeCode, saveCode, addBlock, addCustomComponent } from 'vusion-api/out/designer/index';
+import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
+import type { ViewInfo } from 'vusion-api/src/designer/index';
+
+export {
+    ViewInfo
+}
 
 export type ViewOptions = {
     title: string;
@@ -64,24 +69,30 @@ export default class View extends Tree implements ProjectPath{
         return file.save(templateFile.load());
     }
 
-    static mergeCode(root: string, name: string, code: string, nodePath: string): ReturnType<typeof mergeCode> {
+    static async mergeCode(root: string, name: string, code: string, nodePath: string): Promise<typeof mergeCode> {
         const filePath = View.getFullPath(root, name);
-        return mergeCode(filePath, code, nodePath);
+        return await mergeCode(filePath, code, nodePath);
     }
 
-    static saveCode(root: string, name: string, type: string, content: string): ReturnType<typeof saveCode> {
+    static async saveCode(root: string, name: string, type: string, content: string): Promise<typeof saveCode> {
         const filePath = View.getFullPath(root, name);
-        return saveCode(filePath, type, content);
+        return await saveCode(filePath, type, content);
     }
 
-    static addBlock(root: string, name: string, blockInfo: BlockInfo): ReturnType<typeof addBlock> {
+    static async addBlock(root: string, name: string, blockInfo: BlockInfo): Promise<typeof addBlock> {
         const filePath = View.getFullPath(root, name);
-        return addBlock(filePath, blockInfo);
+        return await addBlock(filePath, blockInfo);
     }
 
-    static addCustomComponent(root: string, name: string, libraryPath: string, blockInfo: BlockInfo, content: string): ReturnType<typeof addBlock> {
+    static async addCustomComponent(root: string, name: string, blockInfo: BlockInfo, content: string): Promise<typeof addBlock> {
         const filePath = View.getFullPath(root, name);
-        return addCustomComponent(filePath, libraryPath, blockInfo, content);
+        return await addCustomComponent(filePath, root, blockInfo, content);
+    }
+
+    static async getViewContent(root: string, name: string, viewInfo: ViewInfo): Promise<typeof getViewContent> {
+        const filePath = View.getFullPath(root, name);
+        viewInfo.fullPath = filePath;
+        return await getViewContent(viewInfo);
     }
 
 }
