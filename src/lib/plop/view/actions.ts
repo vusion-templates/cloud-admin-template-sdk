@@ -5,6 +5,10 @@ interface ViewInfo {
     template?: string; // 页面模板，当前先直接使用区块代替
     page: string;
 }
+interface RemoveViewInfo {
+    path: string;
+    page: string;
+}
 export default {
     add(viewInfo: ViewInfo, project: Project): Array<Function|object|string> {
         const { path : pagePath, title, template, page } = viewInfo;
@@ -19,8 +23,8 @@ export default {
             
         ];
     },
-    remove(viewInfo: ViewInfo, project: Project): Array<Function|object|string> {
-        const { path : pagePath, title, template, page } = viewInfo;
+    remove(viewInfo: RemoveViewInfo, project: Project): Array<Function|object|string> {
+        const { path : pagePath, page } = viewInfo;
         return [
             function (): void {
                 const pageOP = project.page.load(page);

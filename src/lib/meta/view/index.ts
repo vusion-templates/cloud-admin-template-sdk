@@ -69,30 +69,24 @@ export default class View extends Tree implements ProjectPath{
         return file.save(templateFile.load());
     }
 
-    static async mergeCode(root: string, name: string, code: string, nodePath: string): Promise<typeof mergeCode> {
-        const filePath = View.getFullPath(root, name);
-        return await mergeCode(filePath, code, nodePath);
+    async mergeCode(code: string, nodePath: string): Promise<typeof mergeCode> {
+        return await mergeCode(this.fullPath, code, nodePath);
     }
 
-    static async saveCode(root: string, name: string, type: string, content: string): Promise<typeof saveCode> {
-        const filePath = View.getFullPath(root, name);
-        return await saveCode(filePath, type, content);
+    async saveCode(type: string, content: string): Promise<typeof saveCode> {
+        return await saveCode(this.fullPath, type, content);
     }
 
-    static async addBlock(root: string, name: string, blockInfo: BlockInfo): Promise<typeof addBlock> {
-        const filePath = View.getFullPath(root, name);
-        return await addBlock(filePath, blockInfo);
+    async addBlock(blockInfo: BlockInfo): Promise<typeof addBlock> {
+        return await addBlock(this.fullPath, blockInfo);
     }
 
-    static async addCustomComponent(root: string, name: string, blockInfo: BlockInfo, content: string): Promise<typeof addBlock> {
-        const filePath = View.getFullPath(root, name);
-        return await addCustomComponent(filePath, root, blockInfo, content);
-    }
-
-    static async getViewContent(root: string, name: string, viewInfo: ViewInfo): Promise<typeof getViewContent> {
-        const filePath = View.getFullPath(root, name);
-        viewInfo.fullPath = filePath;
+    async getViewContent(viewInfo: ViewInfo): Promise<typeof getViewContent> {
+        viewInfo.fullPath = this.fullPath;
         return await getViewContent(viewInfo);
     }
 
+    async addCustomComponent(blockInfo: BlockInfo, content: string): Promise<typeof addBlock> {
+        return await addCustomComponent(this.fullPath, this.getLevel(LEVEL_ENUM.project).getFullPath, blockInfo, content);
+    }
 }

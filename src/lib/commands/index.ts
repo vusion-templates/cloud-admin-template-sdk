@@ -73,21 +73,20 @@ export default function (root: string): Command {
         'view.remove': function (page: string, view: string) {
             return project.page.load(page).view.remove(view);
         } as typeof View.removeView,
-        'view.detail': async function (page: string, view: string, viewInfo: ViewInfo) {
-            return await project.page.load(page).view.getViewContent(view, viewInfo);
-        } as typeof View.getViewContent,
-
-        'view.mergeCode': async function (page: string, view: string, code: string, nodePath: string) {
-            return await project.page.load(page).view.mergeCode(view, code, nodePath);
-        } as typeof View.mergeCode,
-        'view.saveCode': async function (page: string, view: string, type: string, content: string) {
-            return await project.page.load(page).view.saveCode(view, type, content);
-        } as typeof View.saveCode,
-        'view.addBlock': async function (page: string, view: string, blockInfo: BlockInfo) {
-            return await project.page.load(page).view.addBlock(view, blockInfo);
-        } as typeof View.addBlock,
-        'view.addCustomComponent': async function (page: string, view: string, blockInfo: BlockInfo, content: string) {
-            return await project.page.load(page).view.addCustomComponent(view, blockInfo, content);
-        } as typeof View.addCustomComponent,
+        'view.detail': async function (page: string, view: string, viewInfo: ViewInfo): ReturnType<View["getViewContent"]> {
+            return await project.page.load(page).view.load(view).getViewContent(viewInfo);
+        },
+        'view.mergeCode': async function (page: string, view: string, code: string, nodePath: string): ReturnType<View["mergeCode"]> {
+            return await project.page.load(page).view.load(view).mergeCode(code, nodePath);
+        },
+        'view.saveCode': async function (page: string, view: string, type: string, content: string): ReturnType<View["saveCode"]> {
+            return await project.page.load(page).view.load(view).saveCode(type, content);
+        },
+        'view.addBlock': async function (page: string, view: string, blockInfo: BlockInfo): ReturnType<View["addBlock"]> {
+            return await project.page.load(page).view.load(view).addBlock(blockInfo);
+        },
+        'view.addCustomComponent': async function (page: string, view: string, blockInfo: BlockInfo, content: string): ReturnType<View["addCustomComponent"]> {
+            return await project.page.load(page).view.load(view).addCustomComponent(blockInfo, content);
+        },
     };
 }

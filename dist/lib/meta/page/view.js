@@ -41,7 +41,7 @@ function default_1(pageRoot) {
         },
         add(view, options) {
             return view_1.default.addView(root, view, options);
-        }
+        },
     };
 }
 exports.default = default_1;

@@ -1,5 +1,3 @@
-
-import * as fs from 'fs';
 import { project } from '../global';
 describe('View', () => {
     
@@ -17,9 +15,15 @@ describe('View', () => {
     });
     test('view save code', async () => {
         const page = project.page.load('viewTest');
-        await page.view.saveCode('a/b', 'template', '<div>test</div>');
+        await page.view.load('a/b').saveCode('template', '<div>test</div>');
         const content = page.view.load('a/b').getContent();
         expect(content.includes('<div>test</div>')).toBe(true);
+    });
+    test('view merge code', async () => {
+        const page = project.page.load('viewTest');
+        await page.view.load('a/b').mergeCode('<template><div>test1</div></template>', '/0');
+        const content = page.view.load('a/b').getContent();
+        expect(content.replace(/[ \r\n]/g, '').includes('<div><div>test1</div>test</div>')).toBe(true);
     });
     test('remove view', async () => {
         const page = project.page.load('viewTest');
