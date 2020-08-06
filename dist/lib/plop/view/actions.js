@@ -14,7 +14,7 @@ exports.default = {
         ];
     },
     remove(viewInfo, project) {
-        const { path: pagePath, title, template, page } = viewInfo;
+        const { path: pagePath, page } = viewInfo;
         return [
             function () {
                 const pageOP = project.page.load(page);

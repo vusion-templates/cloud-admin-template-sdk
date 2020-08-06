@@ -24,6 +24,6 @@ export default function(pageRoot: string): ViewOP{
         },
         add(view, options) {
             return View.addView(root, view, options);
-        }
+        },
     } as ViewOP;
 }

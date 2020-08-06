@@ -5,10 +5,27 @@ import { ProjectPath, LEVEL_ENUM } from '../common';
 import type Page from '../page';
 import Directory from '../common/directory';
 import { templatePath } from '../../utils';
+import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
+import type { ViewInfo } from 'vusion-api/src/designer/index';
+
+export {
+    ViewInfo
+}
+
 export type ViewOptions = {
     title: string;
     template?: string;
 };
+
+export type BlockInfo = {
+    name: string;
+    title: string;
+    tagName: string;
+    dependencies: any;
+    registry: string;
+    uuid?: string;
+};
+
 export default class View extends Tree implements ProjectPath{
 
     public file: File;
@@ -50,5 +67,26 @@ export default class View extends Tree implements ProjectPath{
         }
         const templateFile = new File(path.join(templatePath, 'view/index.vue'));
         return file.save(templateFile.load());
+    }
+
+    async mergeCode(code: string, nodePath: string): Promise<typeof mergeCode> {
+        return await mergeCode(this.fullPath, code, nodePath);
+    }
+
+    async saveCode(type: string, content: string): Promise<typeof saveCode> {
+        return await saveCode(this.fullPath, type, content);
+    }
+
+    async addBlock(blockInfo: BlockInfo): Promise<typeof addBlock> {
+        return await addBlock(this.fullPath, blockInfo);
+    }
+
+    async getViewContent(viewInfo: ViewInfo): Promise<typeof getViewContent> {
+        viewInfo.fullPath = this.fullPath;
+        return await getViewContent(viewInfo);
+    }
+
+    async addCustomComponent(blockInfo: BlockInfo, content: string): Promise<typeof addBlock> {
+        return await addCustomComponent(this.fullPath, this.getLevel(LEVEL_ENUM.project).getFullPath, blockInfo, content);
     }
 }

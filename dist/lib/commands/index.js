@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const project_1 = __importDefault(require("../meta/project"));
-const designer_1 = require("vusion-api/out/designer");
 function default_1(root) {
     const project = new project_1.default(root);
     return {
@@ -71,22 +70,29 @@ function default_1(root) {
         'view.remove': function (page, view) {
             return project.page.load(page).view.remove(view);
         },
-        'view.detail': function (page, view) {
-            return project.page.load(page).view.load(view).getContent();
-        },
-        'block.add': function (...args) {
+        'view.detail': function (page, view, viewInfo) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield designer_1.addBlock(...args);
+                return yield project.page.load(page).view.load(view).getViewContent(viewInfo);
             });
         },
-        'code.add': function (...args) {
+        'view.mergeCode': function (page, view, code, nodePath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield designer_1.addCode(...args);
+                return yield project.page.load(page).view.load(view).mergeCode(code, nodePath);
             });
         },
-        'layout.add': function (...args) {
+        'view.saveCode': function (page, view, type, content) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield designer_1.addLayout(...args);
+                return yield project.page.load(page).view.load(view).saveCode(type, content);
+            });
+        },
+        'view.addBlock': function (page, view, blockInfo) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield project.page.load(page).view.load(view).addBlock(blockInfo);
+            });
+        },
+        'view.addCustomComponent': function (page, view, blockInfo, content) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield project.page.load(page).view.load(view).addCustomComponent(blockInfo, content);
             });
         },
     };
