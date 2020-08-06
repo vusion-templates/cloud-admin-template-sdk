@@ -58,8 +58,8 @@ class Project extends tree_1.default {
         const server = this.getSubPath('server');
         this.serverPath = server === root ? '' : server;
         this.auth = new auth_1.default(this.clientPath, this);
-        this.page = page_1.default(this.clientPath);
-        this.service = service_1.default(this.clientPath);
+        this.page = page_1.default(this.clientPath, this);
+        this.service = service_1.default(this.clientPath, this);
     }
     loadDeps(parseTypes = {}, baseName) {
         return __awaiter(this, void 0, void 0, function* () {

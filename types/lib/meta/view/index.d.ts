@@ -21,6 +21,7 @@ export default class View extends Tree implements ProjectPath {
     file: File;
     constructor(name: string, root: string, parent: Page);
     static getFullPath: (root: string, name: string) => string;
+    static getAllViewsPath: (root: string) => string[];
     static getViewsPath: (root: string) => string[];
     getFullPath(): string;
     getContent(): string;

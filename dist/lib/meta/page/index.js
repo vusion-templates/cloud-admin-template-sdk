@@ -35,7 +35,7 @@ class Page extends tree_1.default {
         super(name, root, common_1.LEVEL_ENUM.page, parent);
         this.metaData = new metaData_1.default(parent.clientPath, name);
         this.routes = new routes_1.default(this.fullPath);
-        this.view = view_1.default(this.fullPath);
+        this.view = view_1.default(this.fullPath, this);
     }
     getFullPath() {
         return path.join(this.root, this.name);

@@ -22,7 +22,7 @@ export default class Tree {
     }
     public getLevel(level: LEVEL_ENUM): LevelType {
         let p = this as any;
-        while(p.level !== level) {
+        while(p && p.level !== level) {
             p = p.parent;
         }
         return p as LevelType;

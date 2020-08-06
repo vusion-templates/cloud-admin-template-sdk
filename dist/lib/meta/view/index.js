@@ -95,9 +95,15 @@ exports.default = View;
 View.getFullPath = function (root, name) {
     return path.join(root, name, 'index.vue');
 };
-View.getViewsPath = function (root) {
+View.getAllViewsPath = function (root) {
     const dirOP = new directory_1.default(root);
     return dirOP.dirAll().filter((item) => {
+        return item.endsWith('index.vue');
+    }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+};
+View.getViewsPath = function (root) {
+    const dirOP = new directory_1.default(root);
+    return dirOP.dir().filter((item) => {
         return item.endsWith('index.vue');
     }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
 };

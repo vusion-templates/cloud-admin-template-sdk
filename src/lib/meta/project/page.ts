@@ -1,6 +1,7 @@
 import * as path from 'path';
 import Page, { AddPage, RemovePage } from '../page';
 import { PlopConfig } from '../utils';
+import type Project from './';
 const getRootPath = function (root: string): string {
     return path.join(root, 'src/views');
 }
@@ -11,7 +12,7 @@ export interface PageOP {
     loadListPath(): string[];
     load(pageName: string): Page;
 }
-export default function(projectRoot: string): PageOP {
+export default function(projectRoot: string, project: Project): PageOP {
     const root = getRootPath(projectRoot);
     return {
         add(answers, config){
@@ -27,16 +28,16 @@ export default function(projectRoot: string): PageOP {
             });
         },
         loadList() {
-            const subDirList = this.loadPagesPath();
+            const subDirList = this.loadListPath();
             return subDirList.map((pageName) => {
-                return this.loadPage(pageName);
+                return this.load(pageName);
             });
         },
         loadListPath() {
             return Page.getPagesPath(root);
         },
         load(pageName) {
-            return new Page(pageName, root, this);
+            return new Page(pageName, root, project);
         }
     } as PageOP;
 }

@@ -1,4 +1,5 @@
 import Service from '../service';
+import type Project from './';
 export interface ServiceOP {
     loadList(): Service[];
     loadListPath(): string[];
@@ -6,4 +7,4 @@ export interface ServiceOP {
     remove(name: string): ReturnType<typeof Service.remove>;
     add(name: string, api?: string): ReturnType<typeof Service.add>;
 }
-export default function (projectRoot: string): ServiceOP;
+export default function (projectRoot: string, project: Project): ServiceOP;

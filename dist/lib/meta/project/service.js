@@ -27,19 +27,19 @@ const service_1 = __importDefault(require("../service"));
 const getRootPath = function (root) {
     return path.join(root, 'src/services');
 };
-function default_1(projectRoot) {
+function default_1(projectRoot, project) {
     const root = getRootPath(projectRoot);
     return {
         loadList() {
-            return this.loadServicesPath().map((service) => {
-                return this.loadService(service);
+            return this.loadListPath().map((service) => {
+                return this.load(service);
             });
         },
         loadListPath() {
             return service_1.default.getServicesPath(root);
         },
         load(name) {
-            return new service_1.default(name, root, this);
+            return new service_1.default(name, root, project);
         },
         remove(name) {
             return service_1.default.remove({

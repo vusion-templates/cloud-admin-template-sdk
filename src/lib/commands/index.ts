@@ -18,7 +18,7 @@ export default function (root: string): Command {
         'page.add'(answers): ReturnType<PageOP["add"]> {
             return project.page.add(answers);
         },
-
+        
         'page.remove'(answers): ReturnType<PageOP["remove"]> {
             return project.page.remove(answers);
         },

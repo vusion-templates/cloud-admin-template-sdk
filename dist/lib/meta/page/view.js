@@ -27,14 +27,19 @@ const view_1 = __importDefault(require("../view"));
 const getRootPath = function (root) {
     return path.join(root, 'views');
 };
-function default_1(pageRoot) {
+function default_1(pageRoot, page) {
     const root = getRootPath(pageRoot);
     return {
         loadListPath() {
             return view_1.default.getViewsPath(root);
         },
+        loadList() {
+            return this.loadListPath().map((view) => {
+                return this.load(view);
+            });
+        },
         load(viewPath) {
-            return new view_1.default(viewPath, root, this);
+            return new view_1.default(viewPath, root, page);
         },
         remove(view) {
             return view_1.default.removeView(root, view);

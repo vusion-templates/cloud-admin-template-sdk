@@ -38,9 +38,15 @@ export default class View extends Tree implements ProjectPath{
         return path.join(root, name, 'index.vue');
     }
 
-    static getViewsPath = function(root: string): string[] {
+    static getAllViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
         return dirOP.dirAll().filter((item) => {
+            return item.endsWith('index.vue');
+        }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+    }
+    static getViewsPath = function(root: string): string[] {
+        const dirOP = new Directory(root);
+        return dirOP.dir().filter((item) => {
             return item.endsWith('index.vue');
         }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
     }

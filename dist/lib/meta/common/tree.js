@@ -37,7 +37,7 @@ class Tree {
     }
     getLevel(level) {
         let p = this;
-        while (p.level !== level) {
+        while (p && p.level !== level) {
             p = p.parent;
         }
         return p;

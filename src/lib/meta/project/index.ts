@@ -37,8 +37,8 @@ export default class Project extends Tree implements ProjectPath {
         const server = this.getSubPath('server');
         this.serverPath = server === root ? '' : server;
         this.auth = new Auth(this.clientPath, this);
-        this.page = getPage(this.clientPath);
-        this.service = getService(this.clientPath);
+        this.page = getPage(this.clientPath, this);
+        this.service = getService(this.clientPath, this);
     }
     public async loadDeps(parseTypes: ParseTypes = {}, baseName?: string): ReturnType<typeof loadCustomComponentsData> {
         return await loadCustomComponentsData(this, parseTypes, baseName);

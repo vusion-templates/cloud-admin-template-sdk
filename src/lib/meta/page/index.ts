@@ -28,7 +28,7 @@ export default class Page extends Tree implements ProjectPath{
         super(name, root, LEVEL_ENUM.page, parent);
         this.metaData = new MetaData(parent.clientPath, name);
         this.routes = new Routes(this.fullPath);
-        this.view = getView(this.fullPath);
+        this.view = getView(this.fullPath, this);
     }
 
     static getPagesPath = function (root: string): string[] {

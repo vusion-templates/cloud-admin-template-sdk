@@ -27,7 +27,7 @@ const page_1 = __importDefault(require("../page"));
 const getRootPath = function (root) {
     return path.join(root, 'src/views');
 };
-function default_1(projectRoot) {
+function default_1(projectRoot, project) {
     const root = getRootPath(projectRoot);
     return {
         add(answers, config) {
@@ -37,16 +37,16 @@ function default_1(projectRoot) {
             return page_1.default.remove(answers, Object.assign({ root: projectRoot }, config));
         },
         loadList() {
-            const subDirList = this.loadPagesPath();
+            const subDirList = this.loadListPath();
             return subDirList.map((pageName) => {
-                return this.loadPage(pageName);
+                return this.load(pageName);
             });
         },
         loadListPath() {
             return page_1.default.getPagesPath(root);
         },
         load(pageName) {
-            return new page_1.default(pageName, root, this);
+            return new page_1.default(pageName, root, project);
         }
     };
 }
