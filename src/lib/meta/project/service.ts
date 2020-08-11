@@ -2,7 +2,7 @@ import * as path from 'path';
 import Service from '../service';
 import type Project from './';
 const getRootPath = function (root: string): string {
-    return path.join(root, 'src/services');
+    return path.join(root, 'src/global/services');
 }
 export interface ServiceOP {
     loadList(): Service[];

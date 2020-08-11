@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
 const service_1 = __importDefault(require("../service"));
 const getRootPath = function (root) {
-    return path.join(root, 'src/services');
+    return path.join(root, 'src/global/services');
 };
 function default_1(projectRoot, project) {
     const root = getRootPath(projectRoot);
