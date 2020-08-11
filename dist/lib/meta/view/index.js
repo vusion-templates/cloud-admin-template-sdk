@@ -18,20 +18,92 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-class View {
-    constructor(name, module, page, root, parent) {
-        this.name = name;
-        this.module = module;
-        this.page = page;
-        this.root = root;
-        if (parent) {
-            this.parent = parent;
-        }
+const tree_1 = __importDefault(require("../common/tree"));
+const file_1 = __importDefault(require("../common/file"));
+const common_1 = require("../common");
+const directory_1 = __importDefault(require("../common/directory"));
+const utils_1 = require("../../utils");
+const index_1 = require("vusion-api/out/designer/index");
+class View extends tree_1.default {
+    constructor(name, root, parent) {
+        super(name, root, common_1.LEVEL_ENUM.view, parent);
+        this.file = new file_1.default(this.fullPath);
     }
     getFullPath() {
-        return path.join(this.root, this.page, this.module, 'views', this.name);
+        return View.getFullPath(this.root, this.name);
+    }
+    getContent() {
+        return this.file.load();
+    }
+    static removeView(root, name) {
+        const file = new file_1.default(View.getFullPath(root, name));
+        if (!file.exists()) {
+            throw new Error(`file is not exist`);
+        }
+        return file.remove();
+    }
+    static addView(root, name, options) {
+        const file = new file_1.default(View.getFullPath(root, name));
+        if (file.exists()) {
+            throw new Error(`file is exist`);
+        }
+        const templateFile = new file_1.default(path.join(utils_1.templatePath, 'view/index.vue'));
+        return file.save(templateFile.load());
+    }
+    mergeCode(code, nodePath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield index_1.mergeCode(this.fullPath, code, nodePath);
+        });
+    }
+    saveCode(type, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield index_1.saveCode(this.fullPath, type, content);
+        });
+    }
+    addBlock(blockInfo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield index_1.addBlock(this.fullPath, blockInfo);
+        });
+    }
+    getViewContent(viewInfo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            viewInfo.fullPath = this.fullPath;
+            return yield index_1.getViewContent(viewInfo);
+        });
+    }
+    addCustomComponent(blockInfo, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield index_1.addCustomComponent(this.fullPath, this.getLevel(common_1.LEVEL_ENUM.project).getFullPath, blockInfo, content);
+        });
     }
 }
 exports.default = View;
+View.getFullPath = function (root, name) {
+    return path.join(root, name, 'index.vue');
+};
+View.getAllViewsPath = function (root) {
+    const dirOP = new directory_1.default(root);
+    return dirOP.dirAll().filter((item) => {
+        return item.endsWith('index.vue');
+    }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+};
+View.getViewsPath = function (root) {
+    const dirOP = new directory_1.default(root);
+    return dirOP.dir().filter((item) => {
+        return item.endsWith('index.vue');
+    }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+};

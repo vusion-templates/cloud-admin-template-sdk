@@ -8,5 +8,15 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
-    ]
+    ],
+    "overrides": [
+        {
+          "files": ["**/*.js"],
+          "rules": {
+            "no-restricted-globals": "off",
+            "@typescript-eslint/no-var-requires": "off",
+            "no-restricted-syntax": "off"
+          }
+        }
+      ]
 }

@@ -19,12 +19,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAppConfig = exports.getFile = exports.fixSlash = void 0;
+exports.getAppConfig = exports.getFile = exports.templatePath = exports.fixSlash = void 0;
 const path = __importStar(require("path"));
-const fs = __importStar(require("fs"));
+const fs = __importStar(require("fs-extra"));
 exports.fixSlash = function (filePath) {
     return filePath.split(path.sep).join('/');
 };
+exports.templatePath = path.join(__dirname, '../../../template');
 exports.getFile = function (filePath) {
     let obj;
     if (fs.existsSync(filePath)) {
