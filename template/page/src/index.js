@@ -1,5 +1,6 @@
 import '@/global/styles/theme.css';
 
+import platformConfig from '../../../platform.config.json';
 import Vue from 'vue';
 import App from './index.vue';
 import { initRouter } from './router';
@@ -11,7 +12,7 @@ import micro from './micro';
 import appConfig from './app.config';
 import { initMiddleware } from '@/global/middleware';
 // import { initI18n } from '@/global/page/i18n';
-
+window.appInfo = Object.assign(appConfig, platformConfig);
 Vue.use(installServices);
 
 initMiddleware(appConfig);

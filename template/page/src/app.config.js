@@ -4,6 +4,7 @@ export default {
     project: '{{ appName }}',
     domainName: '{{ appName }}',
     auth: {{ auth }},
+    tenant: {{ tenant }},
     router: {
         notFound: '/',
         middleware: ['lock', 'auth'],
