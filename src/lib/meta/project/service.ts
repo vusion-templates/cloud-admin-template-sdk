@@ -15,7 +15,7 @@ export default function(projectRoot: string, project: Project): ServiceOP {
     const root = getRootPath(projectRoot);
     return {
         loadList() {
-            return this.loadListPath().map((service) => {
+            return this.loadListPath().map((service: string) => {
                 return this.load(service);
             });
         },

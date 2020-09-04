@@ -32,16 +32,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-const tree_1 = __importDefault(require("../common/tree"));
-const file_1 = __importDefault(require("../common/file"));
+const Tree_1 = __importDefault(require("../common/Tree"));
+const File_1 = __importDefault(require("../common/File"));
 const common_1 = require("../common");
-const directory_1 = __importDefault(require("../common/directory"));
+const Directory_1 = __importDefault(require("../common/Directory"));
 const utils_1 = require("../../utils");
-const index_1 = require("vusion-api/out/designer/index");
-class View extends tree_1.default {
+const index_1 = require("vusion-api/src/designer/index");
+class View extends Tree_1.default {
     constructor(name, root, parent) {
         super(name, root, common_1.LEVEL_ENUM.view, parent);
-        this.file = new file_1.default(this.fullPath);
+        this.file = new File_1.default(this.fullPath);
     }
     getFullPath() {
         return View.getFullPath(this.root, this.name);
@@ -50,18 +50,18 @@ class View extends tree_1.default {
         return this.file.load();
     }
     static removeView(root, name) {
-        const file = new file_1.default(View.getFullPath(root, name));
+        const file = new File_1.default(View.getFullPath(root, name));
         if (!file.exists()) {
             throw new Error(`file is not exist`);
         }
         return file.remove();
     }
     static addView(root, name, options) {
-        const file = new file_1.default(View.getFullPath(root, name));
+        const file = new File_1.default(View.getFullPath(root, name));
         if (file.exists()) {
             throw new Error(`file is exist`);
         }
-        const templateFile = new file_1.default(path.join(utils_1.templatePath, 'view/index.vue'));
+        const templateFile = new File_1.default(path.join(utils_1.templatePath, 'view/index.vue'));
         return file.save(templateFile.load());
     }
     mergeCode(code, nodePath) {
@@ -87,7 +87,7 @@ class View extends tree_1.default {
     }
     addCustomComponent(blockInfo, content) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield index_1.addCustomComponent(this.fullPath, this.getLevel(common_1.LEVEL_ENUM.project).getFullPath, blockInfo, content);
+            return yield index_1.addCustomComponent(this.fullPath, this.getLevel(common_1.LEVEL_ENUM.project).getFullPath(), blockInfo, content);
         });
     }
 }
@@ -96,13 +96,15 @@ View.getFullPath = function (root, name) {
     return path.join(root, name, 'index.vue');
 };
 View.getAllViewsPath = function (root) {
-    const dirOP = new directory_1.default(root);
+    const dirOP = new Directory_1.default(root);
+    console.log(root, dirOP.dirAll());
     return dirOP.dirAll().filter((item) => {
         return item.endsWith('index.vue');
     }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
 };
 View.getViewsPath = function (root) {
-    const dirOP = new directory_1.default(root);
+    const dirOP = new Directory_1.default(root);
+    console.log(root, dirOP.dir());
     return dirOP.dir().filter((item) => {
         return item.endsWith('index.vue');
     }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));

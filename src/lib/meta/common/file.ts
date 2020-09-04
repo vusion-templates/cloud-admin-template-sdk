@@ -1,46 +1,50 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
+
 type Options = {
     willCreate?: boolean;
     defaultContent?: string;
 };
+
+/**
+ * 同步处理文件类
+ */
 export default class File {
-    fileName: string;
-    willCreate: string;
-    constructor(fileName: string, options?: Options) {
-        this.fileName = fileName;
-        if (options && options.willCreate && !fs.existsSync(fileName)) {
-            fs.mkdirpSync(path.dirname(fileName));
-            fs.writeFileSync(fileName, options.defaultContent);
+    filePath: string;
+    constructor(filePath: string, options?: Options) {
+        this.filePath = filePath;
+        if (options && options.willCreate && !fs.existsSync(filePath)) {
+            fs.ensureFileSync(filePath);
+            fs.writeFileSync(filePath, options.defaultContent);
         }
     }
-    exists(): ReturnType<typeof fs.existsSync> {
-        return fs.existsSync(this.fileName);
+    exists() {
+        return fs.existsSync(this.filePath);
     }
     loadOrCreate(content: any): string {
-        if (!fs.existsSync(this.fileName)) {
+        if (!fs.existsSync(this.filePath)) {
             this.save(content || '');
         }
         return this.load();
     }
-    loadJSONOrCreate(content: any): string {
-        if (!fs.existsSync(this.fileName)) {
+    loadJSONOrCreate(content: any): any {
+        if (!fs.existsSync(this.filePath)) {
             this.save(content || '');
         }
         return this.loadJSON();
     }
     load(): string {
-        return fs.readFileSync(this.fileName).toString();
+        return fs.readFileSync(this.filePath).toString();
     }
-    save(content: string | object): ReturnType<typeof fs.writeFileSync> {
-        fs.mkdirpSync(path.dirname(this.fileName));
-        return fs.writeFileSync(this.fileName, typeof content === 'string' ? content : JSON.stringify(content, null, 4));
+    save(content: string | object) {
+        fs.ensureFileSync(this.filePath);
+        return fs.writeFileSync(this.filePath, typeof content === 'string' ? content : JSON.stringify(content, null, 4));
     }
-    loadJSON(): ReturnType<typeof JSON.parse>{
+    loadJSON() {
         const content = this.load();
         return JSON.parse(content);
     }
-    remove(): ReturnType<typeof fs.removeSync> {
-        return fs.removeSync(this.fileName);
+    remove() {
+        return fs.removeSync(this.filePath);
     }
 }

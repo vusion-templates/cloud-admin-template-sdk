@@ -33,10 +33,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const component_1 = __importDefault(require("../component"));
 const common_1 = require("../common");
-const tree_1 = __importDefault(require("../common/tree"));
+const Tree_1 = __importDefault(require("../common/Tree"));
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs-extra"));
-const file_1 = __importDefault(require("../common/file"));
+const File_1 = __importDefault(require("../common/File"));
 const resolve_1 = __importDefault(require("./config/resolve"));
 const deps_1 = require("./deps");
 const auth_1 = __importDefault(require("./auth"));
@@ -46,11 +46,14 @@ const getName = function (dir) {
     const packagePath = path.join(dir, 'package.json');
     let name = path.basename(dir);
     if (fs.existsSync(packagePath)) {
-        name = new file_1.default(packagePath).loadJSON().name;
+        name = new File_1.default(packagePath).loadJSON().name;
     }
     return name;
 };
-class Project extends tree_1.default {
+/**
+ * 项目类
+ */
+class Project extends Tree_1.default {
     constructor(root) {
         const name = getName(root);
         super(name, root, common_1.LEVEL_ENUM.project, null);
@@ -72,16 +75,16 @@ class Project extends tree_1.default {
         });
     }
     getPackage() {
-        return new file_1.default(path.join(this.clientPath, 'package.json')).loadJSON();
-    }
-    getFullPath() {
-        return this.root;
+        return new File_1.default(path.join(this.clientPath, 'package.json')).loadJSON();
     }
     loadUILibrary(name, parseTypes = {}) {
         return deps_1.loadUILibrary(name, this, parseTypes);
     }
     config() {
         return resolve_1.default(path.join(this.clientPath));
+    }
+    getFullPath() {
+        return this.root;
     }
     getSubPath(subPath) {
         const clientPath = path.join(this.fullPath, subPath);

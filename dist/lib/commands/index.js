@@ -19,6 +19,9 @@ function default_1(root) {
         'config.resolve': function () {
             return project.config();
         },
+        'page.list'() {
+            return project.page.loadList();
+        },
         'page.add'(answers) {
             return project.page.add(answers);
         },
@@ -62,7 +65,7 @@ function default_1(root) {
             return project.service.remove(...args);
         },
         'view.list'(page) {
-            return project.page.load(page).view.loadListPath();
+            return project.page.load(page).view.loadList();
         },
         'view.add': function (page, view, options) {
             return project.page.load(page).view.add(view, options);

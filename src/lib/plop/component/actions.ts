@@ -4,7 +4,7 @@ const fixComponentName = function (name: string): string {
     return name.replace(/^[a-z]/, (a) => a.toUpperCase()).replace(/-([a-z])/g, (a, b) => b.toUpperCase()).replace('.vue', '');
 };
 export default  {
-    add(answers, root: string): Array<Function|object|string> {
+    add(answers: any, root: string): Array<Function|object|string> {
         const basePath = path.join(root, './src/global/components');
         const sub = answers.directory.split('/');
         sub.unshift('');

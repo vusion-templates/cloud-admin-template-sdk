@@ -23,12 +23,12 @@ export default function(plop: NodePlop.API): any {
                 name: 'path',
                 required: true,
                 message: '请选择要删除的页面路径',
-                choices(answers): string[] {
+                choices(answers: any): string[] {
                     return project.page.load(answers.page || pages[0]).view.loadListPath();
                 },
             },
         ],
-        actions(answers): ReturnType<typeof actions.remove> {
+        actions(answers: any): ReturnType<typeof actions.remove> {
             answers.page = answers.page || pages[0];
             const { path: pagePath } = answers;
             return [

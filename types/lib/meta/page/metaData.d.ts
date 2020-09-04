@@ -3,5 +3,5 @@ export default class MetaData {
     name: string;
     constructor(root: string, name: string);
     load(): object;
-    save(content: any): void;
+    save(content: object): void;
 }

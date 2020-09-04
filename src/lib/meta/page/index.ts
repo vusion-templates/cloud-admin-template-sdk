@@ -1,8 +1,8 @@
 import * as path from 'path';
 import MetaData from './metaData';
 import Utils, { PlopConfig } from '../utils';
-import Tree from '../common/tree';
-import Directory from '../common/directory';
+import Tree from '../common/Tree';
+import Directory from '../common/Directory';
 import { ProjectPath, LEVEL_ENUM } from '../common';
 import Routes from '../routes';
 import type Project from '../project';

@@ -4,25 +4,27 @@ import type { ViewOP } from '../meta/page/view';
 import type { ServiceOP } from '../meta/project/service';
 import type View from '../meta/view';
 import type { BlockInfo, ViewInfo } from '../meta/view';
+import { AddPage, RemovePage } from '../meta/page';
 
 export interface Command {
     [prop: string]: any;
 }
 export default function (root: string): Command {
     const project = new Project(root);
+    
     return {
         'config.resolve': function () {
             return project.config();
         } as Project["config"],
-
-        'page.add'(answers): ReturnType<PageOP["add"]> {
+        'page.list'(): ReturnType<PageOP['loadList']> {
+            return project.page.loadList();
+        },
+        'page.add'(answers: AddPage): ReturnType<PageOP["add"]> {
             return project.page.add(answers);
         },
-        
-        'page.remove'(answers): ReturnType<PageOP["remove"]> {
+        'page.remove'(answers: RemovePage): ReturnType<PageOP["remove"]> {
             return project.page.remove(answers);
         },
-
         'auth.load': function () {
             return project.auth.load();
         } as Project["auth"]["load"],
@@ -63,8 +65,8 @@ export default function (root: string): Command {
             return project.service.remove(...args);
         } as ServiceOP["remove"],
 
-        'view.list'(page: string): ReturnType<ViewOP["loadListPath"]> {
-            return project.page.load(page).view.loadListPath();
+        'view.list'(page: string): ReturnType<ViewOP["loadList"]> {
+            return project.page.load(page).view.loadList();
         },
         'view.add': function (page: string, view: string, options) {
             return project.page.load(page).view.add(view, options);
@@ -79,7 +81,7 @@ export default function (root: string): Command {
         'view.mergeCode': async function (page: string, view: string, code: string, nodePath: string): ReturnType<View["mergeCode"]> {
             return await project.page.load(page).view.load(view).mergeCode(code, nodePath);
         },
-        'view.saveCode': async function (page: string, view: string, type: string, content: string): ReturnType<View["saveCode"]> {
+        'view.saveCode': async function (page: string, view: string, type: 'template' | 'script' | 'style', content: string): ReturnType<View["saveCode"]> {
             return await project.page.load(page).view.load(view).saveCode(type, content);
         },
         'view.addBlock': async function (page: string, view: string, blockInfo: BlockInfo): ReturnType<View["addBlock"]> {

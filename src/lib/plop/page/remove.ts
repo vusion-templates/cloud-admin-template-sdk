@@ -2,8 +2,9 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import chalk = require('chalk');
 import actions from './actions';
+import type NodePlop from '../../plop';
 
-export default function(plop): any {
+export default function(plop: NodePlop.API): any {
     const dest = plop.getDestBasePath();
     return {
         prompts: [
@@ -13,7 +14,7 @@ export default function(plop): any {
                 required: true,
                 message: '请选择要删除的入口页名称',
                 choices(): string[] {
-                    const pages = [];
+                    const pages: string[] = [];
                     const viewsRoot = path.join(dest, './src/views');
                     fs.readdirSync(viewsRoot).forEach((innerDir) => {
                         const stat = fs.statSync(path.resolve(viewsRoot, innerDir));
@@ -25,7 +26,7 @@ export default function(plop): any {
                 },
             },
         ],
-        actions(answers): ReturnType<typeof actions.remove> {
+        actions(answers: any): ReturnType<typeof actions.remove> {
             const { name } = answers;
             return [
                 ...actions.remove(answers, dest),

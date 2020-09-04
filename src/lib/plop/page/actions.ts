@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { fixSlash } from '../../utils';
-import * as ms from 'vusion-api/out/ms';
+import * as ms from 'vusion-api/src/ms';
 import pagesUtil from './pages';
 interface PageInfo {
     name: string;

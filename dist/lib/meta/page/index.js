@@ -25,12 +25,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
 const metaData_1 = __importDefault(require("./metaData"));
 const utils_1 = __importDefault(require("../utils"));
-const tree_1 = __importDefault(require("../common/tree"));
-const directory_1 = __importDefault(require("../common/directory"));
+const Tree_1 = __importDefault(require("../common/Tree"));
+const Directory_1 = __importDefault(require("../common/Directory"));
 const common_1 = require("../common");
 const routes_1 = __importDefault(require("../routes"));
 const view_1 = __importDefault(require("./view"));
-class Page extends tree_1.default {
+class Page extends Tree_1.default {
     constructor(name, root, parent) {
         super(name, root, common_1.LEVEL_ENUM.page, parent);
         this.metaData = new metaData_1.default(parent.clientPath, name);
@@ -51,5 +51,5 @@ class Page extends tree_1.default {
 }
 exports.default = Page;
 Page.getPagesPath = function (root) {
-    return new directory_1.default(root).dir();
+    return new Directory_1.default(root).dir();
 };

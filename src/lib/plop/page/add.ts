@@ -2,7 +2,9 @@ import chalk = require('chalk');
 import * as path from 'path';
 import actions from './actions';
 import pagesUtil from './pages';
-export default function(plop): any {
+import type NodePlop from '../../plop';
+
+export default function(plop: NodePlop.API): any {
     const dest = plop.getDestBasePath();
     return {
         prompts: [
@@ -37,7 +39,7 @@ export default function(plop): any {
                 }
             },
         ],
-        actions(answers): ReturnType<typeof actions.add> {
+        actions(answers: any): ReturnType<typeof actions.add> {
             const { name } = answers;
             answers.appName = require(path.join(dest, 'package.json')).name.replace(/-client$/, '');
             return [

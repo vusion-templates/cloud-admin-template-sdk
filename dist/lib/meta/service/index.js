@@ -26,16 +26,16 @@ const fs = __importStar(require("fs-extra"));
 const path = __importStar(require("path"));
 const utils_1 = require("../../utils");
 const common_1 = require("../common");
-const tree_1 = __importDefault(require("../common/tree"));
-const file_1 = __importDefault(require("../common/file"));
-const directory_1 = __importDefault(require("../common/directory"));
-class Service extends tree_1.default {
+const Tree_1 = __importDefault(require("../common/Tree"));
+const File_1 = __importDefault(require("../common/File"));
+const Directory_1 = __importDefault(require("../common/Directory"));
+class Service extends Tree_1.default {
     constructor(name, root, parent) {
         super(name, root, common_1.LEVEL_ENUM.service, parent);
         this.subFiles = {
-            api: new file_1.default(path.join(this.fullPath, 'api.json')),
-            config: new file_1.default(path.join(this.fullPath, 'api.config.js')),
-            index: new file_1.default(path.join(this.fullPath, 'index.js')),
+            api: new File_1.default(path.join(this.fullPath, 'api.json')),
+            config: new File_1.default(path.join(this.fullPath, 'api.config.js')),
+            index: new File_1.default(path.join(this.fullPath, 'index.js')),
         };
     }
     getFullPath() {
@@ -54,24 +54,24 @@ class Service extends tree_1.default {
         content.index && this.subFiles.api.save(content.index);
     }
     rename(newName) {
-        new directory_1.default(this.fullPath).rename(newName);
+        new Directory_1.default(this.fullPath).rename(newName);
     }
     static add(answers) {
         const dir = path.join(answers.root, answers.name);
         const tplPath = path.resolve(utils_1.templatePath, 'service');
         fs.copySync(tplPath, dir);
         if (answers.api) {
-            const api = new file_1.default(path.join(dir, 'api.json'));
+            const api = new File_1.default(path.join(dir, 'api.json'));
             api.save(answers.api);
         }
     }
     static remove(answers) {
         const dir = path.join(answers.root, answers.name);
-        return new directory_1.default(dir).remove();
+        return new Directory_1.default(dir).remove();
     }
 }
 exports.default = Service;
 Service.getServicesPath = function (root) {
-    const services = new directory_1.default(root).dir();
+    const services = new Directory_1.default(root).dir();
     return services;
 };

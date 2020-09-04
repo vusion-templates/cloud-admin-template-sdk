@@ -1,5 +1,5 @@
 import * as path from 'path';
-import File from '../common/file';
+import File from '../common/File';
 export default class Route {
     public root: string;
     public fullPath: string;

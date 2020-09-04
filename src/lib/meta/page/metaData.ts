@@ -1,5 +1,5 @@
 import * as path from 'path';
-import File from '../common/file';
+import File from '../common/File';
 export default class MetaData {
     public root: string;
     public name: string;
@@ -15,7 +15,7 @@ export default class MetaData {
         }
         return json[this.name];
     }
-    public save(content): void {
+    public save(content: object): void {
         const pages = new File(path.join(this.root, 'pages.json'));
         const json = pages.loadJSON();
         json[this.name] = Object.assign({}, json[this.name], content);

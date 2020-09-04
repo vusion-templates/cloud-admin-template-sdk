@@ -29,7 +29,7 @@ export default function(projectRoot: string, project: Project): PageOP {
         },
         loadList() {
             const subDirList = this.loadListPath();
-            return subDirList.map((pageName) => {
+            return subDirList.map((pageName: string) => {
                 return this.load(pageName);
             });
         },

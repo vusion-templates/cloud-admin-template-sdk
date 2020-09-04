@@ -3,6 +3,7 @@ import type { ViewOptions } from '../view';
 import type Page from './';
 export interface ViewOP {
     loadListPath(): ReturnType<typeof View.getViewsPath>;
+    loadList(): Array<View>;
     load(viewPath: string): View;
     remove(view: string): ReturnType<typeof View.removeView>;
     add(view: string, options?: ViewOptions): ReturnType<typeof View.addView>;

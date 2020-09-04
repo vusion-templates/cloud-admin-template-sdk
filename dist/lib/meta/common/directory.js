@@ -19,20 +19,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = __importStar(require("fs-extra"));
 const path = __importStar(require("path"));
+const fs = __importStar(require("fs-extra"));
 class Directory {
-    constructor(directoryPath) {
-        this.directoryPath = directoryPath;
+    constructor(filePath) {
+        this.filePath = filePath;
     }
     remove() {
-        return fs.removeSync(this.directoryPath);
+        return fs.removeSync(this.filePath);
     }
     dir(options) {
-        if (!fs.existsSync(this.directoryPath)) {
+        if (!fs.existsSync(this.filePath)) {
             return [];
         }
-        return fs.readdirSync(this.directoryPath, options);
+        return fs.readdirSync(this.filePath, options);
     }
     dirAll() {
         function getFiles(dir, result, prefix = '') {
@@ -46,10 +46,10 @@ class Directory {
             });
             return result;
         }
-        return getFiles(this.directoryPath, []);
+        return getFiles(this.filePath, []);
     }
     rename(name) {
-        return fs.renameSync(this.directoryPath, path.join(this.directoryPath, '..', name));
+        return fs.renameSync(this.filePath, path.join(this.filePath, '..', name));
     }
 }
 exports.default = Directory;

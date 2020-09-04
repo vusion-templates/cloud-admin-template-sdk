@@ -29,7 +29,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-const index_1 = require("vusion-api/out/designer/index");
+const designer_1 = require("vusion-api/src/designer");
 class ModuleComponent {
     constructor(name, root) {
         this.name = name;
@@ -41,7 +41,7 @@ class ModuleComponent {
     }
     parse(parseTypes = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield index_1.loadComponentData(this.fullPath, parseTypes);
+            return yield designer_1.loadComponentData(this.fullPath, parseTypes);
         });
     }
 }

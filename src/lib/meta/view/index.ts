@@ -1,11 +1,11 @@
 import * as path from 'path';
-import Tree from '../common/tree';
-import File from '../common/file';
+import Tree from '../common/Tree';
+import File from '../common/File';
 import { ProjectPath, LEVEL_ENUM } from '../common';
 import type Page from '../page';
-import Directory from '../common/directory';
+import Directory from '../common/Directory';
 import { templatePath } from '../../utils';
-import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
+import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/src/designer/index';
 import type { ViewInfo } from 'vusion-api/src/designer/index';
 
 export {
@@ -22,6 +22,7 @@ export type BlockInfo = {
     title: string;
     tagName: string;
     dependencies: any;
+    vusionDependencies: any;
     registry: string;
     uuid?: string;
 };
@@ -40,12 +41,14 @@ export default class View extends Tree implements ProjectPath{
 
     static getAllViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
+        console.log (root , dirOP.dirAll())
         return dirOP.dirAll().filter((item) => {
             return item.endsWith('index.vue');
         }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
     }
     static getViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
+        console.log (root , dirOP.dir())
         return dirOP.dir().filter((item) => {
             return item.endsWith('index.vue');
         }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
@@ -75,24 +78,24 @@ export default class View extends Tree implements ProjectPath{
         return file.save(templateFile.load());
     }
 
-    async mergeCode(code: string, nodePath: string): Promise<typeof mergeCode> {
+    async mergeCode(code: string, nodePath: string) {
         return await mergeCode(this.fullPath, code, nodePath);
     }
 
-    async saveCode(type: string, content: string): Promise<typeof saveCode> {
+    async saveCode(type: 'template' | 'script' | 'style', content: string) {
         return await saveCode(this.fullPath, type, content);
     }
 
-    async addBlock(blockInfo: BlockInfo): Promise<typeof addBlock> {
+    async addBlock(blockInfo: BlockInfo) {
         return await addBlock(this.fullPath, blockInfo);
     }
 
-    async getViewContent(viewInfo: ViewInfo): Promise<typeof getViewContent> {
+    async getViewContent(viewInfo: ViewInfo) {
         viewInfo.fullPath = this.fullPath;
         return await getViewContent(viewInfo);
     }
 
-    async addCustomComponent(blockInfo: BlockInfo, content: string): Promise<typeof addBlock> {
-        return await addCustomComponent(this.fullPath, this.getLevel(LEVEL_ENUM.project).getFullPath, blockInfo, content);
+    async addCustomComponent(blockInfo: BlockInfo, content: string) {
+        return await addCustomComponent(this.fullPath, this.getLevel(LEVEL_ENUM.project).getFullPath(), blockInfo, content);
     }
 }

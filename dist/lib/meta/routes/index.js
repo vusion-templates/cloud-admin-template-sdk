@@ -23,13 +23,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-const file_1 = __importDefault(require("../common/file"));
+const File_1 = __importDefault(require("../common/File"));
 class Route {
     constructor(root) {
         this.root = root;
         const fullPath = this.fullPath = path.join(root, 'routes.map.js');
         this.subFiles = {
-            index: new file_1.default(fullPath),
+            index: new File_1.default(fullPath),
         };
     }
 }

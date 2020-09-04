@@ -4,6 +4,7 @@ import type { ViewOptions } from '../view';
 import type Page from './';
 export interface ViewOP {
     loadListPath(): ReturnType<typeof View.getViewsPath>;
+    loadList(): Array<View>;
     load(viewPath: string): View;
     remove(view: string): ReturnType<typeof View.removeView>;
     add(view: string, options?: ViewOptions): ReturnType<typeof View.addView>;
@@ -14,21 +15,21 @@ const getRootPath = function (root: string): string {
 export default function(pageRoot: string, page: Page): ViewOP{
     const root = getRootPath(pageRoot);
     return {
-        loadListPath(){
+        loadListPath() {
             return View.getViewsPath(root);
         },
         loadList(){
-            return this.loadListPath().map((view) => {
+            return this.loadListPath().map((view: string) => {
                 return this.load(view);
             });
         },
-        load(viewPath) {
+        load(viewPath: string) {
             return new View(viewPath, root, page);
         },
-        remove(view) {
+        remove(view: string) {
             return View.removeView(root, view);
         },
-        add(view, options) {
+        add(view: string, options) {
             return View.addView(root, view, options);
         },
     } as ViewOP;

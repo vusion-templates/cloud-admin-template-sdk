@@ -1,6 +1,6 @@
 import MetaData from './metaData';
 import { PlopConfig } from '../utils';
-import Tree from '../common/tree';
+import Tree from '../common/Tree';
 import { ProjectPath } from '../common';
 import Routes from '../routes';
 import type Project from '../project';

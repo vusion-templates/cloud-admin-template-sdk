@@ -23,14 +23,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-const file_1 = __importDefault(require("../common/file"));
+const File_1 = __importDefault(require("../common/File"));
 class MetaData {
     constructor(root, name) {
         this.root = root;
         this.name = name;
     }
     load() {
-        const pages = new file_1.default(path.join(this.root, 'pages.json'));
+        const pages = new File_1.default(path.join(this.root, 'pages.json'));
         const json = pages.loadJSON();
         if (!json[this.name]) {
             throw new Error(`page:${this.name} isn't exists`);
@@ -38,7 +38,7 @@ class MetaData {
         return json[this.name];
     }
     save(content) {
-        const pages = new file_1.default(path.join(this.root, 'pages.json'));
+        const pages = new File_1.default(path.join(this.root, 'pages.json'));
         const json = pages.loadJSON();
         json[this.name] = Object.assign({}, json[this.name], content);
         pages.save(json);

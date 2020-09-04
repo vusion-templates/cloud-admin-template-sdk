@@ -1,6 +1,6 @@
 import ModuleComponent from '../../component/module';
-import type { ParseTypes } from 'vusion-api/src/designer/index';
-import type { loadExternalLibrary as LoadExternalLibrary } from 'vusion-api/src/designer/index';
+import type { ParseTypes } from 'vusion-api/src/designer';
+import type { loadExternalLibrary as LoadExternalLibrary } from 'vusion-api/src/designer';
 import Project from '../index';
 export { ParseTypes };
 export declare const loadCustomComponentsData: (project: Project, parseTypes?: ParseTypes, baseName?: string) => Promise<ReturnType<ModuleComponent["parse"]>[]>;

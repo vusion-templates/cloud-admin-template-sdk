@@ -1,22 +1,23 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
+
 export default class Directory {
-    public directoryPath: string;
-    constructor(directoryPath: string) {
-        this.directoryPath = directoryPath;
+    public filePath: string;
+    constructor(filePath: string) {
+        this.filePath = filePath;
     }
-    remove(): ReturnType<typeof fs.removeSync> {
-        return fs.removeSync(this.directoryPath);
+    remove() {
+        return fs.removeSync(this.filePath);
     }
-    dir(options?): string[]{
-        if (!fs.existsSync(this.directoryPath)) {
+    dir(options?: any): string[] {
+        if (!fs.existsSync(this.filePath)) {
             return [];
         }
-        return fs.readdirSync(this.directoryPath, options);
+        return fs.readdirSync(this.filePath, options);
     }
-    dirAll(): string[]{
-        function getFiles (dir, result, prefix = ''): string[] {
-            fs.readdirSync(dir, {withFileTypes: true}).forEach((file) => {
+    dirAll(): string[] {
+        function getFiles (dir: string, result: string[], prefix = ''): string[] {
+            fs.readdirSync(dir, { withFileTypes: true }).forEach((file) => {
                     if (file.isDirectory()) {
                         getFiles(path.join(dir, file.name), result, path.join(prefix, file.name));
                     } else {
@@ -25,9 +26,9 @@ export default class Directory {
             });
             return result;
         }
-        return getFiles(this.directoryPath, []);
+        return getFiles(this.filePath, []);
     }
-    rename(name): ReturnType<typeof fs.renameSync> {
-        return fs.renameSync(this.directoryPath, path.join(this.directoryPath, '..', name));
+    rename(name: string) {
+        return fs.renameSync(this.filePath, path.join(this.filePath, '..', name));
     }
 }

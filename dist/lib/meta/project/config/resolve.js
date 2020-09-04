@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(require("fs-extra"));
 const path = __importStar(require("path"));
 const chalk = require("chalk");
-const file_1 = __importDefault(require("../../common/file"));
+const File_1 = __importDefault(require("../../common/File"));
 // import chokidar from 'chokidar';
 const getDefaults_1 = __importDefault(require("./getDefaults"));
 const TYPES = ['library', 'app', 'html5', 'fullstack', 'component', 'block', 'template', 'repository'];
@@ -89,7 +89,7 @@ function resolve(cwd, configPath = 'vusion.config.js', args, throwErrors) {
     }
     else if (config.type === 'component' || config.type === 'block') {
         config.srcPath = cwd;
-        const pkg = new file_1.default(packagePath).loadJSON();
+        const pkg = new File_1.default(packagePath).loadJSON();
         let libraryName = pkg.vusion.ui;
         if (!libraryName && pkg.peerDependencies)
             libraryName = Object.keys(pkg.peerDependencies).find((key) => key.endsWith('.vusion'));
