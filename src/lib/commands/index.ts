@@ -1,9 +1,6 @@
 import Project from '../meta/project';
-import type { PageOP } from '../meta/project/page';
-import type { ViewOP } from '../meta/page/view';
-import type { ServiceOP } from '../meta/project/service';
-import type View from '../meta/view';
-import type { BlockInfo, ViewInfo } from '../meta/view';
+import View, { ViewOptions } from '../meta/view';
+import { BlockInfo, ViewInfo } from '../meta/view';
 import { AddPage, RemovePage } from '../meta/page';
 
 export interface Command {
@@ -13,16 +10,16 @@ export default function (root: string): Command {
     const project = new Project(root);
     
     return {
-        'config.resolve': function () {
+        'config.resolve'() {
             return project.config();
-        } as Project["config"],
-        'page.list'(): ReturnType<PageOP['loadList']> {
+        },
+        'page.list'() {
             return project.page.loadList();
         },
-        'page.add'(answers: AddPage): ReturnType<PageOP["add"]> {
+        'page.add'(answers: AddPage) {
             return project.page.add(answers);
         },
-        'page.remove'(answers: RemovePage): ReturnType<PageOP["remove"]> {
+        'page.remove'(answers: RemovePage) {
             return project.page.remove(answers);
         },
         'auth.load': function () {
@@ -55,26 +52,28 @@ export default function (root: string): Command {
 
         'service.list': function() {
             return project.service.loadListPath();
-        } as ServiceOP["loadListPath"],
+        },
 
         'service.add': function(...args) {
             return project.service.add(...args);
-        } as ServiceOP["add"],
+        } as typeof project.service.add,
 
         'service.remove': function(...args) {
             return project.service.remove(...args);
-        } as ServiceOP["remove"],
+        } as typeof project.service.remove,
 
-        'view.list'(page: string): ReturnType<ViewOP["loadList"]> {
+        'view.list'(page: string) {
             return project.page.load(page).view.loadList();
         },
-        'view.add': function (page: string, view: string, options) {
+        'view.tree'(page: string) {
+            return project.page.load(page).view.loadTree();
+        },
+        'view.add': function (page: string, view: string, options?: ViewOptions) {
             return project.page.load(page).view.add(view, options);
-        } as typeof View.addView, 
-     
+        },
         'view.remove': function (page: string, view: string) {
             return project.page.load(page).view.remove(view);
-        } as typeof View.removeView,
+        },
         'view.detail': async function (page: string, view: string, viewInfo: ViewInfo): ReturnType<View["getViewContent"]> {
             return await project.page.load(page).view.load(view).getViewContent(viewInfo);
         },

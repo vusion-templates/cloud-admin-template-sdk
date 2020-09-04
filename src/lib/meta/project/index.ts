@@ -10,9 +10,7 @@ import configResolve from './config/resolve';
 import { ParseTypes, loadCustomComponentsData, loadCustomComponentData, loadUILibrary } from './deps';
 import Auth from './auth';
 import getPage from './page';
-import type { PageOP } from './page';
 import getService from './service';
-import type { ServiceOP } from './service';
 
 const getName = function(dir: string): string {
     const packagePath = path.join(dir, 'package.json');
@@ -36,8 +34,8 @@ export default class Project extends Tree implements ProjectPath {
      */
     public serverPath: string;
     public auth: Auth;
-    public page: PageOP;
-    public service: ServiceOP;
+    public page: ReturnType<typeof getPage>;
+    public service: ReturnType<typeof getService>;
 
     constructor(root: string) {
         const name = getName(root);
@@ -49,19 +47,19 @@ export default class Project extends Tree implements ProjectPath {
         this.page = getPage(this.clientPath, this);
         this.service = getService(this.clientPath, this);
     }
-    public async loadDeps(parseTypes: ParseTypes = {}, baseName?: string): ReturnType<typeof loadCustomComponentsData> {
+    public async loadDeps(parseTypes: ParseTypes = {}, baseName?: string) {
         return await loadCustomComponentsData(this, parseTypes, baseName);
     }
-    public async loadDep(name: string, parseTypes: ParseTypes = {}): ReturnType<typeof loadCustomComponentData> {
+    public async loadDep(name: string, parseTypes: ParseTypes = {}) {
         return await loadCustomComponentData(this, name, parseTypes);
     }
     public getPackage(): any {
         return new File(path.join(this.clientPath, 'package.json')).loadJSON();
     }
-    public loadUILibrary(name: string, parseTypes: ParseTypes = {}): ReturnType<typeof loadUILibrary> {
+    public loadUILibrary(name: string, parseTypes: ParseTypes = {}) {
         return loadUILibrary(name, this, parseTypes);
     }
-    public config(): ReturnType<typeof configResolve> {
+    public config() {
         return configResolve(path.join(this.clientPath));
     }
     getFullPath(): string {
@@ -74,7 +72,7 @@ export default class Project extends Tree implements ProjectPath {
         }
         return this.fullPath;
     }
-    public addComponent(answers: AddComponent, config?: PlopConfig): ReturnType<typeof Component.add> {
+    public addComponent(answers: AddComponent, config?: PlopConfig) {
         return Component.add(answers, {
             root: this.clientPath,
             ...config,

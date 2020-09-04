@@ -1,8 +1,8 @@
 import ModuleComponent from '../../component/module';
-import type { ParseTypes } from 'vusion-api/src/designer';
+import type { ParseTypes } from 'vusion-api/out/designer/index';
 import * as path from 'path';
-import type { loadExternalLibrary as LoadExternalLibrary } from 'vusion-api/src/designer';
-import { loadExternalLibrary } from 'vusion-api/src/designer';
+import type { loadExternalLibrary as LoadExternalLibrary } from 'vusion-api/out/designer/index';
+import { loadExternalLibrary } from 'vusion-api/out/designer/index';
 import Project from '../index';
 export {
     ParseTypes

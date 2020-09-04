@@ -21,6 +21,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs-extra"));
+/**
+ * 同步处理文件夹
+ */
 class Directory {
     constructor(filePath) {
         this.filePath = filePath;

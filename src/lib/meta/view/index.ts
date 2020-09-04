@@ -5,8 +5,9 @@ import { ProjectPath, LEVEL_ENUM } from '../common';
 import type Page from '../page';
 import Directory from '../common/Directory';
 import { templatePath } from '../../utils';
-import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/src/designer/index';
-import type { ViewInfo } from 'vusion-api/src/designer/index';
+import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
+import type { ViewInfo } from 'vusion-api/out/designer/index';
+import * as fs from 'fs-extra';
 
 export {
     ViewInfo
@@ -27,11 +28,14 @@ export type BlockInfo = {
     uuid?: string;
 };
 
-export default class View extends Tree implements ProjectPath{
-
+export default class View extends Tree implements ProjectPath {
+    public baseName: string;
     public file: File;
+    public children?: Array<View>;
+
     constructor(name: string, root: string, parent: Page) {
         super(name, root, LEVEL_ENUM.view, parent);
+        this.baseName = path.basename(name);
         this.file = new File(this.fullPath);
     }
 
@@ -41,17 +45,16 @@ export default class View extends Tree implements ProjectPath{
 
     static getAllViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
-        console.log (root , dirOP.dirAll())
-        return dirOP.dirAll().filter((item) => {
-            return item.endsWith('index.vue');
-        }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+        return dirOP.dirAll().filter((filePath) => {
+            return filePath.endsWith('index.vue');
+        }).map((filePath) => '/' + filePath.replace(/[\\/]?index\.vue$/, ''));
     }
+
     static getViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
-        console.log (root , dirOP.dir())
-        return dirOP.dir().filter((item) => {
-            return item.endsWith('index.vue');
-        }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+        return dirOP.dir().filter((filePath) => {
+            return filePath.endsWith('index.vue') || fs.existsSync(path.join(root, filePath, 'index.vue'));
+        }).map((filePath) => '/' + filePath.replace(/[\\/]?index\.vue$/, ''));
     }
 
     public getFullPath(): string {
@@ -62,14 +65,14 @@ export default class View extends Tree implements ProjectPath{
         return this.file.load();
     }
 
-    static removeView(root: string, name: string): ReturnType<File["remove"]> {
+    static removeView(root: string, name: string) {
         const file = new File(View.getFullPath(root, name));
         if (!file.exists()) {
             throw new Error(`file is not exist`);
         }
         return file.remove();
     }
-    static addView(root: string, name: string, options: ViewOptions): ReturnType<File["save"]> {
+    static addView(root: string, name: string, options: ViewOptions) {
         const file = new File(View.getFullPath(root, name));
         if (file.exists()) {
             throw new Error(`file is exist`);

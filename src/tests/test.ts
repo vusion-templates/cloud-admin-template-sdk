@@ -1,5 +1,6 @@
 import { Project } from '../lib';
 import * as path from 'path';
+import View from '../lib/meta/view';
 
 async function b() {
     const project = new Project(path.join(__dirname, '../../../cloud-admin-template'));
@@ -8,7 +9,9 @@ async function b() {
     //     title: 'xxx',
     //     auth: true,
     // });
-    console.log(project.page.load('dashboard').view.loadList());
+    // console.log(View.getViewsPath(project.page.load('dashboard').fullPath + '/views'));
+    
+    console.log(project.page.load('dashboard').view.loadTree());
     // console.log(project);
 
     // const pages = project.page.loadList();

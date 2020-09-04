@@ -16,7 +16,7 @@ const project_1 = __importDefault(require("../meta/project"));
 function default_1(root) {
     const project = new project_1.default(root);
     return {
-        'config.resolve': function () {
+        'config.resolve'() {
             return project.config();
         },
         'page.list'() {
@@ -66,6 +66,9 @@ function default_1(root) {
         },
         'view.list'(page) {
             return project.page.load(page).view.loadList();
+        },
+        'view.tree'(page) {
+            return project.page.load(page).view.loadTree();
         },
         'view.add': function (page, view, options) {
             return project.page.load(page).view.add(view, options);

@@ -34,7 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadUILibrary = exports.loadCustomComponentData = exports.loadCustomComponentsData = void 0;
 const module_1 = __importDefault(require("../../component/module"));
 const path = __importStar(require("path"));
-const designer_1 = require("vusion-api/src/designer");
+const index_1 = require("vusion-api/out/designer/index");
 exports.loadCustomComponentsData = function loadCustomComponentsData(project, parseTypes = {}, baseName) {
     return __awaiter(this, void 0, void 0, function* () {
         const pkg = project.getPackage();
@@ -56,6 +56,6 @@ exports.loadCustomComponentData = function loadCustomComponentData(project, name
 };
 exports.loadUILibrary = function (name, project, parseTypes = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield designer_1.loadExternalLibrary(path.join(project.clientPath, 'node_modules', name), parseTypes);
+        return yield index_1.loadExternalLibrary(path.join(project.clientPath, 'node_modules', name), parseTypes);
     });
 };

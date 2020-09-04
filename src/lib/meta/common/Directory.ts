@@ -1,6 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 
+/**
+ * 同步处理文件夹
+ */
 export default class Directory {
     public filePath: string;
     constructor(filePath: string) {
@@ -16,7 +19,7 @@ export default class Directory {
         return fs.readdirSync(this.filePath, options);
     }
     dirAll(): string[] {
-        function getFiles (dir: string, result: string[], prefix = ''): string[] {
+        function getFiles(dir: string, result: string[], prefix = ''): string[] {
             fs.readdirSync(dir, { withFileTypes: true }).forEach((file) => {
                     if (file.isDirectory()) {
                         getFiles(path.join(dir, file.name), result, path.join(prefix, file.name));

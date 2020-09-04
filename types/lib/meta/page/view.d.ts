@@ -1,11 +1,11 @@
 import View from '../view';
 import type { ViewOptions } from '../view';
 import type Page from './';
-export interface ViewOP {
-    loadListPath(): ReturnType<typeof View.getViewsPath>;
-    loadList(): Array<View>;
+export default function (pageRoot: string, page: Page): {
+    loadListPath(): string[];
+    loadList(): View[];
+    loadTree(): View;
     load(viewPath: string): View;
-    remove(view: string): ReturnType<typeof View.removeView>;
-    add(view: string, options?: ViewOptions): ReturnType<typeof View.addView>;
-}
-export default function (pageRoot: string, page: Page): ViewOP;
+    remove(viewPath: string): void;
+    add(viewPath: string, options?: ViewOptions): void;
+};

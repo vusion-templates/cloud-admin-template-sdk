@@ -37,10 +37,12 @@ const File_1 = __importDefault(require("../common/File"));
 const common_1 = require("../common");
 const Directory_1 = __importDefault(require("../common/Directory"));
 const utils_1 = require("../../utils");
-const index_1 = require("vusion-api/src/designer/index");
+const index_1 = require("vusion-api/out/designer/index");
+const fs = __importStar(require("fs-extra"));
 class View extends Tree_1.default {
     constructor(name, root, parent) {
         super(name, root, common_1.LEVEL_ENUM.view, parent);
+        this.baseName = path.basename(name);
         this.file = new File_1.default(this.fullPath);
     }
     getFullPath() {
@@ -97,15 +99,13 @@ View.getFullPath = function (root, name) {
 };
 View.getAllViewsPath = function (root) {
     const dirOP = new Directory_1.default(root);
-    console.log(root, dirOP.dirAll());
-    return dirOP.dirAll().filter((item) => {
-        return item.endsWith('index.vue');
-    }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+    return dirOP.dirAll().filter((filePath) => {
+        return filePath.endsWith('index.vue');
+    }).map((filePath) => '/' + filePath.replace(/[\\/]?index\.vue$/, ''));
 };
 View.getViewsPath = function (root) {
     const dirOP = new Directory_1.default(root);
-    console.log(root, dirOP.dir());
-    return dirOP.dir().filter((item) => {
-        return item.endsWith('index.vue');
-    }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+    return dirOP.dir().filter((filePath) => {
+        return filePath.endsWith('index.vue') || fs.existsSync(path.join(root, filePath, 'index.vue'));
+    }).map((filePath) => '/' + filePath.replace(/[\\/]?index\.vue$/, ''));
 };

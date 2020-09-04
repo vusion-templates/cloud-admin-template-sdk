@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-const metaData_1 = __importDefault(require("./metaData"));
+const MetaData_1 = __importDefault(require("./MetaData"));
 const utils_1 = __importDefault(require("../utils"));
 const Tree_1 = __importDefault(require("../common/Tree"));
 const Directory_1 = __importDefault(require("../common/Directory"));
@@ -33,7 +33,7 @@ const view_1 = __importDefault(require("./view"));
 class Page extends Tree_1.default {
     constructor(name, root, parent) {
         super(name, root, common_1.LEVEL_ENUM.page, parent);
-        this.metaData = new metaData_1.default(parent.clientPath, name);
+        this.metaData = new MetaData_1.default(parent.clientPath, name);
         this.routes = new routes_1.default(this.fullPath);
         this.view = view_1.default(this.fullPath, this);
     }

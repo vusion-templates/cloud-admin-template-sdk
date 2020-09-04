@@ -1,3 +1,6 @@
+/**
+ * 同步处理文件夹
+ */
 export default class Directory {
     filePath: string;
     constructor(filePath: string);

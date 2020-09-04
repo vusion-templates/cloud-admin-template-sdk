@@ -34,18 +34,34 @@ function default_1(pageRoot, page) {
             return view_1.default.getViewsPath(root);
         },
         loadList() {
-            return this.loadListPath().map((view) => {
-                return this.load(view);
+            return this.loadListPath().map((viewPath) => {
+                return this.load(viewPath);
             });
+        },
+        loadTree() {
+            function getChildren(view) {
+                console.log(path.join(root, view.name));
+                view.children = view_1.default.getViewsPath(path.join(root, view.name))
+                    .filter((subPath) => subPath !== '/')
+                    .map((subPath) => {
+                    const viewPath = path.join(view.name, subPath);
+                    const newView = new view_1.default(viewPath, root, page);
+                    getChildren(newView);
+                    return newView;
+                });
+            }
+            const rootView = new view_1.default('/', root, page);
+            getChildren(rootView);
+            return rootView;
         },
         load(viewPath) {
             return new view_1.default(viewPath, root, page);
         },
-        remove(view) {
-            return view_1.default.removeView(root, view);
+        remove(viewPath) {
+            return view_1.default.removeView(root, viewPath);
         },
-        add(view, options) {
-            return view_1.default.addView(root, view, options);
+        add(viewPath, options) {
+            return view_1.default.addView(root, viewPath, options);
         },
     };
 }

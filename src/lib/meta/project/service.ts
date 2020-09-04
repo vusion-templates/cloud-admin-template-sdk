@@ -1,17 +1,12 @@
 import * as path from 'path';
 import Service from '../service';
 import type Project from './';
+
 const getRootPath = function (root: string): string {
     return path.join(root, 'src/global/services');
 }
-export interface ServiceOP {
-    loadList(): Service[];
-    loadListPath(): string[];
-    load(name: string): Service;
-    remove(name: string): ReturnType<typeof Service.remove>;
-    add(name: string, api?: string): ReturnType<typeof Service.add>;
-}
-export default function(projectRoot: string, project: Project): ServiceOP {
+
+export default function(projectRoot: string, project: Project) {
     const root = getRootPath(projectRoot);
     return {
         loadList() {
@@ -22,21 +17,21 @@ export default function(projectRoot: string, project: Project): ServiceOP {
         loadListPath() {
             return Service.getServicesPath(root);
         },
-        load(name) {
+        load(name: string) {
             return new Service(name, root, project);
         },
-        remove(name) {
+        remove(name: string) {
             return Service.remove({
                 root,
                 name,
             });
         },
-        add(name, api) {
+        add(name: string, api?: string) {
             return Service.add({
                 root,
                 name,
                 api,
             });
         }
-    } as ServiceOP;
+    };
 }

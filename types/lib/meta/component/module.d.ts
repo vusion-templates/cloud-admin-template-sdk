@@ -1,5 +1,5 @@
-import type { ParseTypes } from 'vusion-api/src/designer/index';
-import type { loadComponentData as LoadComponentData } from 'vusion-api/src/designer/index';
+import type { ParseTypes } from 'vusion-api/out/designer/index';
+import type { loadComponentData as LoadComponentData } from 'vusion-api/out/designer/index';
 export default class ModuleComponent {
     name: string;
     root: string;

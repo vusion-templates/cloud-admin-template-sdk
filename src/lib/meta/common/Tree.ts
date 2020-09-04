@@ -5,7 +5,13 @@ import * as fs from 'fs-extra';
 export default class Tree {
     public parent?: LevelType;
     public level: LEVEL_ENUM;
+    /**
+     * 唯一标识
+     */
     public name: string;
+    /**
+     * 根路径
+     */
     public root: string;
     public fullPath: string;
 

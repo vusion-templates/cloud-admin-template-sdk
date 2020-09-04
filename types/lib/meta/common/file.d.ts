@@ -3,7 +3,7 @@ declare type Options = {
     defaultContent?: string;
 };
 /**
- * 同步处理文件类
+ * 同步处理文件
  */
 export default class File {
     filePath: string;

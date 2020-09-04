@@ -1,7 +1,7 @@
 import * as path from 'path';
-import type { ParseTypes } from 'vusion-api/src/designer/index';
-import type { loadComponentData as LoadComponentData } from 'vusion-api/src/designer/index';
-import { loadComponentData } from 'vusion-api/src/designer';
+import type { ParseTypes } from 'vusion-api/out/designer/index';
+import type { loadComponentData as LoadComponentData } from 'vusion-api/out/designer/index';
+import { loadComponentData } from 'vusion-api/out/designer/index';
 export default class ModuleComponent {
     public name: string;
     public root: string;

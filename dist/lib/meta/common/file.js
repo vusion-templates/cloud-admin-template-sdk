@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(require("fs-extra"));
 /**
- * 同步处理文件类
+ * 同步处理文件
  */
 class File {
     constructor(filePath, options) {

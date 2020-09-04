@@ -1,11 +1,10 @@
 import Page, { AddPage, RemovePage } from '../page';
 import { PlopConfig } from '../utils';
 import type Project from './';
-export interface PageOP {
-    add(answers: AddPage, config?: PlopConfig): ReturnType<typeof Page.add>;
-    remove(answers: RemovePage, config?: PlopConfig): ReturnType<typeof Page.remove>;
+export default function (projectRoot: string, project: Project): {
+    add(answers: AddPage, config?: PlopConfig): Promise<any>;
+    remove(answers: RemovePage, config?: PlopConfig): Promise<any>;
     loadList(): Page[];
     loadListPath(): string[];
     load(pageName: string): Page;
-}
-export default function (projectRoot: string, project: Project): PageOP;
+};
