@@ -49,11 +49,9 @@ export default function (root: string): Command {
         'ui.library': async function (...args) {
             return await project.loadUILibrary(...args);
         } as Project["loadUILibrary"],
-
         'service.list': function() {
             return project.service.loadListPath();
         },
-
         'service.add': function(...args) {
             return project.service.add(...args);
         } as typeof project.service.add,
@@ -62,20 +60,20 @@ export default function (root: string): Command {
             return project.service.remove(...args);
         } as typeof project.service.remove,
 
-        'view.list'(page: string) {
-            return project.page.load(page).view.loadList();
+        'view.list'(pageName: string) {
+            return project.page.load(pageName).view.loadList();
         },
-        'view.tree'(page: string) {
-            return project.page.load(page).view.loadTree();
+        'view.tree'(pageName: string) {
+            return project.page.load(pageName).view.loadTree();
         },
-        'view.add': function (page: string, view: string, options?: ViewOptions) {
-            return project.page.load(page).view.add(view, options);
+        'view.add': function (pageName: string, viewPath: string, options?: ViewOptions) {
+            return project.page.load(pageName).view.add(viewPath, options);
         },
-        'view.remove': function (page: string, view: string) {
-            return project.page.load(page).view.remove(view);
+        'view.remove': function (pageName: string, viewPath: string) {
+            return project.page.load(pageName).view.remove(viewPath);
         },
-        'view.detail': async function (page: string, view: string, viewInfo: ViewInfo): ReturnType<View["getViewContent"]> {
-            return await project.page.load(page).view.load(view).getViewContent(viewInfo);
+        'view.detail': async function (pageName: string, viewPath: string, viewInfo: ViewInfo): ReturnType<View["getViewContent"]> {
+            return await project.page.load(pageName).view.load(viewPath).getViewContent(viewInfo);
         },
         'view.mergeCode': async function (page: string, view: string, code: string, nodePath: string): ReturnType<View["mergeCode"]> {
             return await project.page.load(page).view.load(view).mergeCode(code, nodePath);

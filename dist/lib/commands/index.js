@@ -64,21 +64,21 @@ function default_1(root) {
         'service.remove': function (...args) {
             return project.service.remove(...args);
         },
-        'view.list'(page) {
-            return project.page.load(page).view.loadList();
+        'view.list'(pageName) {
+            return project.page.load(pageName).view.loadList();
         },
-        'view.tree'(page) {
-            return project.page.load(page).view.loadTree();
+        'view.tree'(pageName) {
+            return project.page.load(pageName).view.loadTree();
         },
-        'view.add': function (page, view, options) {
-            return project.page.load(page).view.add(view, options);
+        'view.add': function (pageName, viewPath, options) {
+            return project.page.load(pageName).view.add(viewPath, options);
         },
-        'view.remove': function (page, view) {
-            return project.page.load(page).view.remove(view);
+        'view.remove': function (pageName, viewPath) {
+            return project.page.load(pageName).view.remove(viewPath);
         },
-        'view.detail': function (page, view, viewInfo) {
+        'view.detail': function (pageName, viewPath, viewInfo) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).getViewContent(viewInfo);
+                return yield project.page.load(pageName).view.load(viewPath).getViewContent(viewInfo);
             });
         },
         'view.mergeCode': function (page, view, code, nodePath) {
