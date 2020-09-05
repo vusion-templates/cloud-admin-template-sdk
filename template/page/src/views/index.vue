@@ -6,11 +6,16 @@
 </template>
 
 <script>
+import gql from 'index.gql';
+
 export default {
     data() {
         return {
             
         };
+    },
+    apollo: {
+      queryAll:  gql
     },
 };
 </script>

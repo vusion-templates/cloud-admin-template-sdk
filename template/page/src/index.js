@@ -11,6 +11,7 @@ import installServices from '@/global/features/service/install';
 import micro from './micro';
 import appConfig from './app.config';
 import { initMiddleware } from '@/global/middleware';
+import { apolloProvider } from '@/global/features/apollo'
 // import { initI18n } from '@/global/page/i18n';
 window.appInfo = Object.assign(appConfig, platformConfig);
 Vue.use(installServices);
@@ -21,6 +22,7 @@ if (window.microApp && window.microApp.isMicro) {
 } else {
     const app = new Vue({
         name: 'app',
+        apolloProvider,
         router: initRouter(),
         ...App,
         // i18n: initI18n(),
