@@ -39,6 +39,7 @@ const Directory_1 = __importDefault(require("../common/Directory"));
 const utils_1 = require("../../utils");
 const index_1 = require("vusion-api/out/designer/index");
 const fs = __importStar(require("fs-extra"));
+const vusion_api_1 = require("vusion-api");
 class View extends Tree_1.default {
     constructor(name, root, parent) {
         super(name, root, common_1.LEVEL_ENUM.view, parent);
@@ -66,14 +67,31 @@ class View extends Tree_1.default {
         const templateFile = new File_1.default(path.join(utils_1.templatePath, 'view/index.vue'));
         return file.save(templateFile.load());
     }
+    loadVueFile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const vueFile = new vusion_api_1.VueFile(this.fullPath);
+            yield vueFile.open();
+            return vueFile;
+        });
+    }
+    savePartialCode(type, content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const vueFile = new vusion_api_1.VueFile(this.fullPath);
+            yield vueFile.open();
+            if (type === 'template')
+                vueFile.template = content;
+            else if (type === 'script')
+                vueFile.script = content;
+            else if (type === 'style')
+                vueFile.style = content;
+            else if (type === 'definition')
+                vueFile.definition = content;
+            yield vueFile.save();
+        });
+    }
     mergeCode(code, nodePath) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield index_1.mergeCode(this.fullPath, code, nodePath);
-        });
-    }
-    saveCode(type, content) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield index_1.saveCode(this.fullPath, type, content);
         });
     }
     addBlock(blockInfo) {

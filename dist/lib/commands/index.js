@@ -76,29 +76,34 @@ function default_1(root) {
         'view.remove': function (pageName, viewPath) {
             return project.page.load(pageName).view.remove(viewPath);
         },
-        'view.detail': function (pageName, viewPath, viewInfo) {
+        'view.detail': function (pageName, viewPath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(pageName).view.load(viewPath).getViewContent(viewInfo);
+                return yield project.page.load(pageName).view.load(viewPath).getContent();
             });
         },
-        'view.mergeCode': function (page, view, code, nodePath) {
+        'view.vueFile': function (pageName, viewPath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).mergeCode(code, nodePath);
+                return yield project.page.load(pageName).view.load(viewPath).loadVueFile();
             });
         },
-        'view.saveCode': function (page, view, type, content) {
+        'view.savePartialCode': function (pageName, viewPath, type, content) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).saveCode(type, content);
+                return yield project.page.load(pageName).view.load(viewPath).savePartialCode(type, content);
             });
         },
-        'view.addBlock': function (page, view, blockInfo) {
+        'view.mergeCode': function (pageName, viewPath, code, nodePath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).addBlock(blockInfo);
+                return yield project.page.load(pageName).view.load(viewPath).mergeCode(code, nodePath);
             });
         },
-        'view.addCustomComponent': function (page, view, blockInfo, content) {
+        'view.addBlock': function (pageName, viewPath, blockInfo) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).addCustomComponent(blockInfo, content);
+                return yield project.page.load(pageName).view.load(viewPath).addBlock(blockInfo);
+            });
+        },
+        'view.addCustomComponent': function (pageName, viewPath, blockInfo, content) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield project.page.load(pageName).view.load(viewPath).addCustomComponent(blockInfo, content);
             });
         },
     };

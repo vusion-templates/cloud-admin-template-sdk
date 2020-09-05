@@ -8,6 +8,7 @@ import { templatePath } from '../../utils';
 import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
 import type { ViewInfo } from 'vusion-api/out/designer/index';
 import * as fs from 'fs-extra';
+import { VueFile } from 'vusion-api';
 
 export {
     ViewInfo
@@ -81,13 +82,32 @@ export default class View extends Tree implements ProjectPath {
         return file.save(templateFile.load());
     }
 
+    async loadVueFile() {
+        const vueFile = new VueFile(this.fullPath);
+        await vueFile.open();
+        return vueFile;
+    }
+
+    async savePartialCode(type: 'template' | 'script' | 'style' | 'definition', content: string) {
+        const vueFile = new VueFile(this.fullPath);
+        await vueFile.open();
+    
+        if (type === 'template')
+            vueFile.template = content;
+        else if (type === 'script')
+            vueFile.script = content;
+        else if (type === 'style')
+            vueFile.style = content;
+        else if (type === 'definition')
+            vueFile.definition = content;
+    
+        await vueFile.save();
+    }
+
     async mergeCode(code: string, nodePath: string) {
         return await mergeCode(this.fullPath, code, nodePath);
     }
 
-    async saveCode(type: 'template' | 'script' | 'style', content: string) {
-        return await saveCode(this.fullPath, type, content);
-    }
 
     async addBlock(blockInfo: BlockInfo) {
         return await addBlock(this.fullPath, blockInfo);

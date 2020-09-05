@@ -3,6 +3,7 @@ import File from '../common/File';
 import { ProjectPath } from '../common';
 import type Page from '../page';
 import type { ViewInfo } from 'vusion-api/out/designer/index';
+import { VueFile } from 'vusion-api';
 export { ViewInfo };
 export declare type ViewOptions = {
     title: string;
@@ -29,9 +30,10 @@ export default class View extends Tree implements ProjectPath {
     getContent(): string;
     static removeView(root: string, name: string): void;
     static addView(root: string, name: string, options: ViewOptions): void;
-    mergeCode(code: string, nodePath: string): Promise<void>;
-    saveCode(type: 'template' | 'script' | 'style', content: string): Promise<void>;
-    addBlock(blockInfo: BlockInfo): Promise<void>;
-    getViewContent(viewInfo: ViewInfo): Promise<import("vusion-api").VueFile>;
-    addCustomComponent(blockInfo: BlockInfo, content: string): Promise<void>;
+    loadVueFile(): Promise<VueFile>;
+    savePartialCode(type: 'template' | 'script' | 'style' | 'definition', content: string): Promise<void>;
+    mergeCode(code: string, nodePath: string): Promise<any>;
+    addBlock(blockInfo: BlockInfo): Promise<any>;
+    getViewContent(viewInfo: ViewInfo): Promise<any>;
+    addCustomComponent(blockInfo: BlockInfo, content: string): Promise<any>;
 }

@@ -40,7 +40,6 @@ function default_1(pageRoot, page) {
         },
         loadTree() {
             function getChildren(view) {
-                console.log(path.join(root, view.name));
                 view.children = view_1.default.getViewsPath(path.join(root, view.name))
                     .filter((subPath) => subPath !== '/')
                     .map((subPath) => {

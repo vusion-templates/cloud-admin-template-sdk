@@ -21,7 +21,6 @@ export default function(pageRoot: string, page: Page) {
         },
         loadTree() {
             function getChildren(view: View) {
-                console.log(path.join(root, view.name))
                 view.children = View.getViewsPath(path.join(root, view.name))
                     .filter((subPath) => subPath !== '/')
                     .map((subPath) => {
