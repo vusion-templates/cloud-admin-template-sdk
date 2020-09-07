@@ -22,10 +22,10 @@ export default class Project extends Tree implements ProjectPath {
     page: ReturnType<typeof getPage>;
     service: ReturnType<typeof getService>;
     constructor(root: string);
-    loadDeps(parseTypes?: ParseTypes, baseName?: string): Promise<any[]>;
-    loadDep(name: string, parseTypes?: ParseTypes): Promise<any>;
+    loadDeps(parseTypes?: ParseTypes, baseName?: string): Promise<Promise<{}>[]>;
+    loadDep(name: string, parseTypes?: ParseTypes): Promise<{}>;
     getPackage(): any;
-    loadUILibrary(name: string, parseTypes?: ParseTypes): any;
+    loadUILibrary(name: string, parseTypes?: ParseTypes): Promise<import("vusion-api").Library>;
     config(): import("./config/getDefaults").VusionConfig;
     getFullPath(): string;
     private getSubPath;

@@ -32,8 +32,8 @@ export default class View extends Tree implements ProjectPath {
     static addView(root: string, name: string, options: ViewOptions): void;
     loadVueFile(): Promise<VueFile>;
     savePartialCode(type: 'template' | 'script' | 'style' | 'definition', content: string): Promise<void>;
-    mergeCode(code: string, nodePath: string): Promise<any>;
-    addBlock(blockInfo: BlockInfo): Promise<any>;
-    getViewContent(viewInfo: ViewInfo): Promise<any>;
-    addCustomComponent(blockInfo: BlockInfo, content: string): Promise<any>;
+    mergeCode(code: string, nodePath: string): Promise<void>;
+    addBlock(blockInfo: BlockInfo): Promise<void>;
+    getViewContent(viewInfo: ViewInfo): Promise<VueFile>;
+    addCustomComponent(blockInfo: BlockInfo, content: string): Promise<void>;
 }
