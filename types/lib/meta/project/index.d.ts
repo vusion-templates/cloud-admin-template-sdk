@@ -4,11 +4,9 @@ import { ProjectPath } from '../common';
 import Tree from '../common/Tree';
 import { ParseTypes } from './deps';
 import Auth from './auth';
-import getPage from './page';
-import getService from './service';
-/**
- * 项目类
- */
+import type { PageOP } from './page';
+import type { ServiceOP } from './service';
+import type { ApolloOP } from './apollo';
 export default class Project extends Tree implements ProjectPath {
     /**
      * 前端路径
@@ -19,8 +17,9 @@ export default class Project extends Tree implements ProjectPath {
      */
     serverPath: string;
     auth: Auth;
-    page: ReturnType<typeof getPage>;
-    service: ReturnType<typeof getService>;
+    page: PageOP;
+    service: ServiceOP;
+    apollo: ApolloOP;
     constructor(root: string);
     loadDeps(parseTypes?: ParseTypes, baseName?: string): Promise<Promise<{}>[]>;
     loadDep(name: string, parseTypes?: ParseTypes): Promise<{}>;
