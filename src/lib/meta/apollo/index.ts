@@ -6,10 +6,9 @@ import Tree from '../common/tree';
 import File from '../common/file';
 import Directory from '../common/directory';
 import type Project from '../Project';
-import dslToGQL from './dsl-to-gql';
+import { createSchema } from './dsl-to-gql';
 import { generateRandomQuery } from './gql-to-randomquery';
 import { buildSchema, printSchema, print } from 'graphql';
-
 export default class Apollo extends Tree implements ProjectPath {
 	public subFiles: {
 			api: File;
@@ -22,10 +21,11 @@ export default class Apollo extends Tree implements ProjectPath {
 	 * 2. write file to right path
 	 *  
 	 */
-	static updateApollo(root, json: any) {
+	static async updateApollo(root, json: any) {
 		// dsl json => schema
-		const schema = dslToGQL.createSchema({
+		const schema = await createSchema({
 			dslSchema: json,
+			callBackend: () => { return Promise.resolve(1); },
 		});
 
 		// output schema

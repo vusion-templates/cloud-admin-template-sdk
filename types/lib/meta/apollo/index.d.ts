@@ -7,5 +7,11 @@ export default class Apollo extends Tree implements ProjectPath {
         config: File;
         index: File;
     };
-    static updateApollo(root: any, json: any): void;
+    /**
+     * TODO
+     * 1. generator resolver
+     * 2. write file to right path
+     *
+     */
+    static updateApollo(root: any, json: any): Promise<void>;
 }

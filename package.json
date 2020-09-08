@@ -54,6 +54,7 @@
     "fs-extra": "^9.0.0",
     "graphql": "^15.3.0",
     "inquirer-directory": "^2.2.0",
+    "json-schema-ref-parser": "^9.0.6",
     "node-plop": "^0.26.0",
     "plop": "^2.7.1",
     "vue-template-compiler": "^2.6.12",
