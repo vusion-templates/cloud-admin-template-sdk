@@ -1,7 +1,9 @@
 import * as path from 'path';
 import chalk = require('chalk');
 import actions from './actions';
-export default function (plop): any{
+import type NodePlop from '../../plop';
+
+export default function (plop: NodePlop.API): any{
     const dest = plop.getDestBasePath();
     const basePath = path.join(dest, './src/global/components');
     return {
@@ -22,7 +24,7 @@ export default function (plop): any{
                 basePath,
             },
         ],
-        actions(answers): ReturnType<typeof actions.add> {
+        actions(answers: any): ReturnType<typeof actions.add> {
             return [
                 ...actions.add(answers, dest),
                 `use like: ${chalk.yellow(`<${answers.name}></${answers.name}>`)}`,

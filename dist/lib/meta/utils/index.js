@@ -40,13 +40,13 @@ exports.default = {
         });
         return plop;
     },
-    getPagePath(answer) {
-        return path.join(answer.root, answer.page);
+    getPagePath(answers) {
+        return path.join(answers.root, answers.page);
     },
-    getModulePath(answer) {
-        return path.join(answer.root, answer.page, answer.module);
+    getModulePath(answers) {
+        return path.join(answers.root, answers.page, answers.module);
     },
-    getViewPath(answer) {
-        return path.join(answer.root, answer.page, answer.module, 'views');
+    getViewPath(answers) {
+        return path.join(answers.root, answers.page, answers.module, 'views');
     },
 };

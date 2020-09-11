@@ -1,18 +1,19 @@
-import * as fs from 'fs-extra';
 declare type Options = {
     willCreate?: boolean;
     defaultContent?: string;
 };
+/**
+ * 同步处理文件
+ */
 export default class File {
-    fileName: string;
-    willCreate: string;
-    constructor(fileName: string, options?: Options);
-    exists(): ReturnType<typeof fs.existsSync>;
+    filePath: string;
+    constructor(filePath: string, options?: Options);
+    exists(): boolean;
     loadOrCreate(content: any): string;
-    loadJSONOrCreate(content: any): string;
+    loadJSONOrCreate(content: any): any;
     load(): string;
-    save(content: string | object): ReturnType<typeof fs.writeFileSync>;
-    loadJSON(): ReturnType<typeof JSON.parse>;
-    remove(): ReturnType<typeof fs.removeSync>;
+    save(content: string | object): void;
+    loadJSON(): any;
+    remove(): void;
 }
 export {};

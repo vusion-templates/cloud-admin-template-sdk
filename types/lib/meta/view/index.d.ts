@@ -1,9 +1,9 @@
-import Tree from '../common/tree';
-import File from '../common/file';
+import Tree from '../common/Tree';
+import File from '../common/File';
 import { ProjectPath } from '../common';
 import type Page from '../page';
-import { mergeCode, saveCode, addBlock, getViewContent } from 'vusion-api/out/designer/index';
-import type { ViewInfo } from 'vusion-api/src/designer/index';
+import type { ViewInfo } from 'vusion-api/out/designer/index';
+import { VueFile } from 'vusion-api';
 export { ViewInfo };
 export declare type ViewOptions = {
     title: string;
@@ -14,22 +14,26 @@ export declare type BlockInfo = {
     title: string;
     tagName: string;
     dependencies: any;
+    vusionDependencies: any;
     registry: string;
     uuid?: string;
 };
 export default class View extends Tree implements ProjectPath {
+    baseName: string;
     file: File;
+    children?: Array<View>;
     constructor(name: string, root: string, parent: Page);
     static getFullPath: (root: string, name: string) => string;
     static getAllViewsPath: (root: string) => string[];
     static getViewsPath: (root: string) => string[];
     getFullPath(): string;
     getContent(): string;
-    static removeView(root: string, name: string): ReturnType<File["remove"]>;
-    static addView(root: string, name: string, options: ViewOptions): ReturnType<File["save"]>;
-    mergeCode(code: string, nodePath: string): Promise<typeof mergeCode>;
-    saveCode(type: string, content: string): Promise<typeof saveCode>;
-    addBlock(blockInfo: BlockInfo): Promise<typeof addBlock>;
-    getViewContent(viewInfo: ViewInfo): Promise<typeof getViewContent>;
-    addCustomComponent(blockInfo: BlockInfo, content: string): Promise<typeof addBlock>;
+    static removeView(root: string, name: string): void;
+    static addView(root: string, name: string, options: ViewOptions): void;
+    loadVueFile(): Promise<VueFile>;
+    savePartialCode(type: 'template' | 'script' | 'style' | 'definition', content: string): Promise<void>;
+    mergeCode(code: string, nodePath: string): Promise<void>;
+    addBlock(blockInfo: BlockInfo): Promise<void>;
+    getViewContent(viewInfo: ViewInfo): Promise<VueFile>;
+    addCustomComponent(blockInfo: BlockInfo, content: string): Promise<void>;
 }

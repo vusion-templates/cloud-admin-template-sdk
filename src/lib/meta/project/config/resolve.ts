@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk = require('chalk');
-import File from '../../common/file';
+import File from '../../common/File';
 // import chokidar from 'chokidar';
 import getDefaults, { VusionConfig, Theme } from './getDefaults';
 

@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": false,
     "lib": [
@@ -13,7 +16,6 @@
     "declaration": true,
     "declarationDir": "types",
     "outDir": "dist",
-    "moduleResolution": "node",
     "pretty": true,
     "typeRoots": [
       "node_modules/@types"

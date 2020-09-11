@@ -6,8 +6,8 @@ export declare type PlopConfig = {
 declare const _default: {
     loadPages(root: string): object;
     getPlop(config: PlopConfig): NodePlop.API;
-    getPagePath(answer: any): string;
-    getModulePath(answer: any): string;
-    getViewPath(answer: any): string;
+    getPagePath(answers: any): string;
+    getModulePath(answers: any): string;
+    getViewPath(answers: any): string;
 };
 export default _default;

@@ -15,7 +15,7 @@ describe('View', () => {
     });
     test('view save code', async () => {
         const page = project.page.load('viewTest');
-        await page.view.load('a/b').saveCode('template', '<div>test</div>');
+        await page.view.load('a/b').savePartialCode('template', '<div>test</div>');
         const content = page.view.load('a/b').getContent();
         expect(content.includes('<div>test</div>')).toBe(true);
     });

@@ -19,44 +19,46 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = __importStar(require("path"));
 const fs = __importStar(require("fs-extra"));
+/**
+ * 同步处理文件
+ */
 class File {
-    constructor(fileName, options) {
-        this.fileName = fileName;
-        if (options && options.willCreate && !fs.existsSync(fileName)) {
-            fs.mkdirpSync(path.dirname(fileName));
-            fs.writeFileSync(fileName, options.defaultContent);
+    constructor(filePath, options) {
+        this.filePath = filePath;
+        if (options && options.willCreate && !fs.existsSync(filePath)) {
+            fs.ensureFileSync(filePath);
+            fs.writeFileSync(filePath, options.defaultContent);
         }
     }
     exists() {
-        return fs.existsSync(this.fileName);
+        return fs.existsSync(this.filePath);
     }
     loadOrCreate(content) {
-        if (!fs.existsSync(this.fileName)) {
+        if (!fs.existsSync(this.filePath)) {
             this.save(content || '');
         }
         return this.load();
     }
     loadJSONOrCreate(content) {
-        if (!fs.existsSync(this.fileName)) {
+        if (!fs.existsSync(this.filePath)) {
             this.save(content || '');
         }
         return this.loadJSON();
     }
     load() {
-        return fs.readFileSync(this.fileName).toString();
+        return fs.readFileSync(this.filePath).toString();
     }
     save(content) {
-        fs.mkdirpSync(path.dirname(this.fileName));
-        return fs.writeFileSync(this.fileName, typeof content === 'string' ? content : JSON.stringify(content, null, 4));
+        fs.ensureFileSync(this.filePath);
+        return fs.writeFileSync(this.filePath, typeof content === 'string' ? content : JSON.stringify(content, null, 4));
     }
     loadJSON() {
         const content = this.load();
         return JSON.parse(content);
     }
     remove() {
-        return fs.removeSync(this.fileName);
+        return fs.removeSync(this.filePath);
     }
 }
 exports.default = File;

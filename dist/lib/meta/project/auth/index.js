@@ -23,13 +23,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
-const file_1 = __importDefault(require("../../common/file"));
+const File_1 = __importDefault(require("../../common/File"));
 const common_1 = require("../../common");
-const tree_1 = __importDefault(require("../../common/tree"));
-class Auth extends tree_1.default {
+const Tree_1 = __importDefault(require("../../common/Tree"));
+class Auth extends Tree_1.default {
     constructor(root, parent) {
         super('auth', root, common_1.LEVEL_ENUM.auth, parent);
-        this.fileOP = new file_1.default(this.fullPath, {
+        this.fileOP = new File_1.default(this.fullPath, {
             willCreate: true,
             defaultContent: JSON.stringify({}),
         });

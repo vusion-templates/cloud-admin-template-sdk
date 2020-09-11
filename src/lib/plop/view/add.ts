@@ -33,7 +33,7 @@ export default function(plop: NodePlop.API): any {
                 message: '请输入页面标题',
             },
         ],
-        actions(answers): ReturnType<typeof actions.add> {
+        actions(answers: any): ReturnType<typeof actions.add> {
             answers.page = answers.page || pages[0];
             const { path: pagePath } = answers;
             return [

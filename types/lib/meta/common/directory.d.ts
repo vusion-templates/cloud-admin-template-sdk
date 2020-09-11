@@ -1,9 +1,11 @@
-import * as fs from 'fs-extra';
+/**
+ * 同步处理文件夹
+ */
 export default class Directory {
-    directoryPath: string;
-    constructor(directoryPath: string);
-    remove(): ReturnType<typeof fs.removeSync>;
+    filePath: string;
+    constructor(filePath: string);
+    remove(): void;
     dir(options?: any): string[];
     dirAll(): string[];
-    rename(name: any): ReturnType<typeof fs.renameSync>;
+    rename(name: string): void;
 }

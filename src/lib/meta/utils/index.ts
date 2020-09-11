@@ -21,13 +21,13 @@ export default {
         });
         return plop as NodePlop.API;
     },
-    getPagePath(answer): string {
-        return path.join(answer.root, answer.page);
+    getPagePath(answers: any): string {
+        return path.join(answers.root, answers.page);
     },
-    getModulePath(answer): string {
-        return path.join(answer.root, answer.page, answer.module);
+    getModulePath(answers: any): string {
+        return path.join(answers.root, answers.page, answers.module);
     },
-    getViewPath(answer): string {
-        return path.join(answer.root, answer.page, answer.module, 'views');
+    getViewPath(answers: any): string {
+        return path.join(answers.root, answers.page, answers.module, 'views');
     },
 };

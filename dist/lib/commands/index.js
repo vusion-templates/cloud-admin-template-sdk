@@ -16,8 +16,11 @@ const project_1 = __importDefault(require("../meta/project"));
 function default_1(root) {
     const project = new project_1.default(root);
     return {
-        'config.resolve': function () {
+        'config.resolve'() {
             return project.config();
+        },
+        'page.list'() {
+            return project.page.loadList();
         },
         'page.add'(answers) {
             return project.page.add(answers);
@@ -61,38 +64,49 @@ function default_1(root) {
         'service.remove': function (...args) {
             return project.service.remove(...args);
         },
-        'view.list'(page) {
-            return project.page.load(page).view.loadListPath();
+        'view.list'(pageName) {
+            return project.page.load(pageName).view.loadList();
         },
-        'view.add': function (page, view, options) {
-            return project.page.load(page).view.add(view, options);
+        'view.subList'(pageName, viewPath) {
+            return project.page.load(pageName).view.loadSubList(viewPath);
         },
-        'view.remove': function (page, view) {
-            return project.page.load(page).view.remove(view);
+        'view.tree'(pageName) {
+            return project.page.load(pageName).view.loadTree();
         },
-        'view.detail': function (page, view, viewInfo) {
+        'view.add': function (pageName, viewPath, options) {
+            return project.page.load(pageName).view.add(viewPath, options);
+        },
+        'view.remove': function (pageName, viewPath) {
+            return project.page.load(pageName).view.remove(viewPath);
+        },
+        'view.detail': function (pageName, viewPath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).getViewContent(viewInfo);
+                return yield project.page.load(pageName).view.load(viewPath).getContent();
             });
         },
-        'view.mergeCode': function (page, view, code, nodePath) {
+        'view.vueFile': function (pageName, viewPath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).mergeCode(code, nodePath);
+                return yield project.page.load(pageName).view.load(viewPath).loadVueFile();
             });
         },
-        'view.saveCode': function (page, view, type, content) {
+        'view.savePartialCode': function (pageName, viewPath, type, content) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).saveCode(type, content);
+                return yield project.page.load(pageName).view.load(viewPath).savePartialCode(type, content);
             });
         },
-        'view.addBlock': function (page, view, blockInfo) {
+        'view.mergeCode': function (pageName, viewPath, code, nodePath) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).addBlock(blockInfo);
+                return yield project.page.load(pageName).view.load(viewPath).mergeCode(code, nodePath);
             });
         },
-        'view.addCustomComponent': function (page, view, blockInfo, content) {
+        'view.addBlock': function (pageName, viewPath, blockInfo) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield project.page.load(page).view.load(view).addCustomComponent(blockInfo, content);
+                return yield project.page.load(pageName).view.load(viewPath).addBlock(blockInfo);
+            });
+        },
+        'view.addCustomComponent': function (pageName, viewPath, blockInfo, content) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield project.page.load(pageName).view.load(viewPath).addCustomComponent(blockInfo, content);
             });
         },
     };

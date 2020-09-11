@@ -2,9 +2,9 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { templatePath } from '../../utils';
 import { ProjectPath, LEVEL_ENUM } from '../common';
-import Tree from '../common/tree';
-import File from '../common/file';
-import Directory from '../common/directory';
+import Tree from '../common/Tree';
+import File from '../common/File';
+import Directory from '../common/Directory';
 import type Project from '../Project';
 interface ServicePath {
     root: string;

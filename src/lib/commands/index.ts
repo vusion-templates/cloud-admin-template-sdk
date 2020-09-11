@@ -1,28 +1,27 @@
 import Project from '../meta/project';
-import type { PageOP } from '../meta/project/page';
-import type { ViewOP } from '../meta/page/view';
-import type { ServiceOP } from '../meta/project/service';
-import type View from '../meta/view';
-import type { BlockInfo, ViewInfo } from '../meta/view';
+import View, { ViewOptions } from '../meta/view';
+import { BlockInfo, ViewInfo } from '../meta/view';
+import { AddPage, RemovePage } from '../meta/page';
 
 export interface Command {
     [prop: string]: any;
 }
 export default function (root: string): Command {
     const project = new Project(root);
+    
     return {
-        'config.resolve': function () {
+        'config.resolve'() {
             return project.config();
-        } as Project["config"],
-
-        'page.add'(answers): ReturnType<PageOP["add"]> {
+        },
+        'page.list'() {
+            return project.page.loadList();
+        },
+        'page.add'(answers: AddPage) {
             return project.page.add(answers);
         },
-        
-        'page.remove'(answers): ReturnType<PageOP["remove"]> {
+        'page.remove'(answers: RemovePage) {
             return project.page.remove(answers);
         },
-
         'auth.load': function () {
             return project.auth.load();
         } as Project["auth"]["load"],
@@ -50,43 +49,49 @@ export default function (root: string): Command {
         'ui.library': async function (...args) {
             return await project.loadUILibrary(...args);
         } as Project["loadUILibrary"],
-
         'service.list': function() {
             return project.service.loadListPath();
-        } as ServiceOP["loadListPath"],
-
+        },
         'service.add': function(...args) {
             return project.service.add(...args);
-        } as ServiceOP["add"],
+        } as typeof project.service.add,
 
         'service.remove': function(...args) {
             return project.service.remove(...args);
-        } as ServiceOP["remove"],
+        } as typeof project.service.remove,
 
-        'view.list'(page: string): ReturnType<ViewOP["loadListPath"]> {
-            return project.page.load(page).view.loadListPath();
+        'view.list'(pageName: string) {
+            return project.page.load(pageName).view.loadList();
         },
-        'view.add': function (page: string, view: string, options) {
-            return project.page.load(page).view.add(view, options);
-        } as typeof View.addView, 
-     
-        'view.remove': function (page: string, view: string) {
-            return project.page.load(page).view.remove(view);
-        } as typeof View.removeView,
-        'view.detail': async function (page: string, view: string, viewInfo: ViewInfo): ReturnType<View["getViewContent"]> {
-            return await project.page.load(page).view.load(view).getViewContent(viewInfo);
+        'view.subList'(pageName: string, viewPath: string) {
+            return project.page.load(pageName).view.loadSubList(viewPath);
         },
-        'view.mergeCode': async function (page: string, view: string, code: string, nodePath: string): ReturnType<View["mergeCode"]> {
-            return await project.page.load(page).view.load(view).mergeCode(code, nodePath);
+        'view.tree'(pageName: string) {
+            return project.page.load(pageName).view.loadTree();
         },
-        'view.saveCode': async function (page: string, view: string, type: string, content: string): ReturnType<View["saveCode"]> {
-            return await project.page.load(page).view.load(view).saveCode(type, content);
+        'view.add': function (pageName: string, viewPath: string, options?: ViewOptions) {
+            return project.page.load(pageName).view.add(viewPath, options);
         },
-        'view.addBlock': async function (page: string, view: string, blockInfo: BlockInfo): ReturnType<View["addBlock"]> {
-            return await project.page.load(page).view.load(view).addBlock(blockInfo);
+        'view.remove': function (pageName: string, viewPath: string) {
+            return project.page.load(pageName).view.remove(viewPath);
         },
-        'view.addCustomComponent': async function (page: string, view: string, blockInfo: BlockInfo, content: string): ReturnType<View["addCustomComponent"]> {
-            return await project.page.load(page).view.load(view).addCustomComponent(blockInfo, content);
+        'view.detail': async function (pageName: string, viewPath: string) {
+            return await project.page.load(pageName).view.load(viewPath).getContent();
+        },
+        'view.vueFile': async function (pageName: string, viewPath: string) {
+            return await project.page.load(pageName).view.load(viewPath).loadVueFile();
+        },
+        'view.savePartialCode': async function (pageName: string, viewPath: string, type: 'template' | 'script' | 'style' | 'definition', content: string) {
+            return await project.page.load(pageName).view.load(viewPath).savePartialCode(type, content);
+        },
+        'view.mergeCode': async function (pageName: string, viewPath: string, code: string, nodePath: string): ReturnType<View["mergeCode"]> {
+            return await project.page.load(pageName).view.load(viewPath).mergeCode(code, nodePath);
+        },
+        'view.addBlock': async function (pageName: string, viewPath: string, blockInfo: BlockInfo): ReturnType<View["addBlock"]> {
+            return await project.page.load(pageName).view.load(viewPath).addBlock(blockInfo);
+        },
+        'view.addCustomComponent': async function (pageName: string, viewPath: string, blockInfo: BlockInfo, content: string): ReturnType<View["addCustomComponent"]> {
+            return await project.page.load(pageName).view.load(viewPath).addCustomComponent(blockInfo, content);
         },
     };
 }

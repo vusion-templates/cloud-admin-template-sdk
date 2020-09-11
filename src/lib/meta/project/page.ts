@@ -5,39 +5,33 @@ import type Project from './';
 const getRootPath = function (root: string): string {
     return path.join(root, 'src/views');
 }
-export interface PageOP {
-    add( answers: AddPage, config?: PlopConfig): ReturnType<typeof Page.add>;
-    remove(answers: RemovePage, config?: PlopConfig): ReturnType<typeof Page.remove>;
-    loadList(): Page[];
-    loadListPath(): string[];
-    load(pageName: string): Page;
-}
-export default function(projectRoot: string, project: Project): PageOP {
+
+export default function(projectRoot: string, project: Project) {
     const root = getRootPath(projectRoot);
     return {
-        add(answers, config){
+        add(answers: AddPage, config?: PlopConfig) {
             return Page.add(answers, {
                 root: projectRoot,
                 ...config,
             });
         },
-        remove(answers, config){
+        remove(answers: RemovePage, config?: PlopConfig) {
             return Page.remove(answers, {
                 root: projectRoot,
                 ...config,
             });
         },
-        loadList() {
+        loadList(): Page[] {
             const subDirList = this.loadListPath();
-            return subDirList.map((pageName) => {
+            return subDirList.map((pageName: string) => {
                 return this.load(pageName);
             });
         },
-        loadListPath() {
+        loadListPath(): string[] {
             return Page.getPagesPath(root);
         },
-        load(pageName) {
+        load(pageName: string): Page {
             return new Page(pageName, root, project);
         }
-    } as PageOP;
+    };
 }

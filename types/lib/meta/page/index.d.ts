@@ -1,10 +1,10 @@
-import MetaData from './metaData';
+import MetaData from './MetaData';
 import { PlopConfig } from '../utils';
-import Tree from '../common/tree';
+import Tree from '../common/Tree';
 import { ProjectPath } from '../common';
 import Routes from '../routes';
 import type Project from '../project';
-import type { ViewOP } from './view';
+import getView from './view';
 export interface AddPage {
     name: string;
     title: string;
@@ -18,7 +18,7 @@ export interface RemovePage {
 export default class Page extends Tree implements ProjectPath {
     metaData: MetaData;
     routes: Routes;
-    view: ViewOP;
+    view: ReturnType<typeof getView>;
     constructor(name: string, root: string, parent: Project);
     static getPagesPath: (root: string) => string[];
     getFullPath(): string;

@@ -14,7 +14,7 @@ export default function(plop: NodePlop.API): any {
                 choices: project.service.loadListPath(),
             },
         ],
-        actions(answers): ReturnType<typeof actions.remove> {
+        actions(answers: any): ReturnType<typeof actions.remove> {
             return [
                 ...actions.remove(answers, project),
                 [

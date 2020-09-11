@@ -1,6 +1,6 @@
 import { ProjectPath } from '../common';
-import Tree from '../common/tree';
-import File from '../common/file';
+import Tree from '../common/Tree';
+import File from '../common/File';
 import type Project from '../Project';
 interface ServicePath {
     root: string;

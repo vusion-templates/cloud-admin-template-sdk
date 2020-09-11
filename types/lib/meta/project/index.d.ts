@@ -1,25 +1,33 @@
-import Component, { AddComponent } from '../component';
+import { AddComponent } from '../component';
 import { PlopConfig } from '../utils';
 import { ProjectPath } from '../common';
-import Tree from '../common/tree';
-import configResolve from './config/resolve';
-import { ParseTypes, loadCustomComponentsData, loadCustomComponentData, loadUILibrary } from './deps';
+import Tree from '../common/Tree';
+import { ParseTypes } from './deps';
 import Auth from './auth';
-import type { PageOP } from './page';
-import type { ServiceOP } from './service';
+import getPage from './page';
+import getService from './service';
+/**
+ * 项目类
+ */
 export default class Project extends Tree implements ProjectPath {
+    /**
+     * 前端路径
+     */
     clientPath: string;
+    /**
+     * BFF 层路径
+     */
     serverPath: string;
     auth: Auth;
-    page: PageOP;
-    service: ServiceOP;
+    page: ReturnType<typeof getPage>;
+    service: ReturnType<typeof getService>;
     constructor(root: string);
-    loadDeps(parseTypes?: ParseTypes, baseName?: string): ReturnType<typeof loadCustomComponentsData>;
-    loadDep(name: string, parseTypes?: ParseTypes): ReturnType<typeof loadCustomComponentData>;
+    loadDeps(parseTypes?: ParseTypes, baseName?: string): Promise<Promise<{}>[]>;
+    loadDep(name: string, parseTypes?: ParseTypes): Promise<{}>;
     getPackage(): any;
+    loadUILibrary(name: string, parseTypes?: ParseTypes): Promise<import("vusion-api").Library>;
+    config(): import("./config/getDefaults").VusionConfig;
     getFullPath(): string;
-    loadUILibrary(name: string, parseTypes?: ParseTypes): ReturnType<typeof loadUILibrary>;
-    config(): ReturnType<typeof configResolve>;
     private getSubPath;
-    addComponent(answers: AddComponent, config?: PlopConfig): ReturnType<typeof Component.add>;
+    addComponent(answers: AddComponent, config?: PlopConfig): Promise<any>;
 }

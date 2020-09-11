@@ -1,12 +1,14 @@
 import * as path from 'path';
-import Tree from '../common/tree';
-import File from '../common/file';
+import Tree from '../common/Tree';
+import File from '../common/File';
 import { ProjectPath, LEVEL_ENUM } from '../common';
 import type Page from '../page';
-import Directory from '../common/directory';
+import Directory from '../common/Directory';
 import { templatePath } from '../../utils';
 import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
-import type { ViewInfo } from 'vusion-api/src/designer/index';
+import type { ViewInfo } from 'vusion-api/out/designer/index';
+import * as fs from 'fs-extra';
+import { VueFile } from 'vusion-api';
 
 export {
     ViewInfo
@@ -22,15 +24,19 @@ export type BlockInfo = {
     title: string;
     tagName: string;
     dependencies: any;
+    vusionDependencies: any;
     registry: string;
     uuid?: string;
 };
 
-export default class View extends Tree implements ProjectPath{
-
+export default class View extends Tree implements ProjectPath {
+    public baseName: string;
     public file: File;
+    public children?: Array<View>;
+
     constructor(name: string, root: string, parent: Page) {
         super(name, root, LEVEL_ENUM.view, parent);
+        this.baseName = path.basename(name);
         this.file = new File(this.fullPath);
     }
 
@@ -40,15 +46,16 @@ export default class View extends Tree implements ProjectPath{
 
     static getAllViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
-        return dirOP.dirAll().filter((item) => {
-            return item.endsWith('index.vue');
-        }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+        return dirOP.dirAll().filter((filePath) => {
+            return filePath.endsWith('index.vue');
+        }).map((filePath) => '/' + filePath.replace(/[\\/]?index\.vue$/, ''));
     }
+
     static getViewsPath = function(root: string): string[] {
         const dirOP = new Directory(root);
-        return dirOP.dir().filter((item) => {
-            return item.endsWith('index.vue');
-        }).map((item) => '/' + item.trim().replace('index.vue', '').replace(/\/$/, ''));
+        return dirOP.dir().filter((filePath) => {
+            return filePath.endsWith('index.vue') || fs.existsSync(path.join(root, filePath, 'index.vue'));
+        }).map((filePath) => '/' + filePath.replace(/[\\/]?index\.vue$/, ''));
     }
 
     public getFullPath(): string {
@@ -59,14 +66,14 @@ export default class View extends Tree implements ProjectPath{
         return this.file.load();
     }
 
-    static removeView(root: string, name: string): ReturnType<File["remove"]> {
-        const file = new File(View.getFullPath(root, name));
+    static removeView(root: string, name: string) {
+        const file = new File(path.join(root, name));
         if (!file.exists()) {
             throw new Error(`file is not exist`);
         }
         return file.remove();
     }
-    static addView(root: string, name: string, options: ViewOptions): ReturnType<File["save"]> {
+    static addView(root: string, name: string, options: ViewOptions) {
         const file = new File(View.getFullPath(root, name));
         if (file.exists()) {
             throw new Error(`file is exist`);
@@ -75,24 +82,43 @@ export default class View extends Tree implements ProjectPath{
         return file.save(templateFile.load());
     }
 
-    async mergeCode(code: string, nodePath: string): Promise<typeof mergeCode> {
+    async loadVueFile() {
+        const vueFile = new VueFile(this.fullPath);
+        await vueFile.open();
+        return vueFile;
+    }
+
+    async savePartialCode(type: 'template' | 'script' | 'style' | 'definition', content: string) {
+        const vueFile = new VueFile(this.fullPath);
+        await vueFile.open();
+    
+        if (type === 'template')
+            vueFile.template = content;
+        else if (type === 'script')
+            vueFile.script = content;
+        else if (type === 'style')
+            vueFile.style = content;
+        else if (type === 'definition')
+            vueFile.definition = content;
+    
+        await vueFile.save();
+    }
+
+    async mergeCode(code: string, nodePath: string) {
         return await mergeCode(this.fullPath, code, nodePath);
     }
 
-    async saveCode(type: string, content: string): Promise<typeof saveCode> {
-        return await saveCode(this.fullPath, type, content);
-    }
 
-    async addBlock(blockInfo: BlockInfo): Promise<typeof addBlock> {
+    async addBlock(blockInfo: BlockInfo) {
         return await addBlock(this.fullPath, blockInfo);
     }
 
-    async getViewContent(viewInfo: ViewInfo): Promise<typeof getViewContent> {
+    async getViewContent(viewInfo: ViewInfo) {
         viewInfo.fullPath = this.fullPath;
         return await getViewContent(viewInfo);
     }
 
-    async addCustomComponent(blockInfo: BlockInfo, content: string): Promise<typeof addBlock> {
-        return await addCustomComponent(this.fullPath, this.getLevel(LEVEL_ENUM.project).getFullPath, blockInfo, content);
+    async addCustomComponent(blockInfo: BlockInfo, content: string) {
+        return await addCustomComponent(this.fullPath, this.getLevel(LEVEL_ENUM.project).getFullPath(), blockInfo, content);
     }
 }

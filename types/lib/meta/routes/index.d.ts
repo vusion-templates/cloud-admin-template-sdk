@@ -1,4 +1,4 @@
-import File from '../common/file';
+import File from '../common/File';
 export default class Route {
     root: string;
     fullPath: string;

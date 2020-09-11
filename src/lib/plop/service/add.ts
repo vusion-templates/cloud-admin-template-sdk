@@ -11,7 +11,7 @@ export default function(plop: NodePlop.API): any {
                 message: '请输入接口名称',
             },
         ],
-        actions(answers): ReturnType<typeof actions.add> {
+        actions(answers: any): ReturnType<typeof actions.add> {
             return [
                 ...actions.add(answers, project),
                 [
