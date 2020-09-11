@@ -55,7 +55,7 @@
     "inquirer-directory": "^2.2.0",
     "node-plop": "^0.26.0",
     "plop": "^2.7.1",
-    "vue-template-compiler": "^2.6.11",
+    "vue-template-compiler": "^2.6.12",
     "vusion-api": "^0.7.25"
   }
 }

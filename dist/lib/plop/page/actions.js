@@ -34,7 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs-extra"));
 const utils_1 = require("../../utils");
-const ms = __importStar(require("vusion-api/src/ms"));
+const ms = __importStar(require("vusion-api/out/ms"));
 const pages_1 = __importDefault(require("./pages"));
 exports.default = {
     add(pageInfo, root) {
