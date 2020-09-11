@@ -34,9 +34,13 @@ function default_1(pageRoot, page) {
             return view_1.default.getViewsPath(root);
         },
         loadList() {
-            return this.loadListPath().map((viewPath) => {
-                return this.load(viewPath);
-            });
+            return this.loadListPath()
+                .map((viewPath) => this.load(viewPath));
+        },
+        loadSubList(viewPath) {
+            return view_1.default.getViewsPath(path.join(root, viewPath))
+                .filter((subPath) => subPath !== '/')
+                .map((subPath) => this.load(path.join(viewPath, subPath)));
         },
         loadTree() {
             function getChildren(view) {

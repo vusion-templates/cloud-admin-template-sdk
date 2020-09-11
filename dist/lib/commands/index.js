@@ -67,6 +67,9 @@ function default_1(root) {
         'view.list'(pageName) {
             return project.page.load(pageName).view.loadList();
         },
+        'view.subList'(pageName, viewPath) {
+            return project.page.load(pageName).view.loadSubList(viewPath);
+        },
         'view.tree'(pageName) {
             return project.page.load(pageName).view.loadTree();
         },

@@ -13,7 +13,8 @@ async function b() {
     // console.log(View.getViewsPath(project.page.load('dashboard').fullPath + '/views'));
     
     // console.log(project.page.load('dashboard').view.loadTree());
-    console.log(await project.page.load('dashboard').view.load('/bbb').loadVueFile());
+    // console.log(await project.page.load('dashboard').view.loadSubList('/ceee'));
+    console.log(await project.page.load('dashboard').view.loadSubList('/ceee'));
     // console.log(project);
 
     // const pages = project.page.loadList();

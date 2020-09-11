@@ -67,7 +67,7 @@ export default class View extends Tree implements ProjectPath {
     }
 
     static removeView(root: string, name: string) {
-        const file = new File(View.getFullPath(root, name));
+        const file = new File(path.join(root, name));
         if (!file.exists()) {
             throw new Error(`file is not exist`);
         }

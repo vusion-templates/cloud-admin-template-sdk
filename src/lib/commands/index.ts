@@ -63,6 +63,9 @@ export default function (root: string): Command {
         'view.list'(pageName: string) {
             return project.page.load(pageName).view.loadList();
         },
+        'view.subList'(pageName: string, viewPath: string) {
+            return project.page.load(pageName).view.loadSubList(viewPath);
+        },
         'view.tree'(pageName: string) {
             return project.page.load(pageName).view.loadTree();
         },

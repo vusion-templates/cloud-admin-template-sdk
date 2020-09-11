@@ -53,7 +53,7 @@ class View extends Tree_1.default {
         return this.file.load();
     }
     static removeView(root, name) {
-        const file = new File_1.default(View.getFullPath(root, name));
+        const file = new File_1.default(path.join(root, name));
         if (!file.exists()) {
             throw new Error(`file is not exist`);
         }

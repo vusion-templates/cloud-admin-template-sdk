@@ -15,9 +15,13 @@ export default function(pageRoot: string, page: Page) {
             return View.getViewsPath(root);
         },
         loadList() {
-            return this.loadListPath().map((viewPath: string) => {
-                return this.load(viewPath);
-            });
+            return this.loadListPath()
+                .map((viewPath: string) => this.load(viewPath));
+        },
+        loadSubList(viewPath: string) {
+            return View.getViewsPath(path.join(root, viewPath))
+                .filter((subPath) => subPath !== '/')
+                .map((subPath: string) => this.load(path.join(viewPath, subPath)));
         },
         loadTree() {
             function getChildren(view: View) {
