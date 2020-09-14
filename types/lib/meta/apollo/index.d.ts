@@ -8,10 +8,9 @@ export default class Apollo extends Tree implements ProjectPath {
         index: File;
     };
     /**
-     * TODO
-     * 1. generator resolver
+     * 1. generator schema and resolvers
      * 2. write file to right path
      *
      */
-    static updateApollo(root: any, json: any): Promise<void>;
+    static updateApollo(root: string, json: any): Promise<void>;
 }

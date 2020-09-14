@@ -19,20 +19,17 @@ function default_1(root) {
         'config.resolve'() {
             return project.config();
         },
-<<<<<<< HEAD
         'page.list'() {
             return project.page.loadList();
-=======
-        // 获取到传入到参数
-        'apollo.update'(json) {
-            return project.apollo.updateApollo(json);
->>>>>>> feat: update apollo method & support transfor schema and query
         },
         'page.add'(answers) {
             return project.page.add(answers);
         },
         'page.remove'(answers) {
-            return project.page.remove(answers);
+        },
+        // 获取到传入到参数
+        'apollo.update'(json) {
+            return project.apollo.updateApollo(json);
         },
         'auth.load': function () {
             return project.auth.load();

@@ -1,16 +1,8 @@
 import Project from '../meta/project';
-<<<<<<< HEAD
 import View, { ViewOptions } from '../meta/view';
 import { BlockInfo, ViewInfo } from '../meta/view';
 import { AddPage, RemovePage } from '../meta/page';
-=======
-import type { PageOP } from '../meta/project/page';
-import type { ViewOP } from '../meta/page/view';
-import type { ServiceOP } from '../meta/project/service';
-import type View from '../meta/view';
-import type { BlockInfo, ViewInfo } from '../meta/view';
 import { ApolloOP } from '../meta/project/apollo';
->>>>>>> feat: update apollo method & support transfor schema and query
 
 export interface Command {
     [prop: string]: any;
@@ -21,7 +13,6 @@ export default function (root: string): Command {
     return {
         'config.resolve'() {
             return project.config();
-<<<<<<< HEAD
         },
         'page.list'() {
             return project.page.loadList();
@@ -30,18 +21,10 @@ export default function (root: string): Command {
             return project.page.add(answers);
         },
         'page.remove'(answers: RemovePage) {
-=======
-        } as Project["config"],
+        },
         // 获取到传入到参数
-        'apollo.update'(json): ReturnType<ApolloOP['updateApollo']> {
+        'apollo.update'(json: JSON): ReturnType<ApolloOP['updateApollo']> {
           return project.apollo.updateApollo(json);
-        },
-        'page.add'(answers): ReturnType<PageOP["add"]> {
-            return project.page.add(answers);
-        },
-        'page.remove'(answers): ReturnType<PageOP["remove"]> {
->>>>>>> feat: update apollo method & support transfor schema and query
-            return project.page.remove(answers);
         },
         'auth.load': function () {
             return project.auth.load();

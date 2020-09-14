@@ -50,6 +50,7 @@
     ]
   },
   "dependencies": {
+    "@types/estraverse": "^5.1.0",
     "chalk": "^4.1.0",
     "fs-extra": "^9.0.0",
     "graphql": "^15.3.0",
