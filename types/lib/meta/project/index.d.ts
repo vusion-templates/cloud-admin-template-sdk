@@ -6,6 +6,7 @@ import { ParseTypes } from './deps';
 import Auth from './auth';
 import getPage from './page';
 import getService from './service';
+import type { ApolloOP } from './apollo';
 /**
  * 项目类
  */
@@ -21,6 +22,7 @@ export default class Project extends Tree implements ProjectPath {
     auth: Auth;
     page: ReturnType<typeof getPage>;
     service: ReturnType<typeof getService>;
+    apollo: ApolloOP;
     constructor(root: string);
     loadDeps(parseTypes?: ParseTypes, baseName?: string): Promise<Promise<{}>[]>;
     loadDep(name: string, parseTypes?: ParseTypes): Promise<{}>;

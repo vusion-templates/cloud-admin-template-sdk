@@ -13,7 +13,8 @@
     "lint": "eslint src --fix --ext .ts",
     "lib": "tsc",
     "dev": "tsc -w",
-    "prepublishOnly": "npm run lib && git add ."
+    "prepublishOnly": "npm run lib && git add .",
+    "codegen":  "node ./dist/lib/meta/apollo/dsl-to-all/test.js"
   },
   "repository": {
     "type": "git",
@@ -28,14 +29,14 @@
   "homepage": "https://github.com/vusion-templates/cloud-admin-template-sdk#readme",
   "devDependencies": {
     "@types/jest": "^24.0.18",
+    "@types/node": "^10.12.18",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
     "eslint": "^6.1.0",
     "husky": "^3.0.1",
     "jest": "^24.9.0",
     "lint-staged": "^9.2.0",
-    "typescript": "^3.3.1",
-    "@types/node": "^10.12.18"
+    "typescript": "^3.3.1"
   },
   "husky": {
     "hooks": {
@@ -50,9 +51,12 @@
     ]
   },
   "dependencies": {
+    "@types/estraverse": "^5.1.0",
     "chalk": "^4.1.0",
     "fs-extra": "^9.0.0",
+    "graphql": "^15.3.0",
     "inquirer-directory": "^2.2.0",
+    "json-schema-ref-parser": "^9.0.6",
     "node-plop": "^0.26.0",
     "plop": "^2.7.1",
     "vue-template-compiler": "^2.6.12",

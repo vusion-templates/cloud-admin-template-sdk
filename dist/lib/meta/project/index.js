@@ -42,6 +42,7 @@ const deps_1 = require("./deps");
 const auth_1 = __importDefault(require("./auth"));
 const page_1 = __importDefault(require("./page"));
 const service_1 = __importDefault(require("./service"));
+const apollo_1 = __importDefault(require("./apollo"));
 const getName = function (dir) {
     const packagePath = path.join(dir, 'package.json');
     let name = path.basename(dir);
@@ -63,6 +64,7 @@ class Project extends Tree_1.default {
         this.auth = new auth_1.default(this.clientPath, this);
         this.page = page_1.default(this.clientPath, this);
         this.service = service_1.default(this.clientPath, this);
+        this.apollo = apollo_1.default(this.clientPath, this);
     }
     loadDeps(parseTypes = {}, baseName) {
         return __awaiter(this, void 0, void 0, function* () {
