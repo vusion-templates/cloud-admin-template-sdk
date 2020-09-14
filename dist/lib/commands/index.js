@@ -28,6 +28,10 @@ function default_1(root) {
         'page.remove'(answers) {
             return project.page.remove(answers);
         },
+        // 获取到传入到参数
+        'apollo.update'(json) {
+            return project.apollo.updateApollo(json);
+        },
         'auth.load': function () {
             return project.auth.load();
         },
