@@ -19,6 +19,10 @@ function getDefaults() {
         designer: false,
         forceShaking: false,
         experimental: false,
+        ui: {
+            name: '',
+            version: '',
+        },
     };
     return defaults;
 }

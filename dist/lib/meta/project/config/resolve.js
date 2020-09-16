@@ -165,6 +165,11 @@ function resolve(cwd, configPath = 'vusion.config.js', args, throwErrors) {
             port: 12800,
         }, config.designer);
     }
+    {
+        const pkg = new File_1.default(packagePath).loadJSON();
+        config.ui.name = pkg.ui.name;
+        config.ui.version = pkg.ui.version;
+    }
     return config;
 }
 exports.default = resolve;

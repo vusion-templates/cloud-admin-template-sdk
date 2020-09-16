@@ -169,6 +169,10 @@ export default function resolve(cwd: string, configPath = 'vusion.config.js', ar
             port: 12800,
         }, config.designer);
     }
-
+    {
+        const pkg = new File(packagePath).loadJSON();
+        config.ui.name = pkg.ui.name;
+        config.ui.version = pkg.ui.version;
+    }
     return config;
 }

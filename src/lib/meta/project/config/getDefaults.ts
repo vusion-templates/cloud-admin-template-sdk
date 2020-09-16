@@ -48,6 +48,11 @@ export interface VusionConfig {
 
     forceShaking: boolean;
     experimental: boolean;
+
+    ui: {
+        name: string;
+        version: string;
+    };
 }
 
 export default function getDefaults(): VusionConfig {
@@ -73,6 +78,11 @@ export default function getDefaults(): VusionConfig {
 
         forceShaking: false,                   // Force to enable tree shaking under this path without care of side effects. It's different from default tree shaking of webpack.
         experimental: false,                   // Enable some experimental loaders or plugins, like ModuleConcatenationPlugin
+
+        ui: {
+            name: '',
+            version: '', 
+        }, 
     };
 
     return defaults;

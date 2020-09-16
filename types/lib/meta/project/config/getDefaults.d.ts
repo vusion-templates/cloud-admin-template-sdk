@@ -46,5 +46,9 @@ export interface VusionConfig {
     };
     forceShaking: boolean;
     experimental: boolean;
+    ui: {
+        name: string;
+        version: string;
+    };
 }
 export default function getDefaults(): VusionConfig;
