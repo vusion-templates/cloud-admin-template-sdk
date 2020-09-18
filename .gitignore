@@ -37,7 +37,14 @@ coverage
 
 #test
 entityResolver.json
+<<<<<<< HEAD
 
 #dist
 dist
 types
+=======
+**/*/test.ts
+
+#dist
+dist
+>>>>>>> feat: rm dist
