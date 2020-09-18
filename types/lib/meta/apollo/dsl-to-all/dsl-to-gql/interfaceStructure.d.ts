@@ -19,8 +19,9 @@ export interface Interfaces {
     [operationId: string]: Endpoint;
 }
 export declare const getParamDetails: (param: Oa3Param | Oa2NonBodyParam) => StructureParam;
+export declare const getSuccessExample: (responses: Responses) => JSONSchemaType | undefined;
 export declare const getSuccessResponse: (responses: Responses) => JSONSchemaType | undefined;
-export declare const getEntityResponse: (responses: Responses) => JSONSchemaType | undefined;
+export declare const getEntityResponse: (responses?: Responses) => JSONSchemaType | undefined;
 export interface EndpointParam {
     required: boolean;
     type: 'header' | 'query' | 'formData' | 'path' | 'body';

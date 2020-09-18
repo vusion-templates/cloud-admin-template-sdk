@@ -7,16 +7,17 @@ import { ArraySchema } from "../dsl-to-gql/json-schema";
 export function UpdateListSchemaOfEntity(schema: any) {
   if (schema.type === 'array') {
     const temp: ArraySchema = schema;
-    return {
-      type: 'object',
-      properties: {
-        content: temp,
-        totalElements: {
-          type: "integer",
-          format: "int"
-        }
-      }
-    }
+    // return {
+    //   type: 'object',
+    //   properties: {
+    //     content: temp,
+    //     totalElements: {
+    //       type: "integer",
+    //       format: "int"
+    //     }
+    //   }
+    // }
+    return schema;
   }
 
   return schema;

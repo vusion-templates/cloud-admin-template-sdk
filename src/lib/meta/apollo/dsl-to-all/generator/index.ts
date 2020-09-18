@@ -3,42 +3,36 @@ import { generateQueryByField } from '../gql-to-randomquery';
 import { buildSchema, printSchema, print, GraphQLSchema } from 'graphql';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { generate } from '../ast-to-resolver';
+import generator from '@babel/generator'
 
 export function FileSave(context: any, path: string) {
   fs.ensureFileSync(path);
   fs.writeFileSync(path, context);
 }
 
-export function GeneratorGraphTS(keys: string[] = []) {
-  const graphAST: {
-    type: string;
-    body: any[];
-  } = {
+export function GeneratorGraphTS(groupQueryObject: {
+  [field: string]: any;
+}) {
+  const graphAST: any = {
     type: 'Program',
     body: []
   };
 
-  keys.forEach(key => {
-    graphAST.body.push(
-      {
-        type: 'ImportDeclaration',
-        specifiers: [
-          {
-            type: 'ImportDefaultSpecifier',
-            local: {
-              type: 'Identifier',
-              name: key,
-            }
-          }
-        ],
-        source: {
-          type: 'Literal',
-          value: `./${key}.gql`
-        }
+  const importAst = {
+    type: 'ImportDeclaration',
+    specifiers: [{
+      type: 'ImportDefaultSpecifier',
+      local: {
+        type: 'Identifier',
+        name: 'gql'
       }
-    )
-  })
+    }],
+    source: {
+      type: 'StringLiteral',
+      value: 'graphql-tag'
+    }
+  }
+  graphAST.body.push(importAst);
 
   const newLocal: any[] = [];
   const exportAst =  {
@@ -61,24 +55,38 @@ export function GeneratorGraphTS(keys: string[] = []) {
     }
   };
 
-  keys.forEach(key => {
-    exportAst.declaration.declarations[0].init.properties.push( {
-      type: 'Property',
+  
+  Object.keys(groupQueryObject).forEach(key => {
+    const { queryDocument, variableValues }  = groupQueryObject[key];
+    exportAst.declaration.declarations[0].init.properties.push({
+      type: 'ObjectProperty',
       key: {
         type: 'Identifier',
         name: key
       },
       value: {
-        type: 'Identifier',
-        name: key
+        type: 'TaggedTemplateExpression',
+        tag: {
+          type: 'Identifier',
+          name: 'gql',
+        },
+        quasi: {
+          type: "TemplateLiteral",
+          quasis: [
+            {
+              type: 'TemplateElement',
+              value: {
+                raw: print(queryDocument)
+              }
+            }
+          ]
+        }
       }
-    })
-
-  })
+    });
+  });
 
   graphAST.body.push(exportAst);
-
-  return generate(graphAST);
+  return generator(graphAST).code;
 }
 
 export function OutputGraphQLQuery(schema: GraphQLSchema, rootPath: string) {
@@ -86,14 +94,14 @@ export function OutputGraphQLQuery(schema: GraphQLSchema, rootPath: string) {
     buildSchema(`${printSchema(schema)}`),
   );
 
-  Object.keys(groupQueryObject).forEach((fieldName: string) => {
-    const { queryDocument, variableValues }  = groupQueryObject[fieldName];
-    const queryPath = path.join(rootPath, `/${fieldName}.gql`);
-    // output query
-    FileSave(print(queryDocument), queryPath);
-  })
+  // Object.keys(groupQueryObject).forEach((fieldName: string) => {
+  //   const { queryDocument, variableValues }  = groupQueryObject[fieldName];
+  //   const queryPath = path.join(rootPath, `/${fieldName}.gql`);
+  //   // output query
+  //   FileSave(print(queryDocument), queryPath);
+  // })
 
-   const graphJS = GeneratorGraphTS(Object.keys(groupQueryObject));
+   const graphJS = GeneratorGraphTS(groupQueryObject);
    const graphJSPath = path.join(rootPath, `/graph.js`);
    FileSave(graphJS, graphJSPath)
 }

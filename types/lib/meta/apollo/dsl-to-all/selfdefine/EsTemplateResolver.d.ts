@@ -1,3 +1,4 @@
+import { ESASTNode } from "../ast-to-resolver";
 export declare const RootTemplete = "\nimport requester from './requester';\n\nexport const resolvers = {\n  Query: {\n  },\n};";
 /**
  * path = '/xxx/xx/' + args.id
@@ -7,10 +8,11 @@ export declare const RootTemplete = "\nimport requester from './requester';\n\ne
  *   limit: args.id
  * }
  */
-export declare const EntityfunTemplate: ({ path, setFlag, query }: {
+export declare const EntityfunTemplate: ({ path, setFlag, query, example }: {
     path: string;
     setFlag?: boolean;
-    query: object;
+    query: ESASTNode | string;
+    example: ESASTNode | string;
 }) => string;
 /**
  * 查询结构体内部需要补充和完善

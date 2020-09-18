@@ -1,4 +1,4 @@
-import { ESASTNode } from ".";
+import { ESASTNode, generate } from ".";
 import * as acorn from 'acorn';
 import { ResolverOptions } from "../dsl-to-gql/interfaceStructure";
 import esrecurse from 'esrecurse';
@@ -19,6 +19,7 @@ export function resolverTemplate(config: ResolverOptions = {
     path: config.path ? PathToBinaryExpressionString(config.path) : 'PATH',
     setFlag: config.extendConfig.setFlag,
     query: config.query? QueryToObjectExpression(config.query) : {},
+    example: JSON.stringify(config.extendConfig.example),
   });
   const funTemplateAst: any = acorn.parse(template);
   return funTemplateAst.body[0].expression;
@@ -34,7 +35,6 @@ export const UpdateASTFn = async (allEndpoints: any) => {
     ObjectExpression: async (node: ESASTNode) => {
       Object.keys(allEndpoints).forEach((operateId: string) => {
         const config: any = allEndpoints[operateId].config;
-
         const operateAST = {
           type: 'Property',
           key: {
