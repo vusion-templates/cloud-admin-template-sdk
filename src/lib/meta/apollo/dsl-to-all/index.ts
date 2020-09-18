@@ -11,8 +11,6 @@ export async function TransforDSL(dslSchema: any, rootPath: string) {
     const schemaPath = path.join(rootPath, '/schema.gql');
     const resolverPath = path.join(rootPath, '/resolver.js');
 
-    console.info('json', dslSchema);
-
     const { schema, endpoints }  = await dslToGQL.createSchema({
       dslSchema
     });

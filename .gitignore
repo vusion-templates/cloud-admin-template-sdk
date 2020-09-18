@@ -47,4 +47,10 @@ types
 
 #dist
 dist
+<<<<<<< HEAD
 >>>>>>> feat: rm dist
+=======
+
+#types 
+types
+>>>>>>> feat: support data transfor
