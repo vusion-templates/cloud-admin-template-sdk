@@ -41,3 +41,6 @@ types/tests
 **/*/tests
 entityResolver.json
 **/*/test.ts
+
+#dist
+dist

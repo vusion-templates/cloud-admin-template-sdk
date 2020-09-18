@@ -67,7 +67,6 @@ export function TransforArrToBinaryExpression(arr: string[]) {
   return root;
 }
 
-
 /**
  * asdfaf{d}
  * =>  'asdfaf' + args.d
@@ -81,8 +80,6 @@ export function PathToBinaryExpressionString(str: string) {
   }
   return str;
 }
-
-
 interface Param {
   name: string;
 }
@@ -120,7 +117,6 @@ export function QueryToObjectExpression(obj: Param[] = []) {
       }
     )
   })
-
 
   return generate(root);
 }
