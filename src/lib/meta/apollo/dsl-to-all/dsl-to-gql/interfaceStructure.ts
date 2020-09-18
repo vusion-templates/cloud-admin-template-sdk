@@ -11,7 +11,7 @@ import {
   getFields
 } from "./config";
 import { GraphQLSchema, GraphQLObjectType, GraphQLFieldConfig, GraphQLResolveInfo, GraphQLFieldConfigMap } from "graphql";
-import { RootGraphQLSchema, JSONSchemaType, ObjectSchema } from "./json-schema";
+import { RootGraphQLSchema, JSONSchemaType, ObjectSchema, BodySchema } from "./json-schema";
 import { UpdateListSchemaOfEntity } from "../selfdefine/schemaGQL";
 
 export interface Param {
@@ -60,6 +60,32 @@ export const getParamDetails = (param: Oa3Param | Oa2NonBodyParam): StructurePar
   };
 };
 
+export const getSuccessExample = (
+  responses: Responses,
+): JSONSchemaType | undefined => {
+  const successCode = Object.keys(responses).find(code => {
+    return code[0] === '2';
+  });
+
+  if (!successCode) {
+    return undefined;
+  }
+
+  const successResponse = responses[successCode];
+  if (!successResponse) {
+    throw new Error(`Expected responses[${successCode}] to be defined`);
+  }
+  if (successResponse.schema) {
+    return successResponse.schema;
+  }
+
+  if (successResponse.content) {
+    return (successResponse.content['application/json'].examples || {}).default;
+  }
+
+  return undefined;
+};
+
 // const contentTypeFormData = 'application/x-www-form-urlencoded';
 export const getSuccessResponse = (
   responses: Responses,
@@ -80,50 +106,24 @@ export const getSuccessResponse = (
     return successResponse.schema;
   }
 
-  // if (successResponse.content) {
-  //   return successResponse.content['application/json'].schema;
-  // }
+  if (successResponse.content) {
+    return successResponse.content['application/json'].schema;
+  }
 
   return undefined;
 };
 
 
 export const getEntityResponse = (
-  responses: Responses,
+  responses: Responses = {},
 ): JSONSchemaType | undefined => {
-  const successCode = Object.keys(responses).find(code => {
-    return code[0] === '2';
-  });
 
-  if (!successCode) {
-    return undefined;
+  if (responses.schema) {
+    return UpdateListSchemaOfEntity(responses.schema);
   }
-
-  const successResponse = responses[successCode];
-  if (!successResponse) {
-    throw new Error(`Expected responses[${successCode}] to be defined`);
-  }
-  if (successResponse.schema) {
-    return UpdateListSchemaOfEntity(successResponse.schema);
-  }
-
-  // if (successResponse.content) {
-  //   return successResponse.content['application/json'].schema;
-  // }
 
   return undefined;
 };
-
-function isFormdataRequest(requestBody: OA3BodyParam): boolean {
-  // TODO return !!requestBody.content[contentTypeFormData];
-  return false;
-}
-
-const getGQLTypeNameFromURL = (method: string, url: string): string => {
-  const fromUrl = replaceOddChars(url.replace(/[{}]+/g, ''));
-  return `${method}${fromUrl}`;
-};
-
 export interface EndpointParam {
   required: boolean;
   type: 'header' | 'query' | 'formData' | 'path' | 'body';
@@ -173,6 +173,22 @@ export interface RequestOptions {
   bodyType: 'json' | 'formData';
 }
 
+type EnetityResolver = {
+  interface: {
+    path: string;
+    parameters: Oa2NonBodyParam[];
+    name: string;
+    responses: {
+      schema: BodySchema;
+    };
+    extendConfig: {
+      [key: string]: any;
+    };
+    description: string;
+    requestBody?: any;
+  };
+}
+
 /**
  * 获取全部 stucture
  * 创建关联关系
@@ -196,51 +212,53 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
       if (name === 'entities') {
         Object.keys(apiObject).forEach((entityName: string) => {
           const entityObject = apiObject[entityName];
-          const enetityResolvers = (entityObject || {}).resolvers || {};
-          Object.keys(enetityResolvers).forEach((path) => {
-            const route = enetityResolvers[path];
-            Object.keys(route).forEach((method: string) => {
-              const operationObject = route[method];
-              const { operationId } = operationObject;
-              const bodyParams = operationObject.requestBody
-                ? getParamDetailsFromRequestBody(operationObject.requestBody)
-                : [];
+          const enetityResolvers = (entityObject || {}).resolvers || [];
+          enetityResolvers.forEach((enetityResolver: EnetityResolver) => {
+            const operationObject = enetityResolver.interface;
+            const path = operationObject.path;
+            const interfaceName = operationObject.name;
+            const bodyParams = operationObject.requestBody
+              ? getParamDetailsFromRequestBody(operationObject.requestBody)
+              : [];
 
-              const parameterDetails = [
-                ...(operationObject.parameters
-                  ? operationObject.parameters.map((param: Oa2NonBodyParam) => getParamDetails(param))
-                  : []),
-                ...bodyParams,
-              ];
+            const parameterDetails = [
+              ...(operationObject.parameters
+                ? (Object.values(operationObject.parameters)).map((param: Oa2NonBodyParam) => getParamDetails(param))
+                : []),
+              ...bodyParams,
+            ];
 
-              allOperations[operationId] = {
-                parameters: parameterDetails,
-                description: operationObject.description,
-                response: getEntityResponse(operationObject.responses),
-                config: {
-                  path,
-                  baseUrl: '',
-                  query: parameterDetails,
-                  extendConfig: operationObject.extendConfig,
-             //     query: { start: 0 } // todo get from 
-                },
-                // getRequestOptions: (parameterValues: GraphQLParameters) => {
-                //   return getRequestOptions({
-                //     parameterDetails,
-                //     parameterValues,
-                //     baseUrl: '', // 网关域名
-                //     path,
-                //     method,
-                //     formData: operationObject.consumes
-                //       ? !operationObject.consumes.includes('application/json')
-                //       : operationObject.requestBody
-                //         ? isFormdataRequest(operationObject.requestBody)
-                //         : false,
-                //   });
-                // },
-                mutation: false,
-              };
-            });
+            allOperations[interfaceName] = {
+              parameters: parameterDetails,
+              description: operationObject.description,
+              response: getSuccessResponse(operationObject.responses),
+              config: {
+                path,
+                baseUrl: '',
+                query: parameterDetails,
+                extendConfig: Object.assign(
+                  operationObject.extendConfig || {},
+                  {
+                    example: getSuccessExample(operationObject.responses)
+                  }
+                )
+              },
+              // getRequestOptions: (parameterValues: GraphQLParameters) => {
+              //   return getRequestOptions({
+              //     parameterDetails,
+              //     parameterValues,
+              //     baseUrl: '', // 网关域名
+              //     path,
+              //     method,
+              //     formData: operationObject.consumes
+              //       ? !operationObject.consumes.includes('application/json')
+              //       : operationObject.requestBody
+              //         ? isFormdataRequest(operationObject.requestBody)
+              //         : false,
+              //   });
+              // },
+              mutation: false,
+            };
           })
         })
 
