@@ -4,8 +4,8 @@ export const RootTemplete = `
 import requester from './requester';
 
 export const resolvers = {
-	Query: {
-	},
+  Query: {
+  },
 };`;
 
 /**
@@ -17,24 +17,24 @@ export const resolvers = {
  * }
  */
 export const EntityfunTemplate = ({
-	path,
-	setFlag = true,
-	query
+  path,
+  setFlag = true,
+  query
 }: {  path: string; setFlag?: boolean; query: object}) => {
-	return `async (parent, args, context, info) => {
-		${path === 'PATH' ? 'const PATH = "";' : ''}
-		const { data } = await requester({
-			url: {
-				path: ${path},
-				method: "get",
-				query: ${query}
-			},
-			config: {
-				baseURL:'/',
-			}
-		});
-		return data && data.Data;
-	}
+  return `async (parent, args, context, info) => {
+    ${path === 'PATH' ? 'const PATH = "";' : ''}
+    const { data } = await requester({
+      url: {
+        path: ${path},
+        method: "get",
+        query: ${query}
+      },
+      config: {
+        baseURL:'/',
+      }
+    });
+    return data && data.Data;
+  }
 `;
 } 
 
@@ -42,12 +42,12 @@ export const EntityfunTemplate = ({
  * 查询结构体内部需要补充和完善
  */
 export const StructureResolverTemplate = `
-	async () => {
-	}
+  async () => {
+  }
 `;
 
 
 export const OtherWebResolverTemplate = `
-	async () => {
-	}
+  async () => {
+  }
 ` ;

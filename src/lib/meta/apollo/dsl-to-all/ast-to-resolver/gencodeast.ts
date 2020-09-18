@@ -10,43 +10,43 @@ import { PathToBinaryExpressionString, QueryToObjectExpression } from "./paramsT
  * 替换请求地址，也可以根据表现层传递过来的参数去配置请求地址
  */
 export function resolverTemplate(config: ResolverOptions = { 
-	baseUrl: '', 
-	path: '',
-	extendConfig: {},
-	query: [],
+  baseUrl: '', 
+  path: '',
+  extendConfig: {},
+  query: [],
 }) {
-	const template = EntityfunTemplate({
-		path: config.path ? PathToBinaryExpressionString(config.path) : 'PATH',
-		setFlag: config.extendConfig.setFlag,
-		query: config.query? QueryToObjectExpression(config.query) : {},
-	});
-	const funTemplateAst: any = acorn.parse(template);
-	return funTemplateAst.body[0].expression;
+  const template = EntityfunTemplate({
+    path: config.path ? PathToBinaryExpressionString(config.path) : 'PATH',
+    setFlag: config.extendConfig.setFlag,
+    query: config.query? QueryToObjectExpression(config.query) : {},
+  });
+  const funTemplateAst: any = acorn.parse(template);
+  return funTemplateAst.body[0].expression;
 }
 
 export const UpdateASTFn = async (allEndpoints: any) => {
-	// output resolver
-	const ast = acorn.parse(RootTemplete,  {
-		sourceType: 'module'
-	});
-		
-	esrecurse.visit(ast, {
-		ObjectExpression: async (node: ESASTNode) => {
-			Object.keys(allEndpoints).forEach((operateId: string) => {
-				const config: any = allEndpoints[operateId].config;
+  // output resolver
+  const ast = acorn.parse(RootTemplete,  {
+    sourceType: 'module'
+  });
+    
+  esrecurse.visit(ast, {
+    ObjectExpression: async (node: ESASTNode) => {
+      Object.keys(allEndpoints).forEach((operateId: string) => {
+        const config: any = allEndpoints[operateId].config;
 
-				const operateAST = {
-					type: 'Property',
-					key: {
-						type: 'Identifier',
-						name: operateId,
-					},
-					value: resolverTemplate(config)
-				}
-				node.properties[0].value.properties.push(operateAST);
-			})
-		}
-	});
+        const operateAST = {
+          type: 'Property',
+          key: {
+            type: 'Identifier',
+            name: operateId,
+          },
+          value: resolverTemplate(config)
+        }
+        node.properties[0].value.properties.push(operateAST);
+      })
+    }
+  });
 
-	return ast;
+  return ast;
 }

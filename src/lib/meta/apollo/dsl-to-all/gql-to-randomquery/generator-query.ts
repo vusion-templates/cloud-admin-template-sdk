@@ -88,8 +88,8 @@ function random(config: InternalConfiguration) {
   // } else {
   //   config.nextSeed = seedrandom(config.seed)()
    
-	// }
-	return config.nextSeed || config.seed;
+  // }
+  return config.nextSeed || config.seed;
 }
 
 function getDocumentDefinition(definitions: any): DocumentNode {
