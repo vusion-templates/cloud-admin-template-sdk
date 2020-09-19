@@ -40,4 +40,6 @@ entityResolver.json
 
 #dist
 dist
+
+#types 
 types

@@ -1,5 +1,3 @@
-import { ESASTNode } from "../ast-to-resolver";
-
 
 export const RootTemplete = `
 import requester from './requester';
@@ -19,10 +17,9 @@ export const resolvers = {
  */
 export const EntityfunTemplate = ({
   path,
-  setFlag = true,
   query,
-  example
-}: { path: string; setFlag?: boolean; query: ESASTNode | string; example: ESASTNode | string }) => {
+  example // 设置默认的返回参数，在服务启动起来之前需要使用测试数据
+}: { path: string; query: any | string; example: any | string }) => {
 
   return `async (parent, args, context, info) => {
      try {
@@ -31,6 +28,7 @@ export const EntityfunTemplate = ({
         return data;
       } else {
         ${path === 'PATH' ? 'const PATH = "";' : ''}
+        ${query == 'QUERYPARAM' ? 'const QUERYPARAM = {};' : ''}
         const { data } = await requester({
           url: {
             path: ${path},
@@ -57,7 +55,6 @@ export const StructureResolverTemplate = `
   async () => {
   }
 `;
-
 
 export const OtherWebResolverTemplate = `
   async () => {
