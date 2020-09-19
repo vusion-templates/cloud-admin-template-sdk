@@ -1,6 +1,6 @@
 import Project from '../meta/project';
 import View, { ViewOptions } from '../meta/view';
-import { BlockInfo, ViewInfo } from '../meta/view';
+import { BlockInfo } from '../meta/view';
 import { AddPage, RemovePage } from '../meta/page';
 import { ApolloOP } from '../meta/project/apollo';
 

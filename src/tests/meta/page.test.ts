@@ -45,8 +45,10 @@ describe('Page', () => {
             name: 'zzzzzz',
             title: 'fff',
         });
-        expect(project.page.loadListPath()).toEqual(['zzz', 'zzzzzz']);
-        expect(project.page.loadList().map((item) => item.name)).toEqual(['zzz', 'zzzzzz']);
+        expect(project.page.loadListPath().includes('zzz')).toBe(true);
+        expect(project.page.loadListPath().includes('zzzzzz')).toBe(true);
+        expect(project.page.loadList().map((item) => item.name).includes('zzz')).toBe(true);
+        expect(project.page.loadList().map((item) => item.name).includes('zzzzzz')).toBe(true);
         expect(project.page.load('zzz')).toBeInstanceOf(Page);
         await project.page.remove({
             name: 'zzz',

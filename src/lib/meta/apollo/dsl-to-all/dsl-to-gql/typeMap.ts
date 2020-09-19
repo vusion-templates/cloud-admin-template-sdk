@@ -14,7 +14,6 @@ import {
   GraphQLScalarType,
   GraphQLString,
   Thunk,
-  GraphQLInputFieldConfig,
   GraphQLInputType,
 } from 'graphql';
 import {

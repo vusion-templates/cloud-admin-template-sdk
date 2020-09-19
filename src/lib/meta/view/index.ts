@@ -5,7 +5,7 @@ import { ProjectPath, LEVEL_ENUM } from '../common';
 import type Page from '../page';
 import Directory from '../common/Directory';
 import { templatePath } from '../../utils';
-import { mergeCode, saveCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
+import { mergeCode, addBlock, addCustomComponent, getViewContent } from 'vusion-api/out/designer/index';
 import type { ViewInfo } from 'vusion-api/out/designer/index';
 import * as fs from 'fs-extra';
 import { VueFile } from 'vusion-api';

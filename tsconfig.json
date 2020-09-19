@@ -22,7 +22,7 @@
     ]
   },
   "include": [
-    "./src/**/*", "dist/lib/meta/apollo/dsl-to-all/test.js"
+    "./src/**/*"
   ],
   "exclude": [
     "node_modules/**",

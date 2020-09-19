@@ -57,7 +57,7 @@ export function GeneratorGraphTS(groupQueryObject: {
 
   
   Object.keys(groupQueryObject).forEach(key => {
-    const { queryDocument, variableValues }  = groupQueryObject[key];
+    const { queryDocument }  = groupQueryObject[key];
     exportAst.declaration.declarations[0].init.properties.push({
       type: 'ObjectProperty',
       key: {

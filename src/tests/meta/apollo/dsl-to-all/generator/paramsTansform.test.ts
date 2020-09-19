@@ -1,5 +1,5 @@
 
-import { PathToBinaryExpressionString } from '../generator/paramsTansform';
+import { PathToBinaryExpressionString } from '../../../../../lib/meta/apollo/dsl-to-all/generator/paramsTansform';
 
 /**
  * 测试
@@ -16,3 +16,9 @@ function Test(path: string) {
 Test("asdfaf{as}");
 Test("asdfaf");
 Test("");
+
+describe('paramsTansform', () => {
+  test('todo', () => {
+    expect(true).toEqual(true);
+  });
+});

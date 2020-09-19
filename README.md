@@ -6,6 +6,7 @@ npm run dev
 
 本地测试
 ```
-yarn run plop --plopfile=dist/lib/cli/plopfile.js
+npm run test:init
+npm run test
 ```
 

@@ -1,6 +1,6 @@
 
 
-import { TransforDSL } from "./index";
+import { TransforDSL } from "../dist/lib/meta/apollo/dsl-to-all/index";
 
 /**
  * 用自定义的结构测试转化工具
@@ -12,14 +12,14 @@ require('yargs')
 .command(
 	'$0',
 	'Convert swagger schema to graphql schema',
-	(yargs: any) => {
+	(yargs) => {
 		yargs.options('dsl-schema', {
 			describe: 'Path or url to a swagger schema, can be json or yaml',
 			type: 'string',
 			demandOption: true,
 		});
 	},
-	async ({ dslSchema }: any) => {
+	async ({ dslSchema }) => {
 		try {
 
 			await TransforDSL(dslSchema, '/Users/daisy/wy/cloud-admin-template/src/global/apollo');
