@@ -6,15 +6,15 @@ const getRootPath = function (root: string): string {
 }
 
 export interface ApolloOP {
-	// 能转化 schema 的 JSON
+  // 能转化 schema 的 JSON
   updateApollo(JSON: any): void;
 }
 
 export default function(projectRoot: string, project: Project): ApolloOP {
     const root = getRootPath(projectRoot);
     return {
-			updateApollo(json) {
-				return Apollo.updateApollo(root, json);
-			}
+      updateApollo(json) {
+        return Apollo.updateApollo(root, json);
+      }
     } as ApolloOP;
 }
