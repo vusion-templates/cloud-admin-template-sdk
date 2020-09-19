@@ -38,9 +38,7 @@ dist/tests
 types/tests
 
 #test
-**/*/tests
 entityResolver.json
-**/*/test.ts
 
 #dist
 dist

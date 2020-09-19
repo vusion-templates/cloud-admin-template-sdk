@@ -243,20 +243,6 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
                   }
                 )
               },
-              // getRequestOptions: (parameterValues: GraphQLParameters) => {
-              //   return getRequestOptions({
-              //     parameterDetails,
-              //     parameterValues,
-              //     baseUrl: '', // 网关域名
-              //     path,
-              //     method,
-              //     formData: operationObject.consumes
-              //       ? !operationObject.consumes.includes('application/json')
-              //       : operationObject.requestBody
-              //         ? isFormdataRequest(operationObject.requestBody)
-              //         : false,
-              //   });
-              // },
               mutation: false,
             };
           })
@@ -271,27 +257,8 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
           *   key: any
           * }
           */
-        // Object.keys(apiObject).forEach((operationId) => {
-        //   const operationObject = apiObject[operationId];
-
-        //   const bodyParams = operationObject.requestBody
-        //     ? getParamDetailsFromRequestBody(operationObject.requestBody)
-        //     : [];
-
-        //   const parameterDetails = [
-        //     ...(operationObject.parameters
-        //       ? operationObject.parameters.map((param: Oa2NonBodyParam) => getParamDetails(param))
-        //       : []),
-        //     ...bodyParams,
-        //   ];
-
-        //   allOperations[operationId] = {
-        //     response: Object.assign(operationObject, {
-        //       parameters: parameterDetails,
-        //       mutation: false
-        //     })
-        //   };
-        // })
+         // TODO support structure gencode
+         return allOperations;
       }
     });
   })
