@@ -26,7 +26,6 @@ import {
 import { EndpointParam } from './getRequestOptions';
 
 export type GraphQLType = GraphQLOutputType | GraphQLInputType;
-
 export interface GraphQLTypeMap {
   [typeName: string]: GraphQLType;
 }

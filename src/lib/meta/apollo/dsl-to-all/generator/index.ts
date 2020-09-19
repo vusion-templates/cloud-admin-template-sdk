@@ -94,13 +94,6 @@ export function OutputGraphQLQuery(schema: GraphQLSchema, rootPath: string) {
     buildSchema(`${printSchema(schema)}`),
   );
 
-  // Object.keys(groupQueryObject).forEach((fieldName: string) => {
-  //   const { queryDocument, variableValues }  = groupQueryObject[fieldName];
-  //   const queryPath = path.join(rootPath, `/${fieldName}.gql`);
-  //   // output query
-  //   FileSave(print(queryDocument), queryPath);
-  // })
-
    const graphJS = GeneratorGraphTS(groupQueryObject);
    const graphJSPath = path.join(rootPath, `/graph.js`);
    FileSave(graphJS, graphJSPath)
