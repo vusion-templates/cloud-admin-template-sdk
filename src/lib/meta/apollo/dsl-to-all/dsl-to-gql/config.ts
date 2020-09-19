@@ -19,7 +19,12 @@ export interface Responses {
   [key: string]: {
     schema?: JSONSchemaType;
     content?: {
-      'application/json': { schema: JSONSchemaType };
+      'application/json': { 
+        schema: JSONSchemaType;
+        examples: {
+          default: any;
+        };
+      };
     };
     type?: 'file';
   };

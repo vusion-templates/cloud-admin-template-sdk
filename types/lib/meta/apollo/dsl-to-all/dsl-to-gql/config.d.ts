@@ -12,6 +12,9 @@ export interface Responses {
         content?: {
             'application/json': {
                 schema: JSONSchemaType;
+                examples: {
+                    default: any;
+                };
             };
         };
         type?: 'file';
