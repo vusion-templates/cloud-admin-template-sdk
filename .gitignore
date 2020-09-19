@@ -36,7 +36,6 @@ coverage
 .nyc_output
 
 #test
-entityResolver.json
 
 #dist
 dist

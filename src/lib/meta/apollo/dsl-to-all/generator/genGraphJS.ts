@@ -4,6 +4,7 @@ import { buildSchema, printSchema, print, GraphQLSchema } from 'graphql';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import generator from '@babel/generator'
+import { generateMutationByField } from '../gql-to-randomquery/generator-query';
 
 export function FileSave(context: any, path: string) {
   fs.ensureFileSync(path);
@@ -89,12 +90,20 @@ export function GeneratorGraphTS(groupQueryObject: {
   return generator(graphAST).code;
 }
 
-export function OutputGraphQLQuery(schema: GraphQLSchema, rootPath: string) {
+export function OutputGraphQLQueryAndMutation(schema: GraphQLSchema, rootPath: string) {
   const groupQueryObject= generateQueryByField(
     buildSchema(`${printSchema(schema)}`),
   );
 
-   const graphJS = GeneratorGraphTS(groupQueryObject);
+  const groupMutationObject = generateMutationByField(
+    buildSchema(`${printSchema(schema)}`),
+  )
+
+
+   const graphJS = GeneratorGraphTS({
+     ...groupQueryObject,
+     ...groupMutationObject
+   });
    const graphJSPath = path.join(rootPath, `/graph.js`);
    FileSave(graphJS, graphJSPath)
 }

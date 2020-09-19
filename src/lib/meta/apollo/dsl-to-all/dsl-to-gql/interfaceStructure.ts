@@ -11,7 +11,7 @@ import {
 } from "./config";
 import { GraphQLSchema, GraphQLObjectType } from "graphql";
 import { RootGraphQLSchema, JSONSchemaType, BodySchema } from "./json-schema";
-import { UpdateListSchemaOfEntity } from "../selfdefine/schemaGQL";
+import { UpdateListSchemaOfEntity } from "../define/schemaGQL";
 
 export interface Param {
   required: boolean;
@@ -57,32 +57,6 @@ export const getParamDetails = (param: Oa3Param | Oa2NonBodyParam): StructurePar
     required: !!param.required,
     jsonSchema: param,
   };
-};
-
-export const getSuccessExample = (
-  responses: Responses,
-): JSONSchemaType | undefined => {
-  const successCode = Object.keys(responses).find(code => {
-    return code[0] === '2';
-  });
-
-  if (!successCode) {
-    return undefined;
-  }
-
-  const successResponse = responses[successCode];
-  if (!successResponse) {
-    throw new Error(`Expected responses[${successCode}] to be defined`);
-  }
-  if (successResponse.schema) {
-    return successResponse.schema;
-  }
-
-  if (successResponse.content) {
-    return (successResponse.content['application/json'].examples || {}).default;
-  }
-
-  return undefined;
 };
 
 // const contentTypeFormData = 'application/x-www-form-urlencoded';
@@ -180,12 +154,44 @@ type EnetityResolver = {
     responses: {
       schema: BodySchema;
     };
+    method: string;
     extendConfig: {
       [key: string]: any;
     };
     description: string;
     requestBody?: any;
   };
+}
+
+export const getSuccessExample = (
+  responses: Responses,
+): JSONSchemaType | undefined => {
+  const successCode = Object.keys(responses).find(code => {
+    return code[0] === '2';
+  });
+
+  if (!successCode) {
+    return undefined;
+  }
+
+  const successResponse = responses[successCode];
+  if (!successResponse) {
+    throw new Error(`Expected responses[${successCode}] to be defined`);
+  }
+  if (successResponse.schema) {
+    return successResponse.schema;
+  }
+
+  if (successResponse.content) {
+    return (successResponse.content['application/json'].examples || {}).default;
+  }
+
+  return undefined;
+};
+export enum ResolverType {
+  INTERFACE = 'interface',
+  JOIN = 'join',
+  JSON = 'json',
 }
 
 /**
@@ -214,8 +220,8 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
           const enetityResolvers = (entityObject || {}).resolvers || [];
           enetityResolvers.forEach((enetityResolver: EnetityResolver) => {
             const operationObject = enetityResolver.interface;
-            const path = operationObject.path;
             const interfaceName = operationObject.name;
+            const method = operationObject.method;
             const bodyParams = operationObject.requestBody
               ? getParamDetailsFromRequestBody(operationObject.requestBody)
               : [];
@@ -227,22 +233,25 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
               ...bodyParams,
             ];
 
+            const isMutation =
+            ['POST', 'PUT', 'PATCH', 'DELETE'].indexOf(method) !== -1;
+            // combine full path
+            const fullPath =  `/gw/${itmicro}/${operationObject.path}`;
+            enetityResolver.interface.path = fullPath;
+
             allOperations[interfaceName] = {
+              // enetityResolver.type
+              type: ResolverType.INTERFACE,
+              // 定义 schema 的传入参数
               parameters: parameterDetails,
               description: operationObject.description,
+              // 定义 schema 的返回结构
               response: getSuccessResponse(operationObject.responses),
-              config: {
-                path,
-                baseUrl: '',
-                query: parameterDetails,
-                extendConfig: Object.assign(
-                  operationObject.extendConfig || {},
-                  {
-                    example: getSuccessExample(operationObject.responses)
-                  }
-                )
-              },
-              mutation: false,
+              // 用于确定 resolver 函数的具体表现形式
+              resolver: enetityResolver,
+              // 定义 resolver 的默认填充数据
+              examples: getSuccessExample(operationObject.responses),
+              mutation: isMutation,
             };
           })
         })
@@ -286,6 +295,15 @@ export const schemaFromStructures = <TContext>(
   const graphQLSchema: RootGraphQLSchema = {
     query: rootType,
   };
+
+
+  const mutationFields = getFields(endpoints, true, gqlTypes, options);
+  if (Object.keys(mutationFields).length) {
+    graphQLSchema.mutation = new GraphQLObjectType({
+      name: 'Mutation',
+      fields: mutationFields,
+    });
+  }
 
   return new GraphQLSchema(graphQLSchema);
 };

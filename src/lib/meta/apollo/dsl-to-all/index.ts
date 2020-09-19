@@ -4,7 +4,7 @@ import generator from '@babel/generator'
 import { ResolverAST } from './generator/genResolver';
 
 import * as path from 'path';
-import { FileSave, OutputGraphQLQuery } from './generator/genGraphJS';
+import { FileSave, OutputGraphQLQueryAndMutation } from './generator/genGraphJS';
 
 
 export async function TransforDSL(dslSchema: any, rootPath: string) {
@@ -21,7 +21,7 @@ export async function TransforDSL(dslSchema: any, rootPath: string) {
     FileSave(printSchema(schema), schemaPath)
 
     // output query gql & graph.js
-    OutputGraphQLQuery(schema, rootPath);
+    OutputGraphQLQueryAndMutation(schema, rootPath);
 
     // output resolver.js
     const resolverAst: any = await ResolverAST(endpoints);

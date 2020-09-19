@@ -249,6 +249,9 @@ export const getFields = <TContext>(
   { callBackend }: Options<TContext>,
 ): GraphQLFieldConfigMap<any, any> => {
   return Object.keys(endpoints)
+    .filter((operationId: string) => {
+      return !!endpoints[operationId].mutation === !!isMutation;
+    })
     .reduce((result, operationId) => {
       const endpoint: Endpoint = endpoints[operationId];
       const type = jsonSchemaTypeToGraphQL(
