@@ -11,6 +11,8 @@ import { ParseTypes, loadCustomComponentsData, loadCustomComponentData, loadUILi
 import Auth from './auth';
 import getPage from './page';
 import getService from './service';
+import getApollo from './apollo';
+import type { ApolloOP } from './apollo';
 
 const getName = function(dir: string): string {
     const packagePath = path.join(dir, 'package.json');
@@ -36,6 +38,7 @@ export default class Project extends Tree implements ProjectPath {
     public auth: Auth;
     public page: ReturnType<typeof getPage>;
     public service: ReturnType<typeof getService>;
+    public apollo: ApolloOP;
 
     constructor(root: string) {
         const name = getName(root);
@@ -46,6 +49,7 @@ export default class Project extends Tree implements ProjectPath {
         this.auth = new Auth(this.clientPath, this);
         this.page = getPage(this.clientPath, this);
         this.service = getService(this.clientPath, this);
+        this.apollo = getApollo(this.clientPath, this);
     }
     public async loadDeps(parseTypes: ParseTypes = {}, baseName?: string) {
         return await loadCustomComponentsData(this, parseTypes, baseName);

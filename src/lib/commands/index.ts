@@ -2,6 +2,7 @@ import Project from '../meta/project';
 import View, { ViewOptions } from '../meta/view';
 import { BlockInfo, ViewInfo } from '../meta/view';
 import { AddPage, RemovePage } from '../meta/page';
+import { ApolloOP } from '../meta/project/apollo';
 
 export interface Command {
     [prop: string]: any;
@@ -21,6 +22,10 @@ export default function (root: string): Command {
         },
         'page.remove'(answers: RemovePage) {
             return project.page.remove(answers);
+        },
+        // 获取到传入到参数
+        'apollo.update'(json: JSON): ReturnType<ApolloOP['updateApollo']> {
+          return project.apollo.updateApollo(json);
         },
         'auth.load': function () {
             return project.auth.load();
