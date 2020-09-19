@@ -4,14 +4,13 @@ import {
   Oa3Param,
   Responses,
   GraphQLParameters,
-  OA3BodyParam,
   getParamDetailsFromRequestBody,
   Endpoints,
   Oa2NonBodyParam,
   getFields
 } from "./config";
-import { GraphQLSchema, GraphQLObjectType, GraphQLFieldConfig, GraphQLResolveInfo, GraphQLFieldConfigMap } from "graphql";
-import { RootGraphQLSchema, JSONSchemaType, ObjectSchema, BodySchema } from "./json-schema";
+import { GraphQLSchema, GraphQLObjectType } from "graphql";
+import { RootGraphQLSchema, JSONSchemaType, BodySchema } from "./json-schema";
 import { UpdateListSchemaOfEntity } from "../selfdefine/schemaGQL";
 
 export interface Param {

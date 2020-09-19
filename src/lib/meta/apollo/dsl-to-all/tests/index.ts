@@ -1,7 +1,5 @@
 
-
-
-import { PathToBinaryExpressionString } from '../ast-to-resolver/paramsTansform';
+import { PathToBinaryExpressionString } from '../generator/paramsTansform';
 
 /**
  * 测试
@@ -12,7 +10,7 @@ import { PathToBinaryExpressionString } from '../ast-to-resolver/paramsTansform'
  * cmd:  node dist/lib/meta/apollo/dsl-to-all/test/index.js
  */
 function Test(path: string) {
-	const result = PathToBinaryExpressionString(path);
+  const result = PathToBinaryExpressionString(path);
 }
 
 Test("asdfaf{as}");

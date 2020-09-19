@@ -1,4 +1,4 @@
-import { generate } from ".";
+import generator from '@babel/generator';
 
 /**
  * /dd/dd/{id}
@@ -13,7 +13,7 @@ function Literal(str: string) {
   for(let i=0;i<str.length;i++){ 
     if(str[i]==='{'){ 
       const cloneTemp = [...temp]; 
-      arr.push({ type: 'Literal', value: cloneTemp.join('') }); 
+      arr.push({ type: 'StringLiteral', value: cloneTemp.join('') }); 
       temp = [];
     } else if(str[i]==='}') {
       const cloneTemp = [...temp]; 
@@ -32,7 +32,7 @@ function Literal(str: string) {
       temp.push(str[i]); 
       if (i == str.length - 1) {
         const cloneTemp = [...temp]; 
-        arr.push({ type: 'Literal', value: cloneTemp.join('') }); 
+        arr.push({ type: 'StringLiteral', value: cloneTemp.join('') }); 
       }
     }
   }
@@ -76,7 +76,7 @@ export function TransforArrToBinaryExpression(arr: string[]) {
 export function PathToBinaryExpressionString(str: string) {
   if (str.length >= 1) {
     const arr: string[] = Literal(str);
-    return generate(TransforArrToBinaryExpression(arr));
+    return generator(TransforArrToBinaryExpression(arr)).code;
   }
   return str;
 }
@@ -85,10 +85,7 @@ interface Param {
 }
 
 export function QueryToObjectExpression(obj: Param[] = []) {
-  const root: {
-    type: string;
-    properties: any[];
-  } = {
+  const root: any  = {
     type: 'ObjectExpression',
     properties: [],
   }
@@ -98,7 +95,7 @@ export function QueryToObjectExpression(obj: Param[] = []) {
     // check if in query
     root.properties.push(
       {
-        type: 'Property',
+        type: 'ObjectProperty',
         key: {
           type: 'Identifier',
           name,
@@ -118,5 +115,5 @@ export function QueryToObjectExpression(obj: Param[] = []) {
     )
   })
 
-  return generate(root);
+  return generator(root).code;
 }
