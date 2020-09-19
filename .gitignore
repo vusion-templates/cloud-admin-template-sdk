@@ -37,20 +37,9 @@ coverage
 
 #test
 entityResolver.json
-<<<<<<< HEAD
 
 #dist
 dist
-types
-=======
-**/*/test.ts
-
-#dist
-dist
-<<<<<<< HEAD
->>>>>>> feat: rm dist
-=======
 
 #types 
 types
->>>>>>> feat: support data transfor
