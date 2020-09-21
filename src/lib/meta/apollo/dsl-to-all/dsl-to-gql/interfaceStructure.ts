@@ -238,8 +238,9 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
             // combine full path
             const fullPath =  `/gw/${itmicro}/${operationObject.path}`;
             enetityResolver.interface.path = fullPath;
+            const operationName = `${itmicro}_${interfaceName}`;
 
-            allOperations[interfaceName] = {
+            allOperations[operationName] = {
               // enetityResolver.type
               type: ResolverType.INTERFACE,
               // 定义 schema 的传入参数

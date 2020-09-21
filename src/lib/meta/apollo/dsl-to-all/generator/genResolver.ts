@@ -1,6 +1,7 @@
 import * as parser from '@babel/parser';
 import traverse from '@babel/traverse'
 import { RootTemplete } from '../define/esTemplateResolver';
+import { resolverTemplate } from './parseArrowFun';
 
 function PathNodeUpdate(allEndpoints: any, isMutation: boolean) {
   const properties: any[] = [];

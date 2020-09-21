@@ -59,7 +59,7 @@ function EntityMutationTemplate(params: any, beAssign: string) {
 }
 
 function EntityQueryTemplate(params: any, beAssign: string) {
-  return  `${params.path === 'PATH' ? 'const PATH = "";' : ''}
+  return `${params.path === 'PATH' ? 'const PATH = "";' : ''}
   ${params.query == 'QUERYPARAM' ? 'const QUERYPARAM = {};' : ''}
   const { ${beAssign} } = await requester({
     url: {
@@ -110,6 +110,11 @@ export function FullTemplate({
       examples: JSON.stringify(examples),
       method: JSON.stringify(resolver.interface.method),
     };
+
+    return `
+    ${EntityQueryTemplate(params, beAssign)}
+    return data;
+    `;
 
     return `if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_DESIGNER) {
       const ${beAssign} =  ${params.examples};
