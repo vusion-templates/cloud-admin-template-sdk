@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "mockfe": {
     "entities": {},
@@ -49,6 +50,77 @@
             "format": "",
             "isLeaf": true,
             "label": "手机号"
+=======
+
+  {
+    "mockfe": {
+      "entities": {},
+      "structures": {}
+    },
+    "mock3rd": {
+      "entities": {
+        "Employee": {
+          "name": "Employee",
+          "type": "object",
+          "properties": {
+            "id": {
+              "name": "id",
+              "description": "主键",
+              "type": "integer",
+              "format": "int",
+              "isLeaf": true,
+              "editable": false
+            },
+            "name": {
+              "name": "name",
+              "description": "",
+              "type": "string",
+              "format": "",
+              "isLeaf": true,
+              "label": "申请人9"
+            },
+            "gender": {
+              "name": "gender",
+              "description": "",
+              "type": "string",
+              "format": "",
+              "$ref": "#/mock3rd/entities/Gender",
+              "isLeaf": true,
+              "label": "性别"
+            },
+            "idCard": {
+              "name": "idCard",
+              "description": "",
+              "type": "string",
+              "format": "",
+              "isLeaf": true,
+              "label": "身份证"
+            },
+            "mobile": {
+              "name": "mobile",
+              "description": "",
+              "type": "string",
+              "format": "",
+              "isLeaf": true,
+              "label": "手机号"
+            },
+            "number": {
+              "name": "number",
+              "description": "",
+              "type": "string",
+              "format": "",
+              "isLeaf": true,
+              "label": "工号"
+            },
+            "companyAge": {
+              "name": "companyAge",
+              "description": "",
+              "type": "integer",
+              "format": "int",
+              "isLeaf": true,
+              "label": "工龄"
+            }
+>>>>>>> feat: support data
           },
           "number": {
             "name": "number",
