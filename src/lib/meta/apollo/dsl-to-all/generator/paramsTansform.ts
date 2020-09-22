@@ -7,7 +7,7 @@ import generator from '@babel/generator';
  * 
  * ‘/dd/dd/’ + args.id
  */
-function Literal(str: string) {
+function Literal(str: string, meL: string) {
   let temp = [];
   const arr: any = [];
   for(let i=0;i<str.length;i++){ 
@@ -21,7 +21,7 @@ function Literal(str: string) {
         type: 'MemberExpression',
         object: {
           type: 'Identifier',
-          name: 'args'   
+          name: meL   
         },
         property: {
           type: 'Identifier', name: cloneTemp.join('')
@@ -73,9 +73,9 @@ export function TransforArrToBinaryExpression(arr: string[]) {
  * 
  * 因为路径解析参数在 args 里面设置
  */
-export function PathToBinaryExpressionString(str: string) {
+export function PathToBinaryExpressionString(str: string, meL: string ) {
   if (str.length >= 1) {
-    const arr: string[] = Literal(str);
+    const arr: string[] = Literal(str, meL);
     return generator(TransforArrToBinaryExpression(arr)).code;
   }
   return str;
@@ -84,7 +84,11 @@ interface Param {
   name: string;
 }
 
-export function QueryToObjectExpression(obj: Param[] = []) {
+// export function BodyToObjectExpression(obj: Param[] = [], meL: string) {
+
+// }
+
+export function QueryToObjectExpression(obj: Param[] = [], meL: string) {
   const root: any  = {
     type: 'ObjectExpression',
     properties: [],
@@ -104,7 +108,7 @@ export function QueryToObjectExpression(obj: Param[] = []) {
           type: 'MemberExpression',
           object: {
             type: 'Identifier',
-            name: 'args',
+            name: meL,
           },
           property: {
             type: 'Identifier',

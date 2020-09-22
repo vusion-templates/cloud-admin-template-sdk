@@ -1011,7 +1011,88 @@ function getQueryOperationDefinition(
   }
 }
 
-function getMutationOperationDefinition(
+export function generateMutationByField (
+  schema: GraphQLSchema,
+  config: InternalConfiguration = {
+    seed: 0,
+    nextSeed: 0,
+    nodeFactor: 1,
+    typeCount: 0,
+    resolveCount: 0,
+    depthProbability: 1,
+    breadthProbability: 1,
+    providePlaceholders: true,
+  }
+): {
+  [key: string]: {
+    queryDocument: OperationDefinitionNode;
+    variableValues: { [varName: string]: any };
+  };
+} {
+
+  const finalConfig: InternalConfiguration = {
+    ...DEFAULT_CONFIG,
+    ...config,
+    seed: typeof config.seed !== 'undefined' ? config.seed : Math.random(),
+    nodeFactor: 1,
+    typeCount: 0,
+    resolveCount: 0
+  }
+
+  
+  const node = schema.getMutationType().astNode;
+  const result: {
+    [key: string]: any;
+  } = {};
+
+  (node.fields || []).forEach((field: any) => {
+    const fieldname = field.name.value;
+    const fieldNodeAst = {
+      ...node,
+      fields: [field]
+    }
+
+    // 单个 field 产生的 query
+    const {
+      selectionSet,
+      variableDefinitionsMap,
+      variableValues
+    } = getSelectionSetAndVars(schema, fieldNodeAst, config)
+  
+    // Throw error if query would be empty
+    if (selectionSet.selections.length === 0) {
+      throw new Error(
+        `Could not create query - no selection was possible at the root level`
+      )
+    }
+  
+    const queryDocument = {
+      kind: Kind.OPERATION_DEFINITION,
+      operation: 'mutation',
+      selectionSet,
+      variableDefinitions: Object.values(variableDefinitionsMap),
+      loc,
+      name: getName(`${fieldname}Mutation`)
+    };
+
+
+    const definitions = [queryDocument]
+
+    result[fieldname] = {
+      queryDocument: getDocumentDefinition(definitions),
+      variableValues,
+      seed: finalConfig.seed,
+      typeCount: finalConfig.typeCount,
+      resolveCount: finalConfig.resolveCount
+    }
+
+  });
+
+  return result;
+}
+
+
+export function getMutationOperationDefinition(
   schema: GraphQLSchema,
   config: InternalConfiguration
 ): {
