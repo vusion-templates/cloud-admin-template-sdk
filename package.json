@@ -64,6 +64,6 @@
     "node-plop": "^0.26.0",
     "plop": "^2.7.1",
     "vue-template-compiler": "^2.6.12",
-    "vusion-api": "^0.7.28"
+    "vusion-api": "^0.7.29"
   }
 }
