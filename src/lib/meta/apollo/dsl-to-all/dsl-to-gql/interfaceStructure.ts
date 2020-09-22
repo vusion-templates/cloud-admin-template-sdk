@@ -236,7 +236,7 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
             const isMutation =
             ['POST', 'PUT', 'PATCH', 'DELETE'].indexOf(method) !== -1;
             // combine full path
-            const fullPath =  `/gw/${itmicro}/${operationObject.path}`;
+            const fullPath = `/gw/${itmicro}${operationObject.path}`;
             enetityResolver.interface.path = fullPath;
             const operationName = `${itmicro}_${interfaceName}`;
 
