@@ -2,6 +2,7 @@ import * as parser from "@babel/parser";
 import traverse from "@babel/traverse";
 import { RootTemplete } from "../define/esTemplateResolver";
 import { resolverTemplate } from "./parseArrowFun";
+import { ObjectTypeExtensionNode } from "graphql";
 
 function PathNodeUpdate(allEndpoints: any, isMutation: boolean) {
   const properties: any[] = [];
@@ -48,7 +49,8 @@ export const ResolverAST = async (allEndpoints: any) => {
             const result = PathNodeUpdate(allEndpoints, false);
             // 普通赋值可能更新不成功
             result.forEach((proper) => {
-              path.node.value.properties.push(proper);
+              const pathObject: any = path.node.value;
+              pathObject.properties.push(proper);
             });
           }
         }
@@ -60,7 +62,8 @@ export const ResolverAST = async (allEndpoints: any) => {
           if (path.node.value.type === "ObjectExpression") {
             const result = PathNodeUpdate(allEndpoints, true);
             result.forEach((proper) => {
-              path.node.value.properties.push(proper);
+              const pathObject: any = path.node.value;
+              pathObject.properties.push(proper);
             });
           }
         }

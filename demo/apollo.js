@@ -1,6 +1,6 @@
 
 
-import { TransforDSL } from "../dist/lib/meta/apollo/dsl-to-all/index";
+const { TransforDSL } = require("../dist/lib/meta/apollo/dsl-to-all/index");
 
 /**
  * 用自定义的结构测试转化工具
