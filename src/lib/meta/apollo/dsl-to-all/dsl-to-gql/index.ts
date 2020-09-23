@@ -6,10 +6,12 @@ import {
   GraphQLSchema,
 } from "graphql";
 import refParser = require("json-schema-ref-parser");
-import { DSLSchema } from "./config";
-
 import { RequestOptions } from "./getRequestOptions";
-import { schemaFromStructures, getAllInterfaces } from "./interfaceStructure";
+import {
+  schemaFromStructures,
+  addUUIDToSchemas,
+  getAllInterfaces,
+} from "./interfaceStructure";
 
 export function parseResponse(response: any, returnType: GraphQLOutputType) {
   const nullableType =
@@ -47,11 +49,15 @@ export const createSchema = async <TContext>(
     [operaterId: string]: any;
   };
 }> => {
-  const schemaWithoutReferences = (await refParser.dereference(
-    options.dslSchema
-  )) as DSLSchema;
-
+  const json: any = await refParser.bundle(options.dslSchema);
+  const dslSchemaWithUUID = await addUUIDToSchemas(json);
+  let schemaWithoutReferences = {};
+  // 添加 uuid，为了控制入口函数的调用规则
+  schemaWithoutReferences = (await refParser.dereference(dslSchemaWithUUID, {
+    continueOnError: false,
+  })) as any;
   const endpoints = getAllInterfaces(schemaWithoutReferences);
+
   return {
     schema: schemaFromStructures(endpoints, options),
     endpoints,
