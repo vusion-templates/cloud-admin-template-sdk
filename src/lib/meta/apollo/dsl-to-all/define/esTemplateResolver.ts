@@ -1,5 +1,7 @@
-
-import { PathToBinaryExpressionString, QueryToObjectExpression } from "../generator/paramsTansform";
+import {
+  PathToBinaryExpressionString,
+  QueryToObjectExpression,
+} from "../generator/paramsTansform";
 import { ResolverType } from "../dsl-to-gql/interfaceStructure";
 
 export const RootTemplete = `
@@ -32,7 +34,6 @@ interface Resolver {
   params: any[];
 }
 
-
 type Endpoint = {
   type: string;
   parameters: any;
@@ -40,11 +41,11 @@ type Endpoint = {
   examples: any;
   mutation: boolean;
   resolver: EntityResolver;
-}
+};
 
 function EntityMutationTemplate(params: any, beAssign: string) {
-  return  `${params.path === 'PATH' ? 'const PATH = "";' : ''}
-  ${params.query == 'QUERYPARAM' ? 'const QUERYPARAM = {};' : ''}
+  return `${params.path === "PATH" ? 'const PATH = "";' : ""}
+  ${params.query == "QUERYPARAM" ? "const QUERYPARAM = {};" : ""}
   const { ${beAssign} } = await requester({
     url: {
       path: ${params.path},
@@ -55,12 +56,12 @@ function EntityMutationTemplate(params: any, beAssign: string) {
       baseURL:'/',
     }
   });
-  return ${beAssign};`
+  return ${beAssign};`;
 }
 
 function EntityQueryTemplate(params: any, beAssign: string) {
-  return `${params.path === 'PATH' ? 'const PATH = "";' : ''}
-  ${params.query == 'QUERYPARAM' ? 'const QUERYPARAM = {};' : ''}
+  return `${params.path === "PATH" ? 'const PATH = "";' : ""}
+  ${params.query == "QUERYPARAM" ? "const QUERYPARAM = {};" : ""}
   const { ${beAssign} } = await requester({
     url: {
       path: ${params.path},
@@ -70,9 +71,8 @@ function EntityQueryTemplate(params: any, beAssign: string) {
     config: {
       baseURL:'/',
     }
-  });`
+  });`;
 }
-
 
 // contain generator in all params
 export function FullTemplate({
@@ -81,31 +81,29 @@ export function FullTemplate({
   examples, // 设置默认的返回参数，在服务启动起来之前需要使用测试数据
   meL,
   beAssign,
-  mutation
-}: { 
-  resolver: EntityResolver;  
-  parameters: any | string; 
-  examples: any | string; 
-  meL: string; 
+  mutation,
+}: {
+  resolver: EntityResolver;
+  parameters: any | string;
+  examples: any | string;
+  meL: string;
   beAssign: string;
   mutation: boolean;
 }) {
-
   const path = resolver.interface.path;
 
   if (mutation) {
     const params = {
-      path: path ? PathToBinaryExpressionString(path, meL) : 'PATH',
-   //   body: BodyToObjectExpression(parameters),
+      path: path ? PathToBinaryExpressionString(path, meL) : "PATH",
+      //   body: BodyToObjectExpression(parameters),
       examples: JSON.stringify(examples),
       method: JSON.stringify(resolver.interface.method),
-    }
+    };
     return `${EntityMutationTemplate(params, beAssign)}`;
-
   } else {
-      // 参数转化为 ast 结构
+    // 参数转化为 ast 结构
     const params = {
-      path: path ? PathToBinaryExpressionString(path, meL) : 'PATH',
+      path: path ? PathToBinaryExpressionString(path, meL) : "PATH",
       query: QueryToObjectExpression(parameters, meL),
       examples: JSON.stringify(examples),
       method: JSON.stringify(resolver.interface.method),
@@ -121,23 +119,22 @@ export function FullTemplate({
       return ${beAssign};
     } else {
       ${EntityQueryTemplate(params, beAssign)}  
-    }`
+    }`;
   }
 }
 
-
 /**
  * path = '/xxx/xx/' + args.id
- *  
+ *
  * query {
  *   start: args.id,
  *   limit: args.id
  * }
  */
-export const FunTemplate = (endpoint: Endpoint ) => {
+export const FunTemplate = (endpoint: Endpoint) => {
   if (endpoint.type === ResolverType.INTERFACE) {
     const examples = endpoint.examples;
-  
+
     return `async (parent, args, context, info) => {
        try {
         ${FullTemplate({
@@ -145,8 +142,8 @@ export const FunTemplate = (endpoint: Endpoint ) => {
           parameters: endpoint.parameters,
           examples,
           mutation: endpoint.mutation,
-          meL: 'args',
-          beAssign: 'data',
+          meL: "args",
+          beAssign: "data",
         })}
       } catch (err) {
         console.error(err);
@@ -156,7 +153,7 @@ export const FunTemplate = (endpoint: Endpoint ) => {
   }
 
   // JSON + JSON
-}
+};
 
 /**
  * 查询结构体
@@ -168,10 +165,10 @@ export const StructureResolverTemplate = () => {
     }
   }
 `;
-}
+};
 
 export const OtherWebResolverTemplate = `
   async () => {
 
   }
-` ;
+`;

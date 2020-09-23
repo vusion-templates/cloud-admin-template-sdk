@@ -1,32 +1,34 @@
 export interface MaterialInfo {
-    name: string;
-    group?: string;
-    alias?: string;
-    path?: string;
-    href?: string;
-    target?: string;
+  name: string;
+  group?: string;
+  alias?: string;
+  path?: string;
+  href?: string;
+  target?: string;
 }
 
 export type Theme = { [name: string]: string };
 
 export interface VusionConfig {
-    type: string;
-    mode?: string;
+  type: string;
+  mode?: string;
 
-    configPath?: string;
-    packagePath?: string;
+  configPath?: string;
+  packagePath?: string;
 
-    outputPath: string;
-    publicPath: string;
-    staticPath: string;
-    srcPath: string;
-    libraryPath: string;
-    baseCSSPath: string;
-    rootViewType: 'root' | 'entry' | 'module' | 'branch';
-    theme: string | Array<string> | Theme;
-    applyTheme: boolean;
+  outputPath: string;
+  publicPath: string;
+  staticPath: string;
+  srcPath: string;
+  libraryPath: string;
+  baseCSSPath: string;
+  rootViewType: "root" | "entry" | "module" | "branch";
+  theme: string | Array<string> | Theme;
+  applyTheme: boolean;
 
-    docs: boolean | {
+  docs:
+    | boolean
+    | {
         title?: string;
         logo?: string;
         mode?: string;
@@ -38,52 +40,54 @@ export interface VusionConfig {
         formatters?: Array<MaterialInfo>;
         blocks?: Array<MaterialInfo>;
         utils?: Array<MaterialInfo>;
-    };
+      };
 
-    designer: boolean | {
+  designer:
+    | boolean
+    | {
         protocol?: string;
         host?: string;
         port?: number;
-    };
+      };
 
-    forceShaking: boolean;
-    experimental: boolean;
+  forceShaking: boolean;
+  experimental: boolean;
 
-    ui: {
-        name: string;
-        version: string;
-    };
+  ui: {
+    name: string;
+    version: string;
+  };
 }
 
 export default function getDefaults(): VusionConfig {
-    const defaults: VusionConfig = {
-        type: '',                              // [Required] Vusion project type. 'library', 'app'
-        mode: '',
+  const defaults: VusionConfig = {
+    type: "", // [Required] Vusion project type. 'library', 'app'
+    mode: "",
 
-        configPath: '',
-        packagePath: '',
+    configPath: "",
+    packagePath: "",
 
-        outputPath: '',
-        publicPath: '',
-        staticPath: '',                        // Path of static files, which will be copied into destination directory. It accepts a String or Array.
-        srcPath: './src',                      // To be `./src` by default
-        libraryPath: '',                       // [Required] Library directory path. To be srcPath by default
-        baseCSSPath: '',                       // Path of base CSS. If not set, it will be `library/base/base.css`
-        rootViewType: 'root',
-        theme: undefined,                      // Project theme
-        applyTheme: false,
+    outputPath: "",
+    publicPath: "",
+    staticPath: "", // Path of static files, which will be copied into destination directory. It accepts a String or Array.
+    srcPath: "./src", // To be `./src` by default
+    libraryPath: "", // [Required] Library directory path. To be srcPath by default
+    baseCSSPath: "", // Path of base CSS. If not set, it will be `library/base/base.css`
+    rootViewType: "root",
+    theme: undefined, // Project theme
+    applyTheme: false,
 
-        docs: false,                           // Generate docs of common components in library. Always be true if project type is `library`
-        designer: false,
+    docs: false, // Generate docs of common components in library. Always be true if project type is `library`
+    designer: false,
 
-        forceShaking: false,                   // Force to enable tree shaking under this path without care of side effects. It's different from default tree shaking of webpack.
-        experimental: false,                   // Enable some experimental loaders or plugins, like ModuleConcatenationPlugin
+    forceShaking: false, // Force to enable tree shaking under this path without care of side effects. It's different from default tree shaking of webpack.
+    experimental: false, // Enable some experimental loaders or plugins, like ModuleConcatenationPlugin
 
-        ui: {
-            name: '',
-            version: '', 
-        }, 
-    };
+    ui: {
+      name: "",
+      version: "",
+    },
+  };
 
-    return defaults;
+  return defaults;
 }

@@ -7,7 +7,7 @@ import {
   getParamDetailsFromRequestBody,
   Endpoints,
   Oa2NonBodyParam,
-  getFields
+  getFields,
 } from "./config";
 import { GraphQLSchema, GraphQLObjectType } from "graphql";
 import { RootGraphQLSchema, JSONSchemaType, BodySchema } from "./json-schema";
@@ -15,7 +15,7 @@ import { UpdateListSchemaOfEntity } from "../define/schemaGQL";
 
 export interface Param {
   required: boolean;
-  type: 'header' | 'query' | 'formData' | 'path' | 'body';
+  type: "header" | "query" | "formData" | "path" | "body";
   name: string;
   swaggerName: string;
   jsonSchema: JSONSchemaType;
@@ -23,7 +23,7 @@ export interface Param {
 
 interface StructureParam {
   required: boolean;
-  type: 'header' | 'query' | 'formData' | 'path' | 'body';
+  type: "header" | "query" | "formData" | "path" | "body";
   name: string;
   swaggerName: string;
   jsonSchema: JSONSchemaType;
@@ -33,10 +33,11 @@ export interface Interfaces {
   [operationId: string]: Endpoint;
 }
 const replaceOddChars = (str: string): string =>
-  str.replace(/[^_a-zA-Z0-9]/g, '_');
+  str.replace(/[^_a-zA-Z0-9]/g, "_");
 
-
-export const getParamDetails = (param: Oa3Param | Oa2NonBodyParam): StructureParam => {
+export const getParamDetails = (
+  param: Oa3Param | Oa2NonBodyParam
+): StructureParam => {
   const name = replaceOddChars(param.name);
   const swaggerName = param.name;
   if (isOa3Param(param)) {
@@ -61,10 +62,10 @@ export const getParamDetails = (param: Oa3Param | Oa2NonBodyParam): StructurePar
 
 // const contentTypeFormData = 'application/x-www-form-urlencoded';
 export const getSuccessResponse = (
-  responses: Responses,
+  responses: Responses
 ): JSONSchemaType | undefined => {
-  const successCode = Object.keys(responses).find(code => {
-    return code[0] === '2';
+  const successCode = Object.keys(responses).find((code) => {
+    return code[0] === "2";
   });
 
   if (!successCode) {
@@ -80,17 +81,15 @@ export const getSuccessResponse = (
   }
 
   if (successResponse.content) {
-    return successResponse.content['application/json'].schema;
+    return successResponse.content["application/json"].schema;
   }
 
   return undefined;
 };
 
-
 export const getEntityResponse = (
-  responses: Responses = {},
+  responses: Responses = {}
 ): JSONSchemaType | undefined => {
-
   if (responses.schema) {
     return UpdateListSchemaOfEntity(responses.schema);
   }
@@ -99,7 +98,7 @@ export const getEntityResponse = (
 };
 export interface EndpointParam {
   required: boolean;
-  type: 'header' | 'query' | 'formData' | 'path' | 'body';
+  type: "header" | "query" | "formData" | "path" | "body";
   name: string;
   swaggerName: string;
   jsonSchema: JSONSchemaType;
@@ -143,7 +142,7 @@ export interface RequestOptions {
     [key: string]: string | string[];
   };
   body?: any;
-  bodyType: 'json' | 'formData';
+  bodyType: "json" | "formData";
 }
 
 type EnetityResolver = {
@@ -161,13 +160,13 @@ type EnetityResolver = {
     description: string;
     requestBody?: any;
   };
-}
+};
 
 export const getSuccessExample = (
-  responses: Responses,
+  responses: Responses
 ): JSONSchemaType | undefined => {
-  const successCode = Object.keys(responses).find(code => {
-    return code[0] === '2';
+  const successCode = Object.keys(responses).find((code) => {
+    return code[0] === "2";
   });
 
   if (!successCode) {
@@ -183,22 +182,22 @@ export const getSuccessExample = (
   }
 
   if (successResponse.content) {
-    return (successResponse.content['application/json'].examples || {}).default;
+    return (successResponse.content["application/json"].examples || {}).default;
   }
 
   return undefined;
 };
 export enum ResolverType {
-  INTERFACE = 'interface',
-  JOIN = 'join',
-  JSON = 'json',
+  INTERFACE = "interface",
+  JOIN = "join",
+  JSON = "json",
 }
 
 /**
  * 获取全部 stucture
  * 创建关联关系
- * 
- * @param schema 
+ *
+ * @param schema
  */
 export const getAllInterfaces = (schema: DSLSchema = {}) => {
   const allOperations: {
@@ -214,7 +213,7 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
         [operationId: string]: any;
       } = schemaItmicro[name];
 
-      if (name === 'entities') {
+      if (name === "entities") {
         Object.keys(apiObject).forEach((entityName: string) => {
           const entityObject = apiObject[entityName];
           const enetityResolvers = (entityObject || {}).resolvers || [];
@@ -228,13 +227,15 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
 
             const parameterDetails = [
               ...(operationObject.parameters
-                ? (Object.values(operationObject.parameters)).map((param: Oa2NonBodyParam) => getParamDetails(param))
+                ? Object.values(
+                    operationObject.parameters
+                  ).map((param: Oa2NonBodyParam) => getParamDetails(param))
                 : []),
               ...bodyParams,
             ];
 
             const isMutation =
-            ['POST', 'PUT', 'PATCH', 'DELETE'].indexOf(method) !== -1;
+              ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1;
             // combine full path
             const fullPath = `/gw/${itmicro}${operationObject.path}`;
             enetityResolver.interface.path = fullPath;
@@ -254,42 +255,41 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
               examples: getSuccessExample(operationObject.responses),
               mutation: isMutation,
             };
-          })
-        })
-
+          });
+        });
       } else {
         /**
-          * entities {
-          *   key: any
-          * }
-          * structures {
-          *   key: any
-          * }
-          */
-         // TODO support structure gencode
-         return allOperations;
+         * entities {
+         *   key: any
+         * }
+         * structures {
+         *   key: any
+         * }
+         */
+        // TODO support structure gencode
+        return allOperations;
       }
     });
-  })
+  });
 
   return allOperations;
 };
 
 type Options<T> = {
-  [K in keyof T]: K extends 'context' ? T[K] : number
-}
+  [K in keyof T]: K extends "context" ? T[K] : number;
+};
 
 export const schemaFromStructures = <TContext>(
   endpoints: Endpoints,
-  options: Options<TContext>,
+  options: Options<TContext>
 ): GraphQLSchema => {
   const gqlTypes = {};
   const queryFields = getFields(endpoints, false, gqlTypes, options);
   if (!Object.keys(queryFields).length) {
-    throw new Error('Did not find any GET structures');
+    throw new Error("Did not find any GET structures");
   }
   const rootType = new GraphQLObjectType({
-    name: 'Query',
+    name: "Query",
     fields: queryFields,
   });
 
@@ -297,11 +297,10 @@ export const schemaFromStructures = <TContext>(
     query: rootType,
   };
 
-
   const mutationFields = getFields(endpoints, true, gqlTypes, options);
   if (Object.keys(mutationFields).length) {
     graphQLSchema.mutation = new GraphQLObjectType({
-      name: 'Mutation',
+      name: "Mutation",
       fields: mutationFields,
     });
   }

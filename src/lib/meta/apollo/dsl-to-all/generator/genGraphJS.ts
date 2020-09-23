@@ -1,88 +1,87 @@
-
-import { generateQueryByField } from '../gql-to-randomquery';
-import { buildSchema, printSchema, print, GraphQLSchema } from 'graphql';
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import generator from '@babel/generator'
-import { generateMutationByField } from '../gql-to-randomquery/generator-query';
+import { generateQueryByField } from "../gql-to-randomquery";
+import { buildSchema, printSchema, print, GraphQLSchema } from "graphql";
+import * as fs from "fs-extra";
+import * as path from "path";
+import generator from "@babel/generator";
+import { generateMutationByField } from "../gql-to-randomquery/generator-query";
 
 export function FileSave(context: any, path: string) {
   fs.ensureFileSync(path);
   fs.writeFileSync(path, context);
 }
 
-export function GeneratorGraphTS(groupQueryObject: {
-  [field: string]: any;
-}) {
+export function GeneratorGraphTS(groupQueryObject: { [field: string]: any }) {
   const graphAST: any = {
-    type: 'Program',
-    body: []
+    type: "Program",
+    body: [],
   };
 
   const importAst = {
-    type: 'ImportDeclaration',
-    specifiers: [{
-      type: 'ImportDefaultSpecifier',
-      local: {
-        type: 'Identifier',
-        name: 'gql'
-      }
-    }],
+    type: "ImportDeclaration",
+    specifiers: [
+      {
+        type: "ImportDefaultSpecifier",
+        local: {
+          type: "Identifier",
+          name: "gql",
+        },
+      },
+    ],
     source: {
-      type: 'StringLiteral',
-      value: 'graphql-tag'
-    }
-  }
+      type: "StringLiteral",
+      value: "graphql-tag",
+    },
+  };
   graphAST.body.push(importAst);
 
   const newLocal: any[] = [];
-  const exportAst =  {
-    type: 'ExportNamedDeclaration',
+  const exportAst = {
+    type: "ExportNamedDeclaration",
     declaration: {
-      type: 'VariableDeclaration',
-      declarations: [{
-        type: 'VariableDeclarator',
-        id: {
-          type: "Identifier",
-          name: 'graph'
+      type: "VariableDeclaration",
+      declarations: [
+        {
+          type: "VariableDeclarator",
+          id: {
+            type: "Identifier",
+            name: "graph",
+          },
+          init: {
+            type: "ObjectExpression",
+            properties: newLocal,
+          },
         },
-        init: {
-          type: 'ObjectExpression',
-          properties: newLocal
-        },
-        
-      }],
-      kind: 'const'
-    }
+      ],
+      kind: "const",
+    },
   };
 
-  
-  Object.keys(groupQueryObject).forEach(key => {
-    const { queryDocument }  = groupQueryObject[key];
+  Object.keys(groupQueryObject).forEach((key) => {
+    const { queryDocument } = groupQueryObject[key];
     exportAst.declaration.declarations[0].init.properties.push({
-      type: 'ObjectProperty',
+      type: "ObjectProperty",
       key: {
-        type: 'Identifier',
-        name: key
+        type: "Identifier",
+        name: key,
       },
       value: {
-        type: 'TaggedTemplateExpression',
+        type: "TaggedTemplateExpression",
         tag: {
-          type: 'Identifier',
-          name: 'gql',
+          type: "Identifier",
+          name: "gql",
         },
         quasi: {
           type: "TemplateLiteral",
           quasis: [
             {
-              type: 'TemplateElement',
+              type: "TemplateElement",
               value: {
-                raw: print(queryDocument)
-              }
-            }
-          ]
-        }
-      }
+                raw: print(queryDocument),
+              },
+            },
+          ],
+        },
+      },
     });
   });
 
@@ -90,20 +89,22 @@ export function GeneratorGraphTS(groupQueryObject: {
   return generator(graphAST).code;
 }
 
-export function OutputGraphQLQueryAndMutation(schema: GraphQLSchema, rootPath: string) {
-  const groupQueryObject= generateQueryByField(
-    buildSchema(`${printSchema(schema)}`),
+export function OutputGraphQLQueryAndMutation(
+  schema: GraphQLSchema,
+  rootPath: string
+) {
+  const groupQueryObject = generateQueryByField(
+    buildSchema(`${printSchema(schema)}`)
   );
 
   const groupMutationObject = generateMutationByField(
-    buildSchema(`${printSchema(schema)}`),
-  )
+    buildSchema(`${printSchema(schema)}`)
+  );
 
-
-   const graphJS = GeneratorGraphTS({
-     ...groupQueryObject,
-     ...groupMutationObject
-   });
-   const graphJSPath = path.join(rootPath, `/graph.js`);
-   FileSave(graphJS, graphJSPath)
+  const graphJS = GeneratorGraphTS({
+    ...groupQueryObject,
+    ...groupMutationObject,
+  });
+  const graphJSPath = path.join(rootPath, `/graph.js`);
+  FileSave(graphJS, graphJSPath);
 }

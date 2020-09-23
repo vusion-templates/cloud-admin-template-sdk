@@ -2,13 +2,13 @@ export {
   generateRandomQuery,
   generateRandomMutation,
   generateQueryByField,
-  Configuration
-} from './generator-query'
+  Configuration,
+} from "./generator-query";
 
 export {
   ProviderFunction,
   ProviderMap,
   matchVarName,
   getProvider,
-  getProviderValue
-} from './provide-variables'
+  getProviderValue,
+} from "./provide-variables";

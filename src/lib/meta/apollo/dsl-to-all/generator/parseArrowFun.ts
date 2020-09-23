@@ -1,7 +1,6 @@
-
-import * as parser from '@babel/parser';
-import { ArrowFunctionExpression } from "@babel/types"
-import { FunTemplate } from '../define/esTemplateResolver';
+import * as parser from "@babel/parser";
+import { ArrowFunctionExpression } from "@babel/types";
+import { FunTemplate } from "../define/esTemplateResolver";
 
 /**
  * 传入的参数需要是 ast 结构

@@ -1,10 +1,10 @@
-import { JSONSchemaType } from './json-schema';
-import { Param } from './interfaceStructure';
-import { OA3BodyParam, Responses } from './config';
+import { JSONSchemaType } from "./json-schema";
+import { Param } from "./interfaceStructure";
+import { OA3BodyParam, Responses } from "./config";
 
 export interface EndpointParam {
   required: boolean;
-  type: 'header' | 'query' | 'formData' | 'path' | 'body';
+  type: "header" | "query" | "formData" | "path" | "body";
   name: string;
   swaggerName: string;
   jsonSchema: JSONSchemaType;
@@ -32,7 +32,7 @@ export interface RequestOptions {
     [key: string]: string | string[];
   };
   body?: any;
-  bodyType: 'json' | 'formData';
+  bodyType: "json" | "formData";
 }
 
 export interface OperationObject {
@@ -62,43 +62,43 @@ export function getRequestOptions({
     method,
     baseUrl,
     path,
-    bodyType: formData ? 'formData' : 'json',
+    bodyType: formData ? "formData" : "json",
   };
 
   parameterDetails.forEach(({ name, swaggerName, type, required }) => {
     const value = parameterValues[name];
 
-    if (required && !value && value !== '')
+    if (required && !value && value !== "")
       throw new Error(
-        `No required request field ${name} for ${method.toUpperCase()} ${path}`,
+        `No required request field ${name} for ${method.toUpperCase()} ${path}`
       );
-    if (!value && value !== '') return;
+    if (!value && value !== "") return;
 
     switch (type) {
-      case 'body':
+      case "body":
         result.body = value;
         break;
-      case 'formData':
+      case "formData":
         result.body = result.body || {};
         result.body[swaggerName] = value;
         break;
-      case 'path':
+      case "path":
         result.path =
-          typeof result.path === 'string'
+          typeof result.path === "string"
             ? result.path.replace(`{${swaggerName}}`, value)
             : result.path;
         break;
-      case 'query':
+      case "query":
         result.query = result.query || {};
         result.query[swaggerName] = value;
         break;
-      case 'header':
+      case "header":
         result.headers = result.headers || {};
         result.headers[swaggerName] = value;
         break;
       default:
         throw new Error(
-          `Unsupported param type for param "${name}" and type "${type}"`,
+          `Unsupported param type for param "${name}" and type "${type}"`
         );
     }
   });

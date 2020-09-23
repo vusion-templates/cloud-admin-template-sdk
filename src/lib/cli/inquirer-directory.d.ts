@@ -1,1 +1,1 @@
-declare module 'inquirer-directory';
+declare module "inquirer-directory";

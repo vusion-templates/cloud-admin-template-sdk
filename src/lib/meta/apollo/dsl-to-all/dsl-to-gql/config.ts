@@ -1,40 +1,45 @@
-import { JSONSchemaType, JSONSchemaTypes, isObjectType } from './json-schema';
+import { JSONSchemaType, JSONSchemaTypes, isObjectType } from "./json-schema";
+import { EndpointParam, RequestOptions } from "./getRequestOptions";
+import { ResolverOptions } from "./interfaceStructure";
 import {
-  EndpointParam,
-  RequestOptions,
-} from './getRequestOptions';
-import { ResolverOptions } from './interfaceStructure';
-import { jsonSchemaTypeToGraphQL, mapParametersToFields, GraphQLTypeMap } from "./typeMap";
+  jsonSchemaTypeToGraphQL,
+  mapParametersToFields,
+  GraphQLTypeMap,
+} from "./typeMap";
 import { parseResponse } from ".";
-import { GraphQLFieldConfig, GraphQLResolveInfo, GraphQLFieldConfigMap } from "graphql";
+import {
+  GraphQLFieldConfig,
+  GraphQLResolveInfo,
+  GraphQLFieldConfigMap,
+} from "graphql";
 
 export interface GraphQLParameters {
   [key: string]: any;
 }
 
 const replaceOddChars = (str: string): string =>
-  str.replace(/[^_a-zA-Z0-9]/g, '_');
+  str.replace(/[^_a-zA-Z0-9]/g, "_");
 
 export interface Responses {
   [key: string]: {
     schema?: JSONSchemaType;
     content?: {
-      'application/json': { 
+      "application/json": {
         schema: JSONSchemaType;
         examples: {
           default: any;
         };
       };
     };
-    type?: 'file';
+    type?: "file";
   };
 }
 
 export const getSuccessResponse = (
-  responses: Responses,
+  responses: Responses
 ): JSONSchemaType | undefined => {
-  const successCode = Object.keys(responses).find(code => {
-    return code[0] === '2';
+  const successCode = Object.keys(responses).find((code) => {
+    return code[0] === "2";
   });
 
   if (!successCode) {
@@ -50,7 +55,7 @@ export const getSuccessResponse = (
   }
 
   if (successResponse.content) {
-    return successResponse.content['application/json'].schema;
+    return successResponse.content["application/json"].schema;
   }
 
   return undefined;
@@ -60,19 +65,19 @@ export interface BodyParam {
   name: string;
   required?: boolean;
   schema: JSONSchemaType;
-  in: 'body';
+  in: "body";
 }
 
 export interface Oa2NonBodyParam {
   name: string;
   type: JSONSchemaTypes;
-  in: 'header' | 'query' | 'formData' | 'path';
+  in: "header" | "query" | "formData" | "path";
   required?: boolean;
 }
 
 export interface Oa3Param {
   name: string;
-  in: 'header' | 'query' | 'formData' | 'path';
+  in: "header" | "query" | "formData" | "path";
   required?: boolean;
   schema: JSONSchemaType;
 }
@@ -83,10 +88,10 @@ export type Param = BodyParam | NonBodyParam;
 
 export interface OA3BodyParam {
   content: {
-    'application/json'?: {
+    "application/json"?: {
       schema: JSONSchemaType;
     };
-    'application/x-www-form-urlencoded'?: {
+    "application/x-www-form-urlencoded"?: {
       schema: JSONSchemaType;
     };
   };
@@ -121,19 +126,19 @@ export const getParamDetails = (param: Param): EndpointParam => {
   };
 };
 
-const contentTypeFormData = 'application/x-www-form-urlencoded';
+const contentTypeFormData = "application/x-www-form-urlencoded";
 export const getParamDetailsFromRequestBody = (
-  requestBody: OA3BodyParam,
+  requestBody: OA3BodyParam
 ): EndpointParam[] => {
   const formData = requestBody.content[contentTypeFormData];
   function getSchemaFromRequestBody(): JSONSchemaType {
-    if (requestBody.content['application/json']) {
-      return requestBody.content['application/json'].schema;
+    if (requestBody.content["application/json"]) {
+      return requestBody.content["application/json"].schema;
     }
     throw new Error(
       `Unsupported content type(s) found: ${Object.keys(
-        requestBody.content,
-      ).join(', ')}`,
+        requestBody.content
+      ).join(", ")}`
     );
   }
   if (formData) {
@@ -141,27 +146,27 @@ export const getParamDetailsFromRequestBody = (
     if (!isObjectType(formdataSchema)) {
       throw new Error(
         `RequestBody is formData, expected an object schema, got "${JSON.stringify(
-          formdataSchema,
-        )}"`,
+          formdataSchema
+        )}"`
       );
     }
     return Object.entries(formdataSchema.properties).map<EndpointParam>(
       ([name, schema]) => ({
         name: replaceOddChars(name),
         swaggerName: name,
-        type: 'formData',
+        type: "formData",
         required: formdataSchema.required
           ? formdataSchema.required.includes(name)
           : false,
         jsonSchema: schema,
-      }),
+      })
     );
   }
   return [
     {
-      name: 'body',
-      swaggerName: 'requestBody',
-      type: 'body',
+      name: "body",
+      swaggerName: "requestBody",
+      type: "body",
       required: !!requestBody.required,
       jsonSchema: getSchemaFromRequestBody(),
     },
@@ -213,7 +218,6 @@ export interface ServerObject {
   };
 }
 
-
 export interface Variable {
   default?: string;
   enum: string[];
@@ -240,13 +244,13 @@ export interface DSLSchema {
 
 type Options<T> = {
   [K: string]: any;
-}
+};
 
 export const getFields = <TContext>(
   endpoints: Endpoints,
-  isMutation: boolean, // TODO 
+  isMutation: boolean, // TODO
   gqlTypes: GraphQLTypeMap,
-  { callBackend }: Options<TContext>,
+  { callBackend }: Options<TContext>
 ): GraphQLFieldConfigMap<any, any> => {
   return Object.keys(endpoints)
     .filter((operationId: string) => {
@@ -256,11 +260,11 @@ export const getFields = <TContext>(
       const endpoint: Endpoint = endpoints[operationId];
       const type = jsonSchemaTypeToGraphQL(
         operationId,
-        endpoint.response || { type: 'object', properties: {} },
-        'response',
+        endpoint.response || { type: "object", properties: {} },
+        "response",
         false,
         gqlTypes,
-        true,
+        true
       );
       const gType: GraphQLFieldConfig<any, any> = {
         type,
@@ -270,18 +274,17 @@ export const getFields = <TContext>(
           _source: any,
           args: GraphQLParameters,
           context: TContext,
-          info: GraphQLResolveInfo,
+          info: GraphQLResolveInfo
         ): Promise<any> => {
           return parseResponse(
             await callBackend({
               context,
               requestOptions: endpoint.getRequestOptions(args),
             }),
-            info.returnType,
+            info.returnType
           );
         },
       };
       return { ...result, [operationId]: gType };
-     
     }, {});
 };

@@ -4,14 +4,12 @@ import {
   GraphQLObjectType,
   GraphQLOutputType,
   GraphQLSchema,
-} from 'graphql';
+} from "graphql";
 import refParser = require("json-schema-ref-parser");
-import {
-  DSLSchema,
-} from './config';
+import { DSLSchema } from "./config";
 
-import { RequestOptions } from './getRequestOptions';
-import { schemaFromStructures, getAllInterfaces } from './interfaceStructure';
+import { RequestOptions } from "./getRequestOptions";
+import { schemaFromStructures, getAllInterfaces } from "./interfaceStructure";
 
 export function parseResponse(response: any, returnType: GraphQLOutputType) {
   const nullableType =
@@ -23,7 +21,7 @@ export function parseResponse(response: any, returnType: GraphQLOutputType) {
     return response;
   }
 
-  if (nullableType.name === 'String' && typeof response !== 'string') {
+  if (nullableType.name === "String" && typeof response !== "string") {
     return JSON.stringify(response);
   }
 
@@ -39,19 +37,18 @@ export interface CallBackendArguments<TContext> {
 
 type Options<T> = {
   [K: string]: any;
-}
+};
 
 export const createSchema = async <TContext>(
-  options: Options<TContext>,
+  options: Options<TContext>
 ): Promise<{
   schema: GraphQLSchema;
   endpoints: {
     [operaterId: string]: any;
   };
 }> => {
-
   const schemaWithoutReferences = (await refParser.dereference(
-    options.dslSchema,
+    options.dslSchema
   )) as DSLSchema;
 
   const endpoints = getAllInterfaces(schemaWithoutReferences);
