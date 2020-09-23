@@ -247,8 +247,8 @@ type Options<T> = {
 };
 
 export const getFields = <TContext>(
-  endpoints: Endpoints,
-  isMutation: boolean, // TODO
+  endpoints: Endpoints = {},
+  isMutation: boolean, // TODO 
   gqlTypes: GraphQLTypeMap,
   { callBackend }: Options<TContext>
 ): GraphQLFieldConfigMap<any, any> => {

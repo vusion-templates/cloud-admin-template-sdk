@@ -8,6 +8,7 @@ import {
   Endpoints,
   Oa2NonBodyParam,
   getFields,
+  NonBodyParam
 } from "./config";
 import { GraphQLSchema, GraphQLObjectType } from "graphql";
 import { RootGraphQLSchema, JSONSchemaType, BodySchema } from "./json-schema";
@@ -145,11 +146,13 @@ export interface RequestOptions {
   bodyType: "json" | "formData";
 }
 
-type EnetityResolver = {
+export type EntityResolver = {
+  uuid: string;
+  name: string;
   interface: {
+    name: string;
     path: string;
     parameters: Oa2NonBodyParam[];
-    name: string;
     responses: {
       schema: BodySchema;
     };
@@ -161,6 +164,21 @@ type EnetityResolver = {
     requestBody?: any;
   };
 };
+
+type SourceItem = {
+  resolverName: string; // 通过 sourceKey 能找到实体模版函数 自定义名字，使用的的时候第二个传入 args 
+}
+
+type StructureResolver = {
+  type: string;
+  params: Param[];
+  name: string;
+  uuid: string;
+  expression: any; // schema structure
+  source: {
+    [sourceKey: string]: SourceItem;
+  };
+}
 
 export const getSuccessExample = (
   responses: Responses
@@ -194,6 +212,40 @@ export enum ResolverType {
 }
 
 /**
+ * resolver 作为信息表达的入口
+ */
+export const addUUIDToSchemas = (schema: DSLSchema = {}) => {
+  Object.keys(schema).forEach((itmicro: string) => {
+    const schemaItmicro: {
+      [operationId: string]: any;
+    } = schema[itmicro];
+    console.info('itmicro', itmicro);
+
+    Object.keys(schemaItmicro || {}).forEach((name: string) => {
+      const apiObject: {
+        [operationId: string]: any;
+      } = schemaItmicro[name];
+      Object.values(apiObject).map((structureObject: any) => {
+        const structureResolvers = (structureObject || {}).resolvers || [];
+        structureResolvers.map((resolver: StructureResolver) => {
+          /**
+           * json 只有一个
+           */
+          if (resolver.type == ResolverType.JSON) {
+            // 因为 json 只有一个，所以使用结构本身的名字
+            resolver.uuid = `${itmicro}_${name}_${structureObject.name}`;
+            console.info('uuid zxy',resolver.uuid);
+          } else {
+            // 因为有多个，所有有多个标记的名字，这个类型其实和实体的使用是一样的，
+            resolver.uuid = `${itmicro}_${name}_${resolver.name}`;
+          }
+        })
+      })
+    });
+  })
+  return schema;
+}
+/**
  * 获取全部 stucture
  * 创建关联关系
  *
@@ -216,11 +268,28 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
       if (name === "entities") {
         Object.keys(apiObject).forEach((entityName: string) => {
           const entityObject = apiObject[entityName];
-          const enetityResolvers = (entityObject || {}).resolvers || [];
-          enetityResolvers.forEach((enetityResolver: EnetityResolver) => {
-            const operationObject = enetityResolver.interface;
+
+          const entityResolvers = (entityObject || {}).resolvers || [];
+          entityResolvers.forEach((entityResolver: EntityResolver) => {
+            const operationObject = entityResolver.interface;
+
             const interfaceName = operationObject.name;
             const method = operationObject.method;
+            /**
+             *  "parameters": {
+                  "id": {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "format": "",
+                      "isLeaf": true
+                    }
+                  }
+                },
+                parameters in interface look like this
+             */
             const bodyParams = operationObject.requestBody
               ? getParamDetailsFromRequestBody(operationObject.requestBody)
               : [];
@@ -235,11 +304,14 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
             ];
 
             const isMutation =
-              ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1;
+              ['POST', 'PUT', 'PATCH', 'DELETE'].indexOf(method) !== -1;
             // combine full path
             const fullPath = `/gw/${itmicro}${operationObject.path}`;
-            enetityResolver.interface.path = fullPath;
-            const operationName = `${itmicro}_${interfaceName}`;
+            entityResolver.interface.path = fullPath;
+
+            const operationName = `${itmicro}_entities_${interfaceName}`;
+            // 给单个 resolver 接口添加 唯一标记
+            entityResolver.uuid = operationName;
 
             allOperations[operationName] = {
               // enetityResolver.type
@@ -250,24 +322,60 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
               // 定义 schema 的返回结构
               response: getSuccessResponse(operationObject.responses),
               // 用于确定 resolver 函数的具体表现形式
-              resolver: enetityResolver,
+              resolver: entityResolver,
               // 定义 resolver 的默认填充数据
               examples: getSuccessExample(operationObject.responses),
               mutation: isMutation,
             };
-          });
-        });
-      } else {
-        /**
-         * entities {
-         *   key: any
-         * }
-         * structures {
-         *   key: any
-         * }
-         */
-        // TODO support structure gencode
-        return allOperations;
+          })
+        })
+
+      }
+      // 如果在 structures 和 entities 下面有同名的 resolverName
+      // 目前的 structure 当成只有一个 resolver 的情况处理，如果多个的话，其实二次解析的时候也会需要 resolver的 名字
+      if (name === 'structures') {
+        Object.keys(apiObject).forEach((structureName: string) => {
+          const structureObject = apiObject[structureName];
+          const structureResolvers = (structureObject || {}).resolvers || [];
+          structureResolvers.forEach((structureResolver: StructureResolver) => {
+
+            /**
+             * structure resolver params look like this
+             * [
+             *  {
+                    "name": "employeeId",
+                    "type": "integer",
+                    "format": "int",
+                    "isLeaf": true
+                }
+             * ]
+             */
+            const operationName = `${itmicro}_structures_${structureName}`;
+            const parameterDetails = [
+              ...(structureResolver.params ? Object.values(structureResolver.params).map((param: any) => {
+                const resolverParams: Oa3Param = {
+                  name: param.name,
+                  in: 'query',
+                  schema: param
+                };
+                // 转化
+                return getParamDetails(resolverParams);
+              }) : [])
+              //  ...bodyParams, 
+            ];
+
+            structureResolver.uuid = operationName;
+
+            allOperations[operationName] = {
+              type: ResolverType.JSON,
+              parameters: parameterDetails,
+              response: structureResolver.expression,
+              resolver: structureResolver,
+              mutation: false,
+            };
+          })
+        }
+        )
       }
     });
   });
@@ -278,6 +386,19 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
 type Options<T> = {
   [K in keyof T]: K extends "context" ? T[K] : number;
 };
+
+export function addTitlesToJsonSchemas(schema: DSLSchema) {
+  const jsonSchemas: {
+    [schema: string]: any;
+  } = schema.entities || {};
+  Object.keys(jsonSchemas).forEach((schemaName: string) => {
+    const jsonSchema = jsonSchemas[schemaName];
+    jsonSchema.title = jsonSchema.title || schemaName;
+  });
+
+  return schema;
+}
+
 
 export const schemaFromStructures = <TContext>(
   endpoints: Endpoints,

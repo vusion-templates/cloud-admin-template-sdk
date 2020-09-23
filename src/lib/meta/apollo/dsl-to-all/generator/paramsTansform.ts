@@ -7,7 +7,7 @@ import generator from "@babel/generator";
  *
  * ‘/dd/dd/’ + args.id
  */
-function Literal(str: string, meL: string) {
+function Literal(str: string, meL = 'data') {
   let temp = [];
   const arr: any = [];
   for (let i = 0; i < str.length; i++) {
@@ -74,7 +74,11 @@ export function TransforArrToBinaryExpression(arr: string[]) {
  *
  * 因为路径解析参数在 args 里面设置
  */
+<<<<<<< HEAD
 export function PathToBinaryExpressionString(str: string, meL: string) {
+=======
+export function PathToBinaryExpressionString(str: string, meL?: string) {
+>>>>>>> fix: support integration
   if (str.length >= 1) {
     const arr: string[] = Literal(str, meL);
     return generator(TransforArrToBinaryExpression(arr)).code;

@@ -1,8 +1,7 @@
 import * as dslToGQL from "./dsl-to-gql";
 import { printSchema } from "graphql";
 import generator from "@babel/generator";
-import { ResolverAST } from "./generator/genResolver";
-
+import { ResolverAST, GenFullResolver } from "./generator/genResolver";
 import * as path from "path";
 import {
   FileSave,
@@ -25,8 +24,12 @@ export async function TransforDSL(dslSchema: any, rootPath: string) {
     // output query gql & graph.js
     OutputGraphQLQueryAndMutation(schema, rootPath);
 
+    const fullResolverTemplateGroup = GenFullResolver(endpoints);
     // output resolver.js
-    const resolverAst: any = await ResolverAST(endpoints);
+    const resolverAst: any = await ResolverAST(
+      endpoints,
+      fullResolverTemplateGroup
+    );
     const result = generator(resolverAst).code;
     FileSave(`${result}`, resolverPath);
   } catch (err) {
