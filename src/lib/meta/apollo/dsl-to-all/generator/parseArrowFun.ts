@@ -14,38 +14,18 @@ import {
   Oa2NonBodyParam,
 } from "../dsl-to-gql/config";
 
-export const RootTemplete = `
-import requester from './requester';
-
-export const resolvers = {
-  Query: {},
-  Mutation: {}
-};`;
-
-function EntityMutationTemplate(params: any, beAssign: string) {
+function EntityTemplate(params: any, beAssign: string) {
   return `${params.path === "PATH" ? 'const PATH = "";' : ""}
   ${params.query == "QUERYPARAM" ? "const QUERYPARAM = {};" : ""}
+  const body = args.body;
+  delete args.body;
+
   const { ${beAssign} } = await requester({
     url: {
       path: ${params.path},
       method: ${params.method},
-      body: args.body
-    },
-    config: {
-      baseURL:'/',
-    }
-  });
-  return ${beAssign};`;
-}
-
-function EntityQueryTemplate(params: any, beAssign: string) {
-  return `${params.path === "PATH" ? 'const PATH = "";' : ""}
-  ${params.query == "QUERYPARAM" ? "const QUERYPARAM = {};" : ""}
-  const { ${beAssign} } = await requester({
-    url: {
-      path: ${params.path},
-      method: "get",
-      query: ${params.query}
+      query: args,
+      body: body,
     },
     config: {
       baseURL:'/',
@@ -100,11 +80,11 @@ export function FullTemplate({
   if (mutation) {
     const params = {
       path: path ? PathToBinaryExpressionString(path, meL) : "PATH",
-      //   body: BodyToObjectExpression(parameters),
+      query: QueryToObjectExpression(parameterDetails, meL),
       examples: JSON.stringify(examples),
       method: JSON.stringify(resolver.interface.method),
     };
-    return `${EntityMutationTemplate(params, beAssign)}`;
+    return `${EntityTemplate(params, beAssign)}`;
   } else {
     // 参数转化为 ast 结构
     const params = {
@@ -114,17 +94,13 @@ export function FullTemplate({
       method: JSON.stringify(resolver.interface.method),
     };
 
-    return `
-    ${EntityQueryTemplate(params, beAssign)}
-    return data;
-    `;
-
-    // return `if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_DESIGNER) {
-    //   const ${beAssign} =  ${params.examples};
-    //   return ${beAssign};
-    // } else {
-    //   ${EntityQueryTemplate(params, beAssign)}
-    // }`
+    return `if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_DESIGNER) {
+      const ${beAssign} =  ${params.examples};
+      return ${beAssign};
+    } else {
+      ${EntityTemplate(params, beAssign)}
+      return ${beAssign};
+    }`;
   }
 }
 
@@ -154,40 +130,6 @@ export const AtomTemplate = (resolver: EntityResolver) => {
 
   // JSON + JSON
 };
-
-/**
- * const fun = allOperations
- *
- * key = {serviceName}_{resolverName};
- *
- * let EmployeeParams = {};
- *
- * if (sourceItem.assignments) {
- *   const EmployeeParams = {
- *      id: args.employee
- *   }
- * }
- *
- * const SourceData0 = fun[key] ? fun[key](null, EmployeeParams) : next;
- * const SourceData0Code = SourceData0.data.Data;
- *
- * const SourceData1 =
- *
- */
-export const StructureResolverTemplate = () => {
-  return `
-    async (parent, args, context, info) => {
-      // TODO 
-    }
-  }
-`;
-};
-
-export const OtherWebResolverTemplate = `
-  async () => {
-
-  }
-`;
 
 export function resolverAst(
   template: any = `() => {}`

@@ -321,8 +321,6 @@ export function GenFullResolver(allEndpoints: any) {
           .join("\n")
           .toString()} }`;
 
-        console.info("wrapperSter", wrapperStr);
-
         allResolvers[uuid] = wrapperStr;
       }
     }
@@ -361,8 +359,7 @@ const RootTemplete = `
 import requester from './requester';
 
 export const resolvers = {
-  Query: {},
-  Mutation: {},
+  Query: {}
 }
 `;
 
