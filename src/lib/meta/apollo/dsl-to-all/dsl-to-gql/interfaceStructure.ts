@@ -145,7 +145,7 @@ export interface RequestOptions {
   bodyType: "json" | "formData";
 }
 
-type EnetityResolver = {
+type EntityResolver = {
   interface: {
     path: string;
     parameters: Oa2NonBodyParam[];
@@ -176,9 +176,6 @@ export const getSuccessExample = (
   const successResponse = responses[successCode];
   if (!successResponse) {
     throw new Error(`Expected responses[${successCode}] to be defined`);
-  }
-  if (successResponse.schema) {
-    return successResponse.schema;
   }
 
   if (successResponse.content) {
@@ -216,9 +213,9 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
       if (name === "entities") {
         Object.keys(apiObject).forEach((entityName: string) => {
           const entityObject = apiObject[entityName];
-          const enetityResolvers = (entityObject || {}).resolvers || [];
-          enetityResolvers.forEach((enetityResolver: EnetityResolver) => {
-            const operationObject = enetityResolver.interface;
+          const entityResolvers = (entityObject || {}).resolvers || [];
+          entityResolvers.forEach((entityResolver: EntityResolver) => {
+            const operationObject = entityResolver.interface;
             const interfaceName = operationObject.name;
             const method = operationObject.method;
             const bodyParams = operationObject.requestBody
@@ -234,15 +231,15 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
               ...bodyParams,
             ];
 
-            const isMutation =
-              ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1;
+            const isMutation = false;
+              // ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1;
             // combine full path
             const fullPath = `/gw/${itmicro}${operationObject.path}`;
-            enetityResolver.interface.path = fullPath;
-            const operationName = `${itmicro}_${interfaceName}`;
+            entityResolver.interface.path = fullPath;
+            const operationName = `${itmicro}_entities_${interfaceName}`;
 
             allOperations[operationName] = {
-              // enetityResolver.type
+              // entityResolver.type
               type: ResolverType.INTERFACE,
               // 定义 schema 的传入参数
               parameters: parameterDetails,
@@ -250,7 +247,7 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
               // 定义 schema 的返回结构
               response: getSuccessResponse(operationObject.responses),
               // 用于确定 resolver 函数的具体表现形式
-              resolver: enetityResolver,
+              resolver: entityResolver,
               // 定义 resolver 的默认填充数据
               examples: getSuccessExample(operationObject.responses),
               mutation: isMutation,

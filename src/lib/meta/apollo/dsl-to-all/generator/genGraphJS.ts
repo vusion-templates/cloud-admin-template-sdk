@@ -97,13 +97,13 @@ export function OutputGraphQLQueryAndMutation(
     buildSchema(`${printSchema(schema)}`)
   );
 
-  const groupMutationObject = generateMutationByField(
-    buildSchema(`${printSchema(schema)}`)
-  );
+  // const groupMutationObject = generateMutationByField(
+  //   buildSchema(`${printSchema(schema)}`)
+  // );
 
   const graphJS = GeneratorGraphTS({
     ...groupQueryObject,
-    ...groupMutationObject,
+    // ...groupMutationObject,
   });
   const graphJSPath = path.join(rootPath, `/graph.js`);
   FileSave(graphJS, graphJSPath);

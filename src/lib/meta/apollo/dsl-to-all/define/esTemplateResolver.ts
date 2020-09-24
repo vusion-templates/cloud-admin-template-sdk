@@ -8,8 +8,7 @@ export const RootTemplete = `
 import requester from './requester';
 
 export const resolvers = {
-  Query: {},
-  Mutation: {}
+  Query: {}
 };`;
 
 interface EntityResolver extends Resolver {
@@ -59,20 +58,25 @@ function EntityMutationTemplate(params: any, beAssign: string) {
   return ${beAssign};`;
 }
 
-function EntityQueryTemplate(params: any, beAssign: string) {
+function EntityQueryTemplate(params: any, beAssign: string, mutation: boolean) {
   return `${params.path === "PATH" ? 'const PATH = "";' : ""}
   ${params.query == "QUERYPARAM" ? "const QUERYPARAM = {};" : ""}
+
+  const body = args.body;
+  delete args.body;
   const { ${beAssign} } = await requester({
     url: {
       path: ${params.path},
-      method: "get",
-      query: ${params.query}
+      method: "${params.method}",
+      body: args.body,
+      query: args
     },
     config: {
       baseURL:'/',
     }
   });`;
 }
+
 
 // contain generator in all params
 export function FullTemplate({
@@ -91,23 +95,26 @@ export function FullTemplate({
   mutation: boolean;
 }) {
   const path = resolver.interface.path;
+  mutation = ["POST", "PUT", "PATCH", "DELETE"].includes(resolver.interface.method);
 
   if (mutation) {
     const params = {
       path: path ? PathToBinaryExpressionString(path, meL) : "PATH",
-      //   body: BodyToObjectExpression(parameters),
+      query: QueryToObjectExpression(parameters, meL),
+      // body: BodyToObjectExpression(parameters),
       examples: JSON.stringify(examples),
-      method: JSON.stringify(resolver.interface.method),
+      method: resolver.interface.method,
     };
-    return `${EntityMutationTemplate(params, beAssign)}`;
+    return `${EntityQueryTemplate(params, beAssign, mutation)}`;
   } else {
     // 参数转化为 ast 结构
     const params = {
       path: path ? PathToBinaryExpressionString(path, meL) : "PATH",
       query: QueryToObjectExpression(parameters, meL),
       examples: JSON.stringify(examples),
-      method: JSON.stringify(resolver.interface.method),
+      method: resolver.interface.method,
     };
+
 
     // return `
     // ${EntityQueryTemplate(params, beAssign)}
@@ -115,10 +122,10 @@ export function FullTemplate({
     // `;
 
     return `if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_DESIGNER) {
-      const ${beAssign} =  ${params.examples};
+      const ${beAssign} = ${params.examples};
       return ${beAssign};
     } else {
-      ${EntityQueryTemplate(params, beAssign)}  
+      ${EntityQueryTemplate(params, beAssign, mutation)}  
       return ${beAssign};
     }`;
   }
