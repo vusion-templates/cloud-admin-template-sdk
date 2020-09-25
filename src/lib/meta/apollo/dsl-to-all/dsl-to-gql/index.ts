@@ -51,11 +51,30 @@ export const createSchema = async <TContext>(
 }> => {
   const json: any = await refParser.bundle(options.dslSchema);
   const dslSchemaWithUUID = await addUUIDToSchemas(json);
-  let schemaWithoutReferences = {};
+  const schemaWithoutReferencesAppend = {
+    basicTypes: {
+      Boolean: "boolean",
+      Integer: "integer",
+      Long: "long",
+      Decimal: "decimal",
+      String: "string",
+      Binary: "binary",
+      Date: "date",
+      Time: "time",
+      DateTime: "datetime",
+      Email: "email",
+    },
+    ...dslSchemaWithUUID,
+  };
+
   // 添加 uuid，为了控制入口函数的调用规则
-  schemaWithoutReferences = (await refParser.dereference(dslSchemaWithUUID, {
-    continueOnError: false,
-  })) as any;
+  const schemaWithoutReferences = (await refParser.dereference(
+    schemaWithoutReferencesAppend,
+    {
+      continueOnError: true,
+    }
+  )) as any;
+
   const endpoints = getAllInterfaces(schemaWithoutReferences);
 
   return {

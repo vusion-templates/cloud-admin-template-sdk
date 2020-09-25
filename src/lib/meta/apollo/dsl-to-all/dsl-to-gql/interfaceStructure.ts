@@ -149,6 +149,7 @@ export interface RequestOptions {
 export type EntityResolver = {
   uuid: string;
   name: string;
+  code: string;
   interface: {
     name: string;
     path: string;
@@ -211,33 +212,35 @@ export enum ResolverType {
 /**
  * resolver 作为信息表达的入口
  */
-export const addUUIDToSchemas = (schema: DSLSchema = {}) => {
+export const addUUIDToSchemas = (schema: any = {}) => {
   Object.keys(schema).forEach((itmicro: string) => {
     const schemaItmicro: {
       [operationId: string]: any;
     } = schema[itmicro];
-
     Object.keys(schemaItmicro || {}).forEach((name: string) => {
       const apiObject: {
         [operationId: string]: any;
       } = schemaItmicro[name];
-      Object.values(apiObject).map((structureObject: any) => {
-        const structureResolvers = (structureObject || {}).resolvers || [];
-        structureResolvers.map((resolver: StructureResolver) => {
-          /**
-           * json 只有一个
-           */
-          if (resolver.type == ResolverType.JSON) {
-            // 因为 json 只有一个，所以使用结构本身的名字
-            resolver.uuid = `${itmicro}_${name}_${structureObject.name}`;
-          } else {
-            // 因为有多个，所有有多个标记的名字，这个类型其实和实体的使用是一样的，
-            resolver.uuid = `${itmicro}_${name}_${resolver.name}`;
-          }
+      if (name === "entities" || name === "structures") {
+        Object.values(apiObject).map((structureObject: any) => {
+          const structureResolvers = (structureObject || {}).resolvers || [];
+          structureResolvers.map((resolver: StructureResolver) => {
+            /**
+             * json 只有一个
+             */
+            if (resolver.type == ResolverType.JSON) {
+              // 因为 json 只有一个，所以使用结构本身的名字
+              resolver.uuid = `${itmicro}_${name}_${structureObject.name}`;
+            } else {
+              // 因为有多个，所有有多个标记的名字，这个类型其实和实体的使用是一样的，
+              resolver.uuid = `${itmicro}_${name}_${resolver.name}`;
+            }
+          });
         });
-      });
+      }
     });
   });
+
   return schema;
 };
 /**
@@ -246,7 +249,7 @@ export const addUUIDToSchemas = (schema: DSLSchema = {}) => {
  *
  * @param schema
  */
-export const getAllInterfaces = (schema: DSLSchema = {}) => {
+export const getAllInterfaces = (schema: any = {}) => {
   const allOperations: {
     [key: string]: any;
   } = {};
@@ -254,6 +257,10 @@ export const getAllInterfaces = (schema: DSLSchema = {}) => {
     const schemaItmicro: {
       [operationId: string]: any;
     } = schema[itmicro];
+
+    if (itmicro === "basicTypes") {
+      return;
+    }
 
     Object.keys(schemaItmicro || {}).forEach((name: string) => {
       const apiObject: {

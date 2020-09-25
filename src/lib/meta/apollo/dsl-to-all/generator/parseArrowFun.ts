@@ -44,6 +44,7 @@ export function FullTemplate({
   beAssign: string;
 }) {
   const interfaceObject = resolver.interface;
+  // 通过 code 才能获取到返回到真实结构
   const examples = getSuccessExample(interfaceObject.responses);
   const method = interfaceObject.method;
   /**
