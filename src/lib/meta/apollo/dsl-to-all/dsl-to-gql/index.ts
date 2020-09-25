@@ -12,6 +12,12 @@ import {
   addUUIDToSchemas,
   getAllInterfaces,
 } from "./interfaceStructure";
+import {
+  FileSave,
+  OutputGraphQLQueryAndMutation,
+} from "../generator/genGraphJS";
+import * as path from "path";
+import { rootPath } from "../../../../../tests/global";
 
 export function parseResponse(response: any, returnType: GraphQLOutputType) {
   const nullableType =
@@ -50,6 +56,8 @@ export const createSchema = async <TContext>(
   };
 }> => {
   const json: any = await refParser.bundle(options.dslSchema);
+  FileSave(JSON.stringify(json), "test.json");
+
   const dslSchemaWithUUID = await addUUIDToSchemas(json);
   const schemaWithoutReferencesAppend = {
     basicTypes: {

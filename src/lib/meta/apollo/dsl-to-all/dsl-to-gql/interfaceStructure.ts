@@ -12,7 +12,6 @@ import {
 } from "./config";
 import { GraphQLSchema, GraphQLObjectType } from "graphql";
 import { RootGraphQLSchema, JSONSchemaType, BodySchema } from "./json-schema";
-import { UpdateListSchemaOfEntity } from "../define/schemaGQL";
 
 export interface Param {
   required: boolean;
@@ -88,15 +87,6 @@ export const getSuccessResponse = (
   return undefined;
 };
 
-export const getEntityResponse = (
-  responses: Responses = {}
-): JSONSchemaType | undefined => {
-  if (responses.schema) {
-    return UpdateListSchemaOfEntity(responses.schema);
-  }
-
-  return undefined;
-};
 export interface EndpointParam {
   required: boolean;
   type: "header" | "query" | "formData" | "path" | "body";
