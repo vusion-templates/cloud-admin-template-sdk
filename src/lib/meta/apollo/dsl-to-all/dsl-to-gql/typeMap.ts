@@ -101,6 +101,7 @@ export const jsonSchemaTypeToGraphQL = <IsInputType extends boolean>(
     if (jsonSchema.type) {
       return getPrimitiveType(jsonSchema.format, jsonSchema.type);
     }
+    
     throw new Error(
       `Don't know how to handle schema ${JSON.stringify(
         jsonSchema
@@ -267,6 +268,7 @@ export const mapParametersToFields = (
   gqlTypes: GraphQLTypeMap
 ): GraphQLFieldConfigArgumentMap => {
   return parameters.reduce((res: GraphQLFieldConfigArgumentMap, param) => {
+
     const type = jsonSchemaTypeToGraphQL(
       `param_${typeName}`,
       param.jsonSchema,

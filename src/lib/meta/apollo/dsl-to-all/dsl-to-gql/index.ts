@@ -6,10 +6,18 @@ import {
   GraphQLSchema,
 } from "graphql";
 import refParser = require("json-schema-ref-parser");
-import { DSLSchema } from "./config";
-
 import { RequestOptions } from "./getRequestOptions";
-import { schemaFromStructures, getAllInterfaces } from "./interfaceStructure";
+import {
+  schemaFromStructures,
+  addUUIDToSchemas,
+  getAllInterfaces,
+} from "./interfaceStructure";
+import {
+  FileSave,
+  OutputGraphQLQueryAndMutation,
+} from "../generator/genGraphJS";
+import * as path from "path";
+import { rootPath } from "../../../../../tests/global";
 
 export function parseResponse(response: any, returnType: GraphQLOutputType) {
   const nullableType =
@@ -47,11 +55,36 @@ export const createSchema = async <TContext>(
     [operaterId: string]: any;
   };
 }> => {
+  const json: any = await refParser.bundle(options.dslSchema);
+  FileSave(JSON.stringify(json), "test.json");
+
+  const dslSchemaWithUUID = await addUUIDToSchemas(json);
+  const schemaWithoutReferencesAppend = {
+    basicTypes: {
+      Boolean: "boolean",
+      Integer: "integer",
+      Long: "long",
+      Decimal: "decimal",
+      String: "string",
+      Binary: "binary",
+      Date: "date",
+      Time: "time",
+      DateTime: "datetime",
+      Email: "email",
+    },
+    ...dslSchemaWithUUID,
+  };
+
+  // 添加 uuid，为了控制入口函数的调用规则
   const schemaWithoutReferences = (await refParser.dereference(
-    options.dslSchema
-  )) as DSLSchema;
+    schemaWithoutReferencesAppend,
+    {
+      continueOnError: true,
+    }
+  )) as any;
 
   const endpoints = getAllInterfaces(schemaWithoutReferences);
+
   return {
     schema: schemaFromStructures(endpoints, options),
     endpoints,

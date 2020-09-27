@@ -3,7 +3,6 @@ import { buildSchema, printSchema, print, GraphQLSchema } from "graphql";
 import * as fs from "fs-extra";
 import * as path from "path";
 import generator from "@babel/generator";
-import { generateMutationByField } from "../gql-to-randomquery/generator-query";
 
 export function FileSave(context: any, path: string) {
   fs.ensureFileSync(path);

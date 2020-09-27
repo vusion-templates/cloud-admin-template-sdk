@@ -232,6 +232,7 @@ export interface ServerObject {
 }
 
 export interface DSLSchema {
+  basicTypes?: any;
   [mirco: string]: {
     entities: {
       [key: string]: any;
@@ -247,7 +248,7 @@ type Options<T> = {
 };
 
 export const getFields = <TContext>(
-  endpoints: Endpoints,
+  endpoints: Endpoints = {},
   isMutation: boolean, // TODO
   gqlTypes: GraphQLTypeMap,
   { callBackend }: Options<TContext>
