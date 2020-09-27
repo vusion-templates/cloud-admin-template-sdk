@@ -95,7 +95,7 @@ export function FullTemplate({
       method: JSON.stringify(resolver.interface.method),
     };
 
-    return `if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_DESIGNER) {
+    return `if (process.env.VUE_APP_DESIGNER) {
       const ${beAssign} =  ${params.examples};
       return ${beAssign};
     } else {
