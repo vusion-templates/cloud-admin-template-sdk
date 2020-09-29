@@ -41,10 +41,46 @@ export default class Page extends Tree implements ProjectPath {
 
   static add(answers: AddPage, config: PlopConfig): Promise<any> {
     const plop = Utils.getPlop(config);
-    return plop.getGenerator("page.add").runActions(answers);
+    return plop
+      .getGenerator("page.add")
+      .runActions(answers)
+      .then((data) => {
+        if (data.failures && data.failures.length) {
+          throw data.failures
+            .map((e) => {
+              if (!e) {
+                return "";
+              } else if (e.message) {
+                return e;
+              } else {
+                return JSON.stringify(e);
+              }
+            })
+            .join("\n");
+        }
+        return data;
+      });
   }
   static remove(answers: RemovePage, config: PlopConfig): Promise<any> {
     const plop = Utils.getPlop(config);
-    return plop.getGenerator("page.remove").runActions(answers);
+    return plop
+      .getGenerator("page.remove")
+      .runActions(answers)
+      .then((data) => {
+        if (data.failures && data.failures.length) {
+          throw data.failures
+            .map((e) => {
+              if (!e) {
+                return "";
+              } else if (e.message) {
+                return e;
+              } else {
+                return JSON.stringify(e);
+              }
+            })
+            .join("\n");
+        }
+        return data;
+      });
   }
 }
