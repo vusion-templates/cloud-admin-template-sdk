@@ -42,6 +42,11 @@ export default function (plop: NodePlop.API): any {
           return !pagesUtil.get(dest).index;
         },
       },
+      {
+        type: "input",
+        name: "template",
+        message: "从模板创建（npm 包名）",
+      },
     ],
     actions(answers: any): ReturnType<typeof actions.add> {
       const { name } = answers;
