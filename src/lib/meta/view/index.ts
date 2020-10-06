@@ -4,6 +4,7 @@ import File from "../common/File";
 import { ProjectPath, LEVEL_ENUM } from "../common";
 import type Page from "../page";
 import Directory from "../common/Directory";
+import utils from "../utils";
 import { templatePath } from "../../utils";
 import {
   mergeCode,
@@ -83,7 +84,9 @@ export default class View extends Tree implements ProjectPath {
     if (!file.exists()) {
       throw new Error(`file is not exist`);
     }
-    return file.remove();
+    file.remove();
+    // 删除页面文件夹后，路由需要手动激活一把
+    utils.ensureHotReload(path.join(root, 'routes.map.js'));
   }
   static addView(root: string, name: string, options: ViewOptions) {
     const file = new File(View.getFullPath(root, name));

@@ -32,4 +32,9 @@ export default {
   getViewPath(answers: any): string {
     return path.join(answers.root, answers.page, answers.module, "views");
   },
+  ensureHotReload(filePath: string) {
+    if (!fs.existsSync(filePath))
+        return;
+    return fs.writeFileSync(filePath, fs.readFileSync(filePath, 'utf8'))
+  },
 };
