@@ -85,7 +85,8 @@ export function FullTemplate({
       examples: JSON.stringify(examples),
       method: JSON.stringify(resolver.interface.method),
     };
-    return `${EntityTemplate(params, beAssign)}`;
+    return `${EntityTemplate(params, beAssign)}
+      return ${beAssign};`;
   } else {
     // 参数转化为 ast 结构
     const params = {
@@ -96,7 +97,7 @@ export function FullTemplate({
     };
 
     return `if (process.env.VUE_APP_DESIGNER) {
-      const ${beAssign} =  ${params.examples};
+      const ${beAssign} = ${params.examples};
       return ${beAssign};
     } else {
       ${EntityTemplate(params, beAssign)}

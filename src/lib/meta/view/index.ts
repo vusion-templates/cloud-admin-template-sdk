@@ -86,7 +86,7 @@ export default class View extends Tree implements ProjectPath {
     }
     file.remove();
     // 删除页面文件夹后，路由需要手动激活一把
-    utils.ensureHotReload(path.join(root, 'routes.map.js'));
+    utils.ensureHotReload(path.join(root, '../routes.map.js'));
   }
   static addView(root: string, name: string, options: ViewOptions) {
     const file = new File(View.getFullPath(root, name));
