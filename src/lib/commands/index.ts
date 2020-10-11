@@ -136,5 +136,11 @@ export default function (root: string): Command {
         .view.load(viewPath)
         .addCustomComponent(blockInfo, content);
     },
+    "enums.add": function (...args) {
+      return project.enums.add(...args);
+    } as typeof project.enums.add,
+    "enums.remove": function (...args) {
+      return project.enums.remove(...args);
+    } as typeof project.enums.remove,
   };
 }
