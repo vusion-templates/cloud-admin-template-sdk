@@ -3,6 +3,7 @@ import View, { ViewOptions } from "../meta/view";
 import { BlockInfo } from "../meta/view";
 import { AddPage, RemovePage } from "../meta/page";
 import { ApolloOP } from "../meta/project/apollo";
+import type { PageMeta } from "../meta/page/MetaData";
 
 export interface Command {
   [prop: string]: any;
@@ -13,6 +14,17 @@ export default function (root: string): Command {
   return {
     "config.resolve"() {
       return project.config();
+    },
+    "page.metaData"(pageName: string, data: PageMeta): void {
+      const file = project.getPages();
+      const pages = file.loadJSON();
+      if (data.options.isIndex) {
+        Object.values(pages).forEach((page: any) => {
+          page.options.isIndex = false;
+        });
+      }
+      file.save(pages);
+      return project.page.setMetaData(pageName, data);
     },
     "page.list"() {
       return project.page.loadList();

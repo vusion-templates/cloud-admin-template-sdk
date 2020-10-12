@@ -67,6 +67,9 @@ export default class Project extends Tree implements ProjectPath {
   public getPackage(): any {
     return new File(path.join(this.clientPath, "package.json")).loadJSON();
   }
+  public getPages(): File {
+    return new File(path.join(this.clientPath, "pages.json"));
+  }
   public loadUILibrary(name: string, parseTypes: ParseTypes = {}) {
     return loadUILibrary(name, this, parseTypes);
   }

@@ -33,5 +33,12 @@ export default function (projectRoot: string, project: Project) {
     load(pageName: string): Page {
       return new Page(pageName, root, project);
     },
+    setMetaData(
+      pageName: string,
+      data: object
+    ): ReturnType<Page["metaData"]["save"]> {
+      const page = this.load(pageName);
+      page.metaData.save(data);
+    },
   };
 }
