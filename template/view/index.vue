@@ -1,6 +1,6 @@
 <template>
     <u-linear-layout direction="vertical">
-        <div>子页面</div>
+        <div><%= title %>页面的内容</div>
         <router-view></router-view>
     </u-linear-layout>
 </template>
@@ -8,3 +8,10 @@
 <script>
 export default {};
 </script>
+
+<definition>
+{
+    "title": "<%= title %>",
+    "logics": []
+}
+</definition>

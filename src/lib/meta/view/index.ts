@@ -15,6 +15,7 @@ import {
 import type { ViewInfo } from "vusion-api/out/designer/index";
 import * as fs from "fs-extra";
 import { VueFile } from "vusion-api";
+import * as _ from "lodash";
 
 export { ViewInfo };
 
@@ -86,7 +87,7 @@ export default class View extends Tree implements ProjectPath {
     }
     file.remove();
     // 删除页面文件夹后，路由需要手动激活一把
-    utils.ensureHotReload(path.join(root, '../routes.map.js'));
+    utils.ensureHotReload(path.join(root, "../routes.map.js"));
   }
   static addView(root: string, name: string, options: ViewOptions) {
     const file = new File(View.getFullPath(root, name));
@@ -94,7 +95,8 @@ export default class View extends Tree implements ProjectPath {
       throw new Error(`file is exist`);
     }
     const templateFile = new File(path.join(templatePath, "view/index.vue"));
-    return file.save(templateFile.load());
+    const content = _.template(templateFile.load())(options);
+    return file.save(content);
   }
 
   async loadVueFile() {
