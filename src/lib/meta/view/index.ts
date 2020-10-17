@@ -89,12 +89,14 @@ export default class View extends Tree implements ProjectPath {
     // 删除页面文件夹后，路由需要手动激活一把
     utils.ensureHotReload(path.join(root, "../routes.map.js"));
   }
-  static addView(root: string, name: string, options: ViewOptions) {
-    const file = new File(View.getFullPath(root, name));
+  static addView(root: string, viewPath: string, options: ViewOptions) {
+    const file = new File(View.getFullPath(root, viewPath));
     if (file.exists()) {
       throw new Error(`file is exist`);
     }
     const templateFile = new File(path.join(templatePath, "view/index.vue"));
+    const name = viewPath.split('/').pop();
+    options.title = options.title || name;
     const content = _.template(templateFile.load())(options);
     return file.save(content);
   }
@@ -117,11 +119,33 @@ export default class View extends Tree implements ProjectPath {
     else if (type === "style") vueFile.style = content;
     else if (type === "definition") vueFile.definition = content;
 
+    if (!vueFile.template || !vueFile.definition) {
+      console.dir(vueFile);
+      throw new Error(`Empty Bomb!!!!:
+${this.fullPath}
+${content}`)
+    }
+
     await vueFile.save();
   }
 
-  async mergeCode(code: string, nodePath: string) {
-    return await mergeCode(this.fullPath, code, nodePath);
+  async mergeCode(content: string, nodePath: string) {
+    const vueFile = new VueFile(this.fullPath);
+    await vueFile.open();
+    vueFile.parseAll();
+
+    const blockVue = typeof content === 'string' ? VueFile.from(content) : content;
+    blockVue.parseAll();
+    vueFile.merge(blockVue, nodePath);
+
+    if (!vueFile.template || !vueFile.definition) {
+      console.dir(vueFile);
+      throw new Error(`Empty Bomb!!!!:
+${this.fullPath}
+${content}`)
+    }
+
+    await vueFile.save();
   }
 
   async addBlock(blockInfo: BlockInfo) {
