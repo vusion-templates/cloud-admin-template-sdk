@@ -78,6 +78,18 @@ export default {
         );
 
         content = await fs.readFile(path.join(blockPath, "index.vue"), "utf8");
+        if (!content.includes('<definition>')) {
+          content += `
+<definition>
+{
+    "title": "${title}",
+    "logics": []
+}
+</definition>
+`
+        }
+
+
         await fs.writeFile(path.join(dest, "views/index.vue"), content);
 
         const pkgInfo = JSON.parse(
