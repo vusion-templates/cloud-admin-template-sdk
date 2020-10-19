@@ -6,7 +6,7 @@ export default {
     auth: {{ auth }},
     router: {
         notFound: '/',
-        middleware: ['lock', 'auth'],
+        middleware: ['first', 'lock', 'auth'],
         effect: ['title'],
         tipMessage: '没有访问该页面的权限',
         unauthorized: '/',
