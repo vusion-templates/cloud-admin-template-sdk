@@ -12,6 +12,7 @@ export default {};
 <definition>
 {
     "title": "<%= title %>",
+    "crumb": "<%= crumb %>",
     "logics": []
 }
 </definition>

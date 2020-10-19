@@ -6,7 +6,6 @@
 </template>
 
 <script>
-
 export default {
     data() {
         return {
@@ -19,3 +18,10 @@ export default {
 <style module>
 
 </style>
+
+<definition>
+{
+    "title": "空白页",
+    "logics": []
+}
+</definition>
