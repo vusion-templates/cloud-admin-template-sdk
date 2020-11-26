@@ -3,6 +3,7 @@ export default {
     name: '{{ name }}',
     project: '{{ appName }}',
     domainName: '{{ appName }}',
+    nuimsDomain: '{{ nuimsDomain }}',
     auth: {{ auth }},
     router: {
         notFound: '/',
