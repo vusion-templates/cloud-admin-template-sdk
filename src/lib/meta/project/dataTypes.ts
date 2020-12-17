@@ -1,9 +1,9 @@
 import * as path from "path";
-import DateTypes from "../datatypes";
+import DateTypes from "../dataTypes";
 import type Project from "./";
 
 const getRootPath = function (root: string): string {
-  return path.join(root, "src/global/datatypes");
+  return path.join(root, "src/global/dataTypes");
 };
 
 export default function (projectRoot: string, project: Project) {
