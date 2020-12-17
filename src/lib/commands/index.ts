@@ -154,5 +154,8 @@ export default function (root: string): Command {
     "enums.remove": function (...args) {
       return project.enums.remove(...args);
     } as typeof project.enums.remove,
+    "dataTypes.update": function (...args) {
+      return project.dataTypes.update(...args);
+    } as typeof project.dataTypes.update,
   };
 }
