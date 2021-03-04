@@ -78,7 +78,7 @@ export default {
         );
 
         content = await fs.readFile(path.join(blockPath, "index.vue"), "utf8");
-        if (!content.includes('<definition>')) {
+        if (!content.includes("<definition>")) {
           content += `
 <definition>
 {
@@ -86,9 +86,8 @@ export default {
     "logics": []
 }
 </definition>
-`
+`;
         }
-
 
         await fs.writeFile(path.join(dest, "views/index.vue"), content);
 
@@ -96,7 +95,16 @@ export default {
           await fs.readFile(path.join(blockPath, "package.json"), "utf8")
         );
         const deps = pkgInfo.vusionDependencies;
-        if (deps && Object.keys(deps).length) {
+        let ignoreVusionDependencies = false;
+        {
+          const pkgPath = path.join(root, "package.json");
+          let pkgInfo: { [name: string]: string };
+          if (fs.existsSync(pkgPath)) {
+            pkgInfo = JSON.parse(await fs.readFile(pkgPath, "utf8"));
+            ignoreVusionDependencies = !!pkgInfo.ignoreVusionDependencies;
+          }
+        }
+        if (deps && Object.keys(deps).length && !ignoreVusionDependencies) {
           await Promise.all(
             Object.keys(deps).map((name) =>
               ms.install({
